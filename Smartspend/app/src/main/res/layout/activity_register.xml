@@ -70,7 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Password"
-            android:hintTextColor="#808080"
+            android:textColorHint="#808080"
             android:textColor="#FFFFFF"
             android:inputType="textPassword"
             android:fontFamily="sans-serif" />
@@ -97,7 +97,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Confirm Password"
-            android:hintTextColor="#808080"
+            app:hintTextColor="#808080"
             android:textColor="#FFFFFF"
             android:inputType="textPassword"
             android:fontFamily="sans-serif" />

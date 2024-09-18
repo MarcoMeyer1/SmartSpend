@@ -13,6 +13,12 @@
         android:theme="@style/Theme.SmartSpend"
         tools:targetApi="31">
         <activity
+            android:name=".NewIncome"
+            android:exported="false" />
+        <activity
+            android:name=".profile"
+            android:exported="false" />
+        <activity
             android:name=".Register"
             android:exported="true" />
         <activity

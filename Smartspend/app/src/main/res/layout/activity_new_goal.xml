@@ -5,16 +5,18 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1b1b1b"
-    tools:context=".NewExpenses">
+    android:background="#1F1F1F"
+    tools:context=".NewGoal">
 
+
+    <!-- Save Button -->
 
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="124dp"
-        android:text="New Expense"
+        android:layout_marginTop="84dp"
+        android:text="New Goal"
         android:textColor="#FFFFFF"
         android:textSize="40dp"
         android:textStyle="bold"
@@ -25,72 +27,53 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/expenseName"
+        android:id="@+id/goalName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="48dp"
         android:background="@drawable/custom_edittext_green_border"
-        android:gravity="center"
-        android:hint="Expense Name"
+        android:hint="Goal Name"
         android:padding="16dp"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_margin="16dp"
+        app:layout_constraintTop_margin="24dp"
         app:layout_constraintTop_toBottomOf="@id/title" />
 
     <EditText
-        android:id="@+id/category"
+        android:id="@+id/totalAmount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="48dp"
         android:background="@drawable/custom_edittext_green_border"
-        android:gravity="center"
-        android:hint="Category"
-        android:padding="16dp"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_margin="16dp"
-        app:layout_constraintTop_toBottomOf="@id/expenseName" />
-
-    <EditText
-        android:id="@+id/amount"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="32dp"
-        android:layout_marginTop="52dp"
-        android:gravity="center"
-        android:hint="Amount"
+        android:hint="Total Amount"
         android:inputType="numberDecimal"
         android:padding="16dp"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF"
-        android:background="@drawable/custom_edittext_green_border"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_margin="16dp"
-        app:layout_constraintTop_toBottomOf="@id/category" />
+        app:layout_constraintTop_margin="24dp"
+        app:layout_constraintTop_toBottomOf="@id/goalName" />
 
     <Button
-        android:id="@+id/confirmButton"
+        android:id="@+id/saveButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="64dp"
-        android:layout_marginTop="72dp"
+        android:layout_marginTop="44dp"
         android:background="@drawable/custom_edittext_green_border"
+        android:backgroundTint="#00FF00"
         android:padding="16dp"
-        android:text="Confirm"
+        android:text="Save"
         android:textColor="#FFFFFF"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_margin="32dp"
-        app:layout_constraintTop_toBottomOf="@id/amount" />
+        app:layout_constraintTop_toBottomOf="@id/totalAmount" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

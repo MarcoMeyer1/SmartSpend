@@ -39,10 +39,13 @@
         android:layout_margin="16dp"
         android:contentDescription="AddGoal"
         android:src="@drawable/baseline_add_24"
-    app:tint="#70FFB5"
-    android:backgroundTint="@null"
-    app:background="@drawable/fab_background"
+        app:tint="#212226"
+    android:backgroundTint="#3f6e56"
+    android:elevation="8dp"
+
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

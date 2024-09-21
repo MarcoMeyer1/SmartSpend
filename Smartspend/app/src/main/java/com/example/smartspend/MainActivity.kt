@@ -6,7 +6,7 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 
 
-class MainActivity : BaseActivity( {
+class MainActivity : BaseActivity() {
 
     // Declare the buttons
     private lateinit var detailedViewButton: Button

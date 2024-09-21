@@ -59,6 +59,7 @@
         android:rowCount="2">
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonDetailedView"
             android:layout_width="73dp"
             android:layout_height="73dp"
             android:layout_columnWeight="1"
@@ -71,6 +72,7 @@
             android:textSize="16sp" />
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonSavingGoals"
             android:layout_width="73dp"
             android:layout_height="73dp"
             android:layout_columnWeight="1"
@@ -83,6 +85,7 @@
             android:textSize="16sp" />
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonReminders"
             android:layout_width="73dp"
             android:layout_height="73dp"
             android:layout_columnWeight="1"
@@ -95,6 +98,7 @@
             android:textSize="16sp" />
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonSettings"
             android:layout_width="73dp"
             android:layout_height="73dp"
             android:layout_columnWeight="1"
@@ -106,6 +110,7 @@
             android:textColor="#FFFFFF"
             android:textSize="16sp" />
     </GridLayout>
+
 
 
 

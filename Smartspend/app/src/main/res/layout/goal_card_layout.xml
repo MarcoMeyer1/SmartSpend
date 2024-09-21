@@ -6,48 +6,59 @@
     android:background="@drawable/card_border"
     android:padding="2dp">
 
-<androidx.cardview.widget.CardView
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-app:cardCornerRadius="24dp"
-app:cardElevation="4dp"
-app:cardBackgroundColor="@android:color/transparent">
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp">
-
-    <TextView
-        android:id="@+id/tvGoalTitle"
-        android:layout_width="wrap_content"
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Goal Title"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold"
-        android:textSize="18sp" />
+        app:cardCornerRadius="24dp"
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="#2E2E2E"
+        android:layout_margin="8dp"
+        android:padding="8dp">
 
-    <TextView
-        android:id="@+id/tvGoalProgress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Current/Total"
-        android:textColor="#808080"
-        android:textSize="14sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:background="#45554d">
 
-    <TextView
-        android:id="@+id/tvGoalPercentage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:text="25%"
-        android:textColor="#E57373"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1">
 
-</LinearLayout>
+                <TextView
+                    android:id="@+id/tvGoalTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Goal Title"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:paddingBottom="4dp" />
 
-</androidx.cardview.widget.CardView>
+                <TextView
+                    android:id="@+id/tvGoalProgress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5,000/20,000"
+                    android:textColor="#AAAAAA"
+                    android:textSize="14sp" />
+            </LinearLayout>
 
-    </FrameLayout>
+            <TextView
+                android:id="@+id/tvGoalPercentage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="25%"
+                android:textColor="#FF7043"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_gravity="center_vertical" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</FrameLayout>

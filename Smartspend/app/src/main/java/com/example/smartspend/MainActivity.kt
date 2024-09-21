@@ -5,7 +5,8 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 
-class MainActivity : AppCompatActivity() {
+
+class MainActivity : BaseActivity( {
 
     // Declare the buttons
     private lateinit var detailedViewButton: Button
@@ -16,7 +17,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        setActiveNavButton(R.id.home_nav)
         // Initialize buttons
         detailedViewButton = findViewById(R.id.buttonDetailedView)
         savingGoalsButton = findViewById(R.id.buttonSavingGoals)
@@ -63,5 +64,6 @@ class MainActivity : AppCompatActivity() {
     private fun openSettings() {//TODO
       //  val intent = Intent(this, SettingsActivity::class.java)
       //  startActivity(intent)
+
     }
 }

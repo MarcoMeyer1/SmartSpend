@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#333333"
+    tools:context=".NewReminders">
+
+    <TextView
+        android:id="@+id/reminder_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="104dp"
+        android:text="Create Reminder"
+        android:textColor="#FFFFFF"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/reminder_description"
+        android:layout_width="247dp"
+        android:layout_height="45dp"
+        android:background="@drawable/custom_edittext_green_border"
+        android:drawableTint="#7E7E7E"
+        android:hint="E-mail"
+        android:inputType="textEmailAddress"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:gravity="center"
+        tools:layout_editor_absoluteX="81dp"
+        tools:layout_editor_absoluteY="190dp" />
+
+    <com.google.android.material.textfield.TextInputEditText
+    android:id="@+id/date_due_button"
+    android:layout_width="247dp"
+    android:layout_height="45dp"
+    android:layout_marginStart="32dp"
+    android:layout_marginTop="36dp"
+    android:layout_marginEnd="32dp"
+    android:background="@drawable/custom_edittext_green_border"
+    android:clickable="true"
+    android:focusable="false"
+    android:gravity="center"
+    android:text="Date Due"
+    android:textColor="#FFFFFD"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.49"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/reminder_description" />
+
+    <TextView
+        android:id="@+id/notification_toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="Notifications "
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/date_due_button" />
+
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/date_to_notify_button"
+        android:layout_width="247dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/custom_edittext_green_border"
+        android:clickable="true"
+        android:focusable="false"
+        android:gravity="center"
+        android:text="Date to notify"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.49"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toggle_notifications" />
+
+    <Button
+        android:id="@+id/create_button"
+        android:layout_width="247dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="44dp"
+        android:layout_marginEnd="32dp"
+        android:gravity="center"
+        android:backgroundTint="#31453a"
+        android:text="Create"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.49"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/date_to_notify_button"
+        app:strokeColor="#70FFB5"
+        app:strokeWidth="1dp"/>
+
+    <LinearLayout
+        android:id="@+id/toggle_notifications"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/notification_toggle">
+
+
+        <TextView
+            android:id="@+id/enabled_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="(Enabled)"
+            android:textColor="#70FFB5"
+            android:textSize="16sp" />
+
+
+        <TextView
+            android:id="@+id/disabled_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="(Disabled)"
+            android:textColor="#FF5C5C"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

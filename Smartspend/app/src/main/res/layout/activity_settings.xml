@@ -22,23 +22,25 @@
         android:gravity="center"
         android:layout_gravity="center_horizontal" />
 
+
     <CheckBox
         android:id="@+id/checkbox_notifications"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Allow Notifications"
-        android:textColor="#FFFFFF"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
         android:buttonTint="@color/white"
-        android:layout_gravity="center_horizontal" />
-
+        android:text="Allow Notifications"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp" />
 
     <CheckBox
-        android:id="@+id/checkbox_biometric"
+        android:id="@+id/checkbox_SSO"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Biometric Login"
+        android:text="Enable SSO"
         android:textColor="#FFFFFF"
+        android:textSize="20sp"
         android:layout_marginTop="8dp"
         android:buttonTint="@color/white"
         android:layout_gravity="center_horizontal" />
@@ -52,16 +54,15 @@
         android:layout_gravity="center_horizontal">
 
 
-
         <Spinner
             android:id="@+id/spinner_language"
-            android:layout_width="158dp"
+            android:layout_width="309dp"
             android:layout_height="48dp"
             android:layout_marginStart="8dp"
             android:background="@drawable/spinner_background"
+            android:entries="@array/language_array"
             android:popupBackground="@color/black"
-            android:spinnerMode="dropdown"
-            android:entries="@array/language_array" />
+            android:spinnerMode="dropdown" />
     </LinearLayout>
 
 
@@ -69,13 +70,12 @@
         android:id="@+id/view_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="View Profile"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="24dp"
         android:gravity="center"
-        android:layout_gravity="center_horizontal" />
-
+        android:text="View Profile"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/btn_sign_out"

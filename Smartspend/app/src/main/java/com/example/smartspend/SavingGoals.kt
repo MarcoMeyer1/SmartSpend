@@ -2,6 +2,7 @@ package com.example.smartspend
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,9 +31,6 @@ class SavingGoals : BaseActivity() {
     private val client = OkHttpClient()
 
     private val apiBaseUrl = "https://smartspendapi.azurewebsites.net/api"
-
-    // Using userID 15 as per your request
-    private val userID: Int = 15
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,27 +81,35 @@ class SavingGoals : BaseActivity() {
                         return@setOnClickListener
                     }
 
-                    val newGoal = Goal(
-                        goalID = 0, // Will be set by the server
-                        userID = userID,
-                        goalName = goalName,
-                        totalAmount = totalAmountDecimal,
-                        savedAmount = savedAmountDecimal,
-                        completionDate = null
-                    )
+                    // Fetch the userID from SharedPreferences
+                    val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+                    val userID = sharedPreferences.getInt("userID", -1)
 
-                    createGoal(newGoal) { success ->
-                        if (success) {
-                            // Goal created successfully, refresh the goals list
-                            fetchGoals()
-                            dialog.dismiss()
-                        } else {
-                            Toast.makeText(
-                                this,
-                                "Failed to create goal",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                    if (userID != -1) {
+                        val newGoal = Goal(
+                            goalID = 0, // Will be set by the server
+                            userID = userID,
+                            goalName = goalName,
+                            totalAmount = totalAmountDecimal,
+                            savedAmount = savedAmountDecimal,
+                            completionDate = null
+                        )
+
+                        createGoal(newGoal) { success ->
+                            if (success) {
+                                // Goal created successfully, refresh the goals list
+                                fetchGoals()
+                                dialog.dismiss()
+                            } else {
+                                Toast.makeText(
+                                    this,
+                                    "Failed to create goal",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
+                    } else {
+                        Toast.makeText(this, "User ID not found. Please log in.", Toast.LENGTH_SHORT).show()
                     }
 
                 } else {
@@ -116,51 +122,59 @@ class SavingGoals : BaseActivity() {
     }
 
     private fun fetchGoals() {
-        val url = "$apiBaseUrl/Goal/$userID"
+        // Fetch the userID from SharedPreferences
+        val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        val userID = sharedPreferences.getInt("userID", -1)
 
-        val request = Request.Builder()
-            .url(url)
-            .get()
-            .build()
+        if (userID != -1) {
+            val url = "$apiBaseUrl/Goal/$userID"
 
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                runOnUiThread {
-                    Toast.makeText(this@SavingGoals, "Failed to load goals", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            }
+            val request = Request.Builder()
+                .url(url)
+                .get()
+                .build()
 
-            override fun onResponse(call: Call, response: Response) {
-                val responseBody = response.body?.string()
-
-                runOnUiThread {
-                    if (response.isSuccessful && responseBody != null) {
-                        val jsonArray = JSONArray(responseBody)
-                        goalList.clear()
-                        for (i in 0 until jsonArray.length()) {
-                            val jsonObject = jsonArray.getJSONObject(i)
-                            val goal = Goal(
-                                goalID = jsonObject.getInt("goalID"),
-                                userID = jsonObject.getInt("userID"),
-                                goalName = jsonObject.getString("goalName"),
-                                totalAmount = BigDecimal(jsonObject.getDouble("totalAmount")),
-                                savedAmount = BigDecimal(jsonObject.getDouble("savedAmount")),
-                                completionDate = jsonObject.optString("completionDate", null)
-                            )
-                            goalList.add(goal)
-                        }
-                        goalAdapter.notifyDataSetChanged()
-                    } else {
-                        Toast.makeText(
-                            this@SavingGoals,
-                            "Failed to load goals",
-                            Toast.LENGTH_SHORT
-                        ).show()
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    runOnUiThread {
+                        Toast.makeText(this@SavingGoals, "Failed to load goals", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
-            }
-        })
+
+                override fun onResponse(call: Call, response: Response) {
+                    val responseBody = response.body?.string()
+
+                    runOnUiThread {
+                        if (response.isSuccessful && responseBody != null) {
+                            val jsonArray = JSONArray(responseBody)
+                            goalList.clear()
+                            for (i in 0 until jsonArray.length()) {
+                                val jsonObject = jsonArray.getJSONObject(i)
+                                val goal = Goal(
+                                    goalID = jsonObject.getInt("goalID"),
+                                    userID = jsonObject.getInt("userID"),
+                                    goalName = jsonObject.getString("goalName"),
+                                    totalAmount = BigDecimal(jsonObject.getDouble("totalAmount")),
+                                    savedAmount = BigDecimal(jsonObject.getDouble("savedAmount")),
+                                    completionDate = jsonObject.optString("completionDate", null)
+                                )
+                                goalList.add(goal)
+                            }
+                            goalAdapter.notifyDataSetChanged()
+                        } else {
+                            Toast.makeText(
+                                this@SavingGoals,
+                                "Failed to load goals",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+            })
+        } else {
+            Toast.makeText(this, "User ID not found. Please log in.", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun createGoal(goal: Goal, callback: (Boolean) -> Unit) {
@@ -196,6 +210,59 @@ class SavingGoals : BaseActivity() {
                 }
             }
         })
+    }
+
+    // Method to handle the login and save userID to SharedPreferences
+    fun loginUser(email: String, password: String) {
+        val url = "$apiBaseUrl/login"
+
+        val json = JSONObject()
+        json.put("email", email)
+        json.put("password", password)
+
+        val requestBody = RequestBody.create(
+            "application/json; charset=utf-8".toMediaTypeOrNull(),
+            json.toString()
+        )
+
+        val request = Request.Builder()
+            .url(url)
+            .post(requestBody)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                runOnUiThread {
+                    Toast.makeText(this@SavingGoals, "Login failed", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val responseBody = response.body?.string()
+                if (response.isSuccessful && responseBody != null) {
+                    val jsonResponse = JSONObject(responseBody)
+
+                    // Assuming the response contains a field called "userID"
+                    val userID = jsonResponse.getInt("userID")
+
+                    // Save the userID to SharedPreferences
+                    saveUserID(userID)
+
+                    runOnUiThread {
+                        Toast.makeText(this@SavingGoals, "Login successful", Toast.LENGTH_SHORT).show()
+                        // Redirect to the main activity or dashboard
+                    }
+                }
+            }
+        })
+    }
+
+    // Method to save userID to SharedPreferences
+    private fun saveUserID(userID: Int) {
+        val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putInt("userID", userID)
+        editor.apply()
     }
 }
 
@@ -255,7 +322,6 @@ class GoalAdapter(private val goals: List<Goal>) :
         }
 
         holder.tvGoalPercentage.setTextColor(percentageColor)
-
     }
 
     override fun getItemCount(): Int {

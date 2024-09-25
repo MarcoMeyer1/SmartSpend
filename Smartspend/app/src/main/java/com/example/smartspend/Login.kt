@@ -1,6 +1,7 @@
 package com.example.smartspend
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
@@ -85,7 +86,6 @@ class Login : AppCompatActivity() {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                // Handle error
                 runOnUiThread {
                     Toast.makeText(this@Login, "Network Error: ${e.message}", Toast.LENGTH_LONG)
                         .show()
@@ -96,13 +96,27 @@ class Login : AppCompatActivity() {
                 val responseBody = response.body?.string()
 
                 runOnUiThread {
-                    if (response.isSuccessful) {
-                        // Handle successful login
-                        Toast.makeText(this@Login, "Login successful", Toast.LENGTH_LONG).show()
-                        // Navigate to the next activity
-                        val intent = Intent(this@Login, MainActivity::class.java)
-                        startActivity(intent)
-                        finish()
+                    if (response.isSuccessful && responseBody != null) {
+                        try {
+                            // Parse the response as JSON
+                            val jsonResponse = JSONObject(responseBody)
+                            val userID = jsonResponse.getInt("userID")
+                            val message = jsonResponse.getString("message")
+
+                            // Save userID to SharedPreferences
+                            saveUserIDToPreferences(userID)
+
+                            // Handle successful login
+                            Toast.makeText(this@Login, message, Toast.LENGTH_LONG).show()
+
+                            // Navigate to the next activity
+                            val intent = Intent(this@Login, MainActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        } catch (e: Exception) {
+                            // Handle parsing error
+                            Toast.makeText(this@Login, "Error parsing response", Toast.LENGTH_LONG).show()
+                        }
                     } else {
                         // Handle failed login
                         val errorMessage = responseBody ?: "Login failed"
@@ -111,5 +125,13 @@ class Login : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    // Function to save userID to SharedPreferences
+    private fun saveUserIDToPreferences(userID: Int) {
+        val sharedPreferences: SharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putInt("userID", userID)
+        editor.apply()
     }
 }

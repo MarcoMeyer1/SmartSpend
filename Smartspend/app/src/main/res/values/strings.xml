@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">SmartSpend</string>
+
+    <string-array name="language_array">
+        <item>English</item>
+        <item>Spanish</item>
+        <item>French</item>
+    </string-array>
+
 </resources>

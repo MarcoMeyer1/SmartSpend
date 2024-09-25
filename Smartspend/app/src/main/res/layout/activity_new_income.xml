@@ -76,6 +76,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_amount"
         app:layout_constraintVertical_bias="0.051"
-        app:layout_constraintWidth_percent="0.5" />
+        app:layout_constraintWidth_percent="0.5"
+        app:strokeColor="#70FFB5"
+        app:strokeWidth="1dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

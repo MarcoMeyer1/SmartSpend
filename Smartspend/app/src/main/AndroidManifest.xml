@@ -13,6 +13,9 @@
         android:theme="@style/Theme.SmartSpend"
         tools:targetApi="31">
         <activity
+            android:name=".Settings"
+            android:exported="false" />
+        <activity
             android:name=".NewGoal"
             android:exported="false" />
         <activity

@@ -28,13 +28,13 @@
         android:layout_height="45dp"
         android:background="@drawable/custom_edittext_green_border"
         android:drawableTint="#7E7E7E"
-        android:hint="E-mail"
+        android:hint="Description"
         android:inputType="textEmailAddress"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF"
         android:gravity="center"
         tools:layout_editor_absoluteX="81dp"
-        tools:layout_editor_absoluteY="190dp" />
+        tools:layout_editor_absoluteY="190dp"/>
 
     <com.google.android.material.textfield.TextInputEditText
     android:id="@+id/date_due_button"

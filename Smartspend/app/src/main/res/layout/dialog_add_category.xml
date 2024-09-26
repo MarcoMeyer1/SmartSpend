@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -7,29 +8,97 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <!-- Category Name Input -->
     <EditText
         android:id="@+id/editTextCategoryName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Category Name"
         android:inputType="text"
+        android:minHeight="48dp"
         android:padding="8dp"
-        android:textColorHint="#FFFFFF" />
+        android:textColorHint="#FFFFFF"
+        android:textColor="#FFFFFF" />
 
+    <!-- Allocation and Manual Entry Section with Headings -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal">
+
+        <!-- Allocate Percentage Section -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!-- Allocate % Heading -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Allocate %"
+                android:textColor="#FFFFFF" />
+
+            <!-- Allocate % Input -->
+            <EditText
+                android:id="@+id/editTextAllocatePercentage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="5%"
+                android:inputType="number"
+                android:minHeight="48dp"
+                android:padding="8dp"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#FFFFFF" />
+        </LinearLayout>
+
+        <!-- Set Amount Manually Section -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="16dp">
+
+            <!-- Set Amount Heading -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Set Amount Manually"
+                android:textColor="#FFFFFF" />
+
+            <!-- Set Amount Input -->
+            <EditText
+                android:id="@+id/editTextSetAmountManually"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="R600"
+                android:inputType="numberDecimal"
+                android:minHeight="48dp"
+                android:padding="8dp"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#FFFFFF" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Selected Color Text -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="16dp"
         android:text="Selected Color:"
-        android:textColor="#FFFFFF"
-        android:textColorHighlight="#FFFFFF" />
+        android:textColor="#FFFFFF" />
 
+    <!-- Selected Color View -->
     <View
         android:id="@+id/viewSelectedColor"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="#FFFFFF" /> <!-- Default white background for selected color -->
+        android:background="#FFFFFF" />
 
+    <!-- Pick Color Button -->
     <Button
         android:id="@+id/buttonPickColor"
         android:layout_width="wrap_content"

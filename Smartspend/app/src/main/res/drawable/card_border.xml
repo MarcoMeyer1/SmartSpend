@@ -9,12 +9,12 @@
         </shape>
     </item>
 
-    <!-- Border -->
+
     <item>
         <shape android:shape="rectangle">
             <stroke
                 android:width="3dp"
-                android:color="#70FFB5" /> <!-- Border color -->
+                android:color="#70FFB5" />
             <corners android:radius="24dp" />
         </shape>
     </item>

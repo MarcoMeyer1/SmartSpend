@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#272727"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Category Name Input -->
+    <EditText
+        android:id="@+id/editTextCategoryName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Category Name"
+        android:inputType="text"
+        android:minHeight="48dp"
+        android:padding="8dp"
+        android:textColorHint="#FFFFFF"
+        android:textColor="#FFFFFF" />
+
+    <!-- Allocation and Manual Entry Section with Headings -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal">
+
+        <!-- Allocate Percentage Section -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!-- Allocate % Heading -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Allocate %"
+                android:textColor="#FFFFFF" />
+
+            <!-- Allocate % Input -->
+            <EditText
+                android:id="@+id/editTextAllocatePercentage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="5%"
+                android:inputType="number"
+                android:minHeight="48dp"
+                android:padding="8dp"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#FFFFFF" />
+        </LinearLayout>
+
+        <!-- Set Amount Manually Section -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="16dp">
+
+            <!-- Set Amount Heading -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Set Amount Manually"
+                android:textColor="#FFFFFF" />
+
+            <!-- Set Amount Input -->
+            <EditText
+                android:id="@+id/editTextSetAmountManually"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="R600"
+                android:inputType="numberDecimal"
+                android:minHeight="48dp"
+                android:padding="8dp"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#FFFFFF" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Selected Color Text -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:text="Selected Color:"
+        android:textColor="#FFFFFF" />
+
+    <!-- Selected Color View -->
+    <View
+        android:id="@+id/viewSelectedColor"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#FFFFFF" />
+
+    <!-- Pick Color Button -->
+    <Button
+        android:id="@+id/buttonPickColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#70FFB5"
+        android:text="Pick Colour"
+        android:textColor="#000000" />
+
+    <!-- Create Category Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCreateCategory"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="24dp"
+        android:alpha="0.75"
+        android:backgroundTint="#31453a"
+        android:text="Create Category"
+        android:textColor="#FFFFFF"
+        app:strokeColor="#70FFB5"
+        app:strokeWidth="1dp" />
+</LinearLayout>

@@ -15,6 +15,11 @@
         android:theme="@style/Theme.SmartSpend"
         tools:targetApi="31">
         <activity
+
+            android:name=".DetailedView"
+            android:exported="false" />
+        <activity
+
             android:name=".Profile"
             android:exported="false" />
         <activity
@@ -27,6 +32,7 @@
             android:name=".Notifications"
             android:exported="false" />
         <activity
+
             android:name=".SavingGoals"
             android:exported="false" /> <!-- Register Activity -->
         <activity

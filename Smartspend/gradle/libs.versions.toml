@@ -1,5 +1,7 @@
 [versions]
 agp = "8.3.1"
+anychartAndroid = "1.1.2"
+colorpicker = "0.0.15"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -9,9 +11,12 @@ appcompat = "1.7.0"
 material = "1.12.0"
 activity = "1.8.0"
 constraintlayout = "2.1.4"
+mpandroidchart = "3.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+anychart-android = { module = "com.anychart:anychart-android", version.ref = "anychartAndroid" }
+colorpicker = "com.github.QuadFlask:ColorPicker:0.0.15"
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -19,6 +24,8 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+mpandroidchart-v310 = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchart" }
+
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

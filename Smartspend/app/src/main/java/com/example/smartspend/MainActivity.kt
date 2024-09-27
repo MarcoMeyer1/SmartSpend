@@ -56,14 +56,14 @@ class MainActivity : BaseActivity() {
 
     // Method for Reminders button
     private fun openReminders() {//TODO
-      //  val intent = Intent(this, RemindersActivity::class.java)
-      //  startActivity(intent)
+        val intent = Intent(this, Reminders::class.java)
+        startActivity(intent)
     }
 
     // Method for Settings button
     private fun openSettings() {//TODO
-      //  val intent = Intent(this, SettingsActivity::class.java)
-      //  startActivity(intent)
+        val intent = Intent(this, Settings::class.java)
+        startActivity(intent)
 
     }
 }

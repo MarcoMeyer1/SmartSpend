@@ -13,7 +13,7 @@
         android:layout_height="40dp"
         android:layout_gravity="center"
         android:layout_marginEnd="10dp"
-        android:src="@drawable/ic_notification_placeholder" />
+        android:src="@drawable/baseline_add_24" />
 
     <RelativeLayout
         android:layout_width="0dp"

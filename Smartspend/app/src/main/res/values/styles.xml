@@ -1,0 +1,8 @@
+<resources>
+    <style name="CustomDialog" parent="Theme.AppCompat.Dialog">
+        <!-- Removes the default dialog background -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- Removes any default padding -->
+        <item name="android:padding">0dp</item>
+    </style>
+</resources>

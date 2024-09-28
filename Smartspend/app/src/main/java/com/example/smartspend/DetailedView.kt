@@ -62,15 +62,21 @@ class DetailedView : AppCompatActivity() {
         val buttonPickColor: Button = dialogView.findViewById(R.id.buttonPickColor)
         val btnCreateCategory: MaterialButton = dialogView.findViewById(R.id.btnCreateCategory)
 
-        // Set up the dialog
-        val builder = AlertDialog.Builder(this)
+        // Set up the dialog with a custom style
+        val builder = AlertDialog.Builder(this, R.style.CustomDialog)
         builder.setTitle("Add New Category")
             .setView(dialogView)
             .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
 
         // Create the dialog
         val dialog = builder.create()
+
+        // Show the dialog and adjust its width
         dialog.show()
+        dialog.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
 
         // Color Picker Logic
         buttonPickColor.setOnClickListener {
@@ -113,6 +119,7 @@ class DetailedView : AppCompatActivity() {
             dialog.dismiss() // Close the dialog after adding
         }
     }
+
 
     // Function to add the new category to the list
     private fun addCategory(category: Category) {

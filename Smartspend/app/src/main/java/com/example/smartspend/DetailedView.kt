@@ -4,47 +4,60 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.flask.colorpicker.ColorPickerView
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-
-
-
 class DetailedView : AppCompatActivity() {
+
     private var selectedColorHex: String = "#FFFFFF" // Default color
+    private val categories = mutableListOf<Category>()
+    private lateinit var categoryAdapter: CategoryAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
 
-        // Reference to the container where cards will be added
-        val categoriesContainer = findViewById<LinearLayout>(R.id.categoriesContainer)
+        // Change to the correct layout file
+        setContentView(R.layout.activity_detailed_view)
+
+        // Set up the RecyclerView
+        val recyclerView = findViewById<RecyclerView>(R.id.categoriesRecyclerView)
+
+        // Check if the RecyclerView is correctly referenced and exists in the layout
+        if (recyclerView == null) {
+            Toast.makeText(this, "RecyclerView not found in layout", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        categoryAdapter = CategoryAdapter(categories)
+        recyclerView.adapter = categoryAdapter
 
         // Initialize the Floating Action Button
-        val fabAddGoal: FloatingActionButton = findViewById(R.id.fabAddGoal)
-        fabAddGoal.setOnClickListener {
-            showAddCategoryDialog(categoriesContainer)
+        val fabAddGoal: FloatingActionButton = findViewById(R.id.fabAddCategory)
+        fabAddGoal?.setOnClickListener {
+            showAddCategoryDialog()
         }
     }
 
-    private fun showAddCategoryDialog(container: LinearLayout) {
+    private fun showAddCategoryDialog() {
         // Inflate the dialog layout
         val dialogView = layoutInflater.inflate(R.layout.dialog_add_category, null)
         val editTextCategoryName: EditText = dialogView.findViewById(R.id.editTextCategoryName)
+        val editTextAllocatePercentage: EditText = dialogView.findViewById(R.id.editTextAllocatePercentage)
+        val editTextSetAmountManually: EditText = dialogView.findViewById(R.id.editTextSetAmountManually)
         val viewSelectedColor: View = dialogView.findViewById(R.id.viewSelectedColor)
         val buttonPickColor: Button = dialogView.findViewById(R.id.buttonPickColor)
         val btnCreateCategory: MaterialButton = dialogView.findViewById(R.id.btnCreateCategory)
@@ -77,38 +90,64 @@ class DetailedView : AppCompatActivity() {
 
         // Create Category Button Logic
         btnCreateCategory.setOnClickListener {
-            val categoryName = editTextCategoryName.text.toString()
-            if (categoryName.isNotEmpty()) {
-                addCategoryCard(container, categoryName, "R0", selectedColorHex) // Assuming amount is "R0" for now
-                dialog.dismiss() // Close the dialog after adding
-            } else {
+            val categoryName = editTextCategoryName.text.toString().trim()
+            val allocatePercentage = editTextAllocatePercentage.text.toString().trim()
+            val setAmountManually = editTextSetAmountManually.text.toString().trim()
+
+            if (categoryName.isEmpty()) {
                 Toast.makeText(this, "Please enter a category name", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
+
+            if (allocatePercentage.isEmpty() && setAmountManually.isEmpty()) {
+                Toast.makeText(this, "Please enter either allocation percentage or amount", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Add the new category (for now using amount as either percentage or manually set)
+            val amount = if (setAmountManually.isNotEmpty()) "R$setAmountManually" else "$allocatePercentage%"
+
+            addCategory(Category(categoryName, amount))
+            categoryAdapter.notifyDataSetChanged()
+
+            dialog.dismiss() // Close the dialog after adding
         }
     }
 
-    // Function to add a category card dynamically
-    private fun addCategoryCard(container: LinearLayout, categoryName: String, categoryAmount: String, categoryColor: String) {
-        // Inflate the card_category.xml layout
-        val inflater = LayoutInflater.from(this)
-        val cardView = inflater.inflate(R.layout.card_category, container, false) as CardView
+    // Function to add the new category to the list
+    private fun addCategory(category: Category) {
+        categories.add(category)
+    }
 
-        // Get the TextViews from the card and set their values
-        val categoryText = cardView.findViewById<TextView>(R.id.categoryName)
-        val amountText = cardView.findViewById<TextView>(R.id.categoryAmount)
+    // Category data class to represent category items
+    data class Category(
+        val name: String,
+        val amount: String
+    )
 
-        categoryText.text = categoryName
-        amountText.text = categoryAmount
+    // Adapter to handle displaying categories in the RecyclerView
+    class CategoryAdapter(private val categories: List<Category>) :
+        RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
-        // Set the color of the category name dynamically based on the user-selected color
-        try {
-            categoryText.setTextColor(Color.parseColor(categoryColor)) // Apply the color to category name
-        } catch (e: IllegalArgumentException) {
-            // Fallback if color parsing fails (e.g., invalid color string)
-            categoryText.setTextColor(Color.WHITE)
+        inner class CategoryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+            val categoryName: TextView = view.findViewById(R.id.categoryName)
+            val categoryAmount: TextView = view.findViewById(R.id.categoryAmount)
         }
 
-        // Add the card to the container (LinearLayout)
-        container.addView(cardView)
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
+            val view = LayoutInflater.from(parent.context)
+                .inflate(R.layout.card_category, parent, false)
+            return CategoryViewHolder(view)
+        }
+
+        override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
+            val category = categories[position]
+            holder.categoryName.text = category.name
+            holder.categoryAmount.text = category.amount
+        }
+
+        override fun getItemCount(): Int {
+            return categories.size
+        }
     }
 }

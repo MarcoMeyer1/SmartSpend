@@ -1,6 +1,6 @@
 package com.example.smartspend
 
-import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
@@ -218,18 +218,36 @@ class DetailedView : AppCompatActivity() {
     )
 
     // Adapter to handle displaying categories in the RecyclerView
+    // Adapter to handle displaying categories in the RecyclerView
     class CategoryAdapter(private val categories: List<Category>) :
         RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
-        // Inside the CategoryViewHolder inner class
         inner class CategoryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val categoryName: TextView = view.findViewById(R.id.categoryName)
             val categoryAmount: TextView = view.findViewById(R.id.categoryAmount)
             val categoryContainer: View = view  // Use the entire item view as the container
+
+            init {
+                // Set click listener on the itemView
+                view.setOnClickListener {
+                    val position = adapterPosition
+                    if (position != RecyclerView.NO_POSITION) {
+                        val category = categories[position]
+                        // Start CategoryClicked activity
+                        val intent = Intent(view.context, CategoryClicked::class.java)
+                        intent.putExtra("categoryName", category.name)
+                        intent.putExtra("colorCode", category.colorCode)
+                        intent.putExtra("categoryID", category.categoryID) // Pass categoryID
+                        // Pass other necessary data if needed
+                        view.context.startActivity(intent)
+                    }
+                }
+            }
         }
 
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
             val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.card_category, parent, false)
             return CategoryViewHolder(view)
@@ -242,9 +260,11 @@ class DetailedView : AppCompatActivity() {
 
             try {
                 val color = Color.parseColor(category.colorCode)
-                holder.categoryContainer.setBackgroundColor(color)
+                // Set the text color of the category name to the saved color
+                holder.categoryName.setTextColor(color)
             } catch (e: Exception) {
                 // Handle invalid color code
+                holder.categoryName.setTextColor(Color.WHITE) // Set to default color
             }
         }
 

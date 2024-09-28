@@ -9,7 +9,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,7 +26,6 @@ class DetailedView : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
 
         // Change to the correct layout file
         setContentView(R.layout.activity_detailed_view)
@@ -35,19 +33,13 @@ class DetailedView : AppCompatActivity() {
         // Set up the RecyclerView
         val recyclerView = findViewById<RecyclerView>(R.id.categoriesRecyclerView)
 
-        // Check if the RecyclerView is correctly referenced and exists in the layout
-        if (recyclerView == null) {
-            Toast.makeText(this, "RecyclerView not found in layout", Toast.LENGTH_LONG).show()
-            return
-        }
-
         recyclerView.layoutManager = LinearLayoutManager(this)
         categoryAdapter = CategoryAdapter(categories)
         recyclerView.adapter = categoryAdapter
 
         // Initialize the Floating Action Button
-        val fabAddGoal: FloatingActionButton = findViewById(R.id.fabAddCategory)
-        fabAddGoal?.setOnClickListener {
+        val fabAddCategory: FloatingActionButton = findViewById(R.id.fabAddCategory)
+        fabAddCategory.setOnClickListener {
             showAddCategoryDialog()
         }
     }
@@ -56,7 +48,6 @@ class DetailedView : AppCompatActivity() {
         // Inflate the dialog layout
         val dialogView = layoutInflater.inflate(R.layout.dialog_add_category, null)
         val editTextCategoryName: EditText = dialogView.findViewById(R.id.editTextCategoryName)
-        val editTextAllocatePercentage: EditText = dialogView.findViewById(R.id.editTextAllocatePercentage)
         val editTextSetAmountManually: EditText = dialogView.findViewById(R.id.editTextSetAmountManually)
         val viewSelectedColor: View = dialogView.findViewById(R.id.viewSelectedColor)
         val buttonPickColor: Button = dialogView.findViewById(R.id.buttonPickColor)
@@ -97,7 +88,6 @@ class DetailedView : AppCompatActivity() {
         // Create Category Button Logic
         btnCreateCategory.setOnClickListener {
             val categoryName = editTextCategoryName.text.toString().trim()
-            val allocatePercentage = editTextAllocatePercentage.text.toString().trim()
             val setAmountManually = editTextSetAmountManually.text.toString().trim()
 
             if (categoryName.isEmpty()) {
@@ -105,13 +95,13 @@ class DetailedView : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            if (allocatePercentage.isEmpty() && setAmountManually.isEmpty()) {
-                Toast.makeText(this, "Please enter either allocation percentage or amount", Toast.LENGTH_SHORT).show()
+            if (setAmountManually.isEmpty()) {
+                Toast.makeText(this, "Please enter an amount", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // Add the new category (for now using amount as either percentage or manually set)
-            val amount = if (setAmountManually.isNotEmpty()) "R$setAmountManually" else "$allocatePercentage%"
+            // Add the new category using the manually entered amount
+            val amount = "R$setAmountManually"
 
             addCategory(Category(categoryName, amount))
             categoryAdapter.notifyDataSetChanged()
@@ -119,7 +109,6 @@ class DetailedView : AppCompatActivity() {
             dialog.dismiss() // Close the dialog after adding
         }
     }
-
 
     // Function to add the new category to the list
     private fun addCategory(category: Category) {

@@ -12,8 +12,6 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 
-class NotificationsActivity : AppCompatActivity() {
-
 
 class Notifications : BaseActivity() {
 
@@ -54,7 +52,7 @@ class Notifications : BaseActivity() {
                 override fun onFailure(call: Call, e: IOException) {
                     runOnUiThread {
                         Toast.makeText(
-                            this@NotificationsActivity,
+                            this@Notifications,
                             "Error fetching notifications: ${e.message}",
                             Toast.LENGTH_LONG
                         ).show()
@@ -89,7 +87,7 @@ class Notifications : BaseActivity() {
                     } else {
                         runOnUiThread {
                             Toast.makeText(
-                                this@NotificationsActivity,
+                                this@Notifications,
                                 "Error fetching notifications: ${response.message}",
                                 Toast.LENGTH_LONG
                             ).show()

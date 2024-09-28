@@ -18,7 +18,7 @@ import com.flask.colorpicker.builder.ColorPickerDialogBuilder
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class DetailedView : AppCompatActivity() {
+class DetailedView : BaseActivity() {
 
     private var selectedColorHex: String = "#FFFFFF" // Default color
     private val categories = mutableListOf<Category>()
@@ -26,6 +26,7 @@ class DetailedView : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
 
         // Change to the correct layout file
         setContentView(R.layout.activity_detailed_view)

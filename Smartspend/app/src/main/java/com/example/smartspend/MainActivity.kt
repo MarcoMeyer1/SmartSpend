@@ -42,10 +42,11 @@ class MainActivity : BaseActivity() {
     }
 
     // Method for Detailed View button
-    private fun openDetailedView() {
-        // Uncomment when DetailedViewActivity is ready
-        // val intent = Intent(this, DetailedViewActivity::class.java)
-        // startActivity(intent)
+
+    private fun openDetailedView() {//TODO
+        val intent = Intent(this, DetailedView::class.java)
+        startActivity(intent)
+
     }
 
     // Method for Saving Goals button

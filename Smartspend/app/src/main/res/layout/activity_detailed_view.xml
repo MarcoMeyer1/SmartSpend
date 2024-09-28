@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#2E2E2E"
+    android:id="@+id/main"
     android:padding="16dp">
 
     <!-- Graph/Bar Chart -->
@@ -44,57 +45,22 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- Categories List Container -->
-    <LinearLayout
-        android:id="@+id/categoriesContainer"
+    <!-- Categories List with RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/categoriesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="16dp">
-
-        <!-- Sample Category Card -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/card_border"
-            android:padding="12dp">
-
-            <!-- Category Name -->
-            <TextView
-                android:id="@+id/categoryName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Groceries"
-                android:textColor="#00FFFF"
-                android:textSize="16sp" />
-
-            <!-- Category Amount -->
-            <TextView
-                android:id="@+id/categoryAmount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="R842"
-                android:textColor="#00FFFF"
-                android:textSize="16sp" />
-        </LinearLayout>
-
-        <!-- Additional categories will follow the same format as above -->
-        <!-- You can add more dynamically in your activity/fragment -->
-
-    </LinearLayout>
+        android:layout_marginTop="16dp"/>
 
     <!-- Floating Action Button to add more categories -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAddGoal"
+        android:id="@+id/fabAddCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
         android:backgroundTint="#70FFB5"
-        android:contentDescription="AddGoal"
+        android:contentDescription="AddCategory"
         android:elevation="8dp"
         android:src="@drawable/baseline_add_24"
         app:tint="#212226" />

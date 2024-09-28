@@ -12,16 +12,20 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import android.widget.EditText
+import android.widget.Spinner
+import android.widget.ArrayAdapter
 
 abstract class BaseActivity : AppCompatActivity() {
 
     private val client = OkHttpClient()
+    private var categoryList: List<Category> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -112,7 +116,7 @@ abstract class BaseActivity : AppCompatActivity() {
         }
 
         expenseButton.setOnClickListener {
-            showExpenseDialog()
+            fetchCategoriesAndShowExpenseDialog()
             dialog.dismiss()
         }
     }
@@ -202,6 +206,54 @@ abstract class BaseActivity : AppCompatActivity() {
         })
     }
 
+    private fun fetchCategoriesAndShowExpenseDialog() {
+        val sharedPreferences: SharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        val userID = sharedPreferences.getInt("userID", -1)
+        if (userID == -1) {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val url = "https://smartspendapi.azurewebsites.net/api/Category/user/$userID"
+        val request = Request.Builder().url(url).get().build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                runOnUiThread {
+                    Toast.makeText(this@BaseActivity, "Failed to load categories: ${e.message}", Toast.LENGTH_LONG).show()
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val responseBody = response.body?.string()
+                if (response.isSuccessful && responseBody != null) {
+                    val categoriesJsonArray = JSONArray(responseBody)
+                    categoryList = mutableListOf()
+
+                    for (i in 0 until categoriesJsonArray.length()) {
+                        val categoryJson = categoriesJsonArray.getJSONObject(i)
+                        val category = Category(
+                            categoryID = categoryJson.getInt("categoryID"),
+                            categoryName = categoryJson.getString("categoryName"),
+                            colorCode = categoryJson.getString("colorCode"),
+                            userID = categoryJson.getInt("userID"),
+                            maxBudget = categoryJson.getDouble("maxBudget")
+                        )
+                        (categoryList as MutableList<Category>).add(category)
+                    }
+
+                    runOnUiThread {
+                        showExpenseDialog()
+                    }
+                } else {
+                    runOnUiThread {
+                        Toast.makeText(this@BaseActivity, "Failed to load categories", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        })
+    }
+
     private fun showExpenseDialog() {
         val expenseDialogView = layoutInflater.inflate(R.layout.dialog_add_expense, null)
         val builder = AlertDialog.Builder(this)
@@ -210,14 +262,20 @@ abstract class BaseActivity : AppCompatActivity() {
         dialog.show()
 
         val etExpenseName: EditText = expenseDialogView.findViewById(R.id.expenseName)
-        val etCategory: EditText = expenseDialogView.findViewById(R.id.category)
+        val spinnerCategory: Spinner = expenseDialogView.findViewById(R.id.spinner_category)
         val etAmount: EditText = expenseDialogView.findViewById(R.id.amount)
         val confirmButton: Button = expenseDialogView.findViewById(R.id.confirmButton)
+
+        // Populate Spinner with categories
+        val categoryNames = categoryList.map { it.categoryName }
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categoryNames)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerCategory.adapter = adapter
 
         confirmButton.setOnClickListener {
             val amountStr = etAmount.text.toString().trim()
             val expenseName = etExpenseName.text.toString().trim()
-            val category = etCategory.text.toString().trim()
+            val selectedCategoryPosition = spinnerCategory.selectedItemPosition
 
             if (amountStr.isEmpty()) {
                 etAmount.error = "Amount is required"
@@ -229,9 +287,8 @@ abstract class BaseActivity : AppCompatActivity() {
                 etExpenseName.requestFocus()
                 return@setOnClickListener
             }
-            if (category.isEmpty()) {
-                etCategory.error = "Category is required"
-                etCategory.requestFocus()
+            if (selectedCategoryPosition == Spinner.INVALID_POSITION) {
+                Toast.makeText(this, "Please select a category", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -242,12 +299,7 @@ abstract class BaseActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val categoryID = getCategoryIDFromName(category)
-            if (categoryID == -1) {
-                etCategory.error = "Invalid category"
-                etCategory.requestFocus()
-                return@setOnClickListener
-            }
+            val categoryID = categoryList[selectedCategoryPosition].categoryID
 
             val sharedPreferences: SharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
             val userID = sharedPreferences.getInt("userID", -1)
@@ -271,11 +323,6 @@ abstract class BaseActivity : AppCompatActivity() {
             sendExpenseDataToServer(expenseJson)
             dialog.dismiss()
         }
-    }
-
-    private fun getCategoryIDFromName(categoryName: String): Int {
-        // TODO: Replace with actual logic to get category ID
-        return 1
     }
 
     private fun sendExpenseDataToServer(expenseJson: JSONObject) {
@@ -305,4 +352,13 @@ abstract class BaseActivity : AppCompatActivity() {
             }
         })
     }
+
+    // Define the Category data class
+    data class Category(
+        val categoryID: Int,
+        val categoryName: String,
+        val colorCode: String,
+        val userID: Int,
+        val maxBudget: Double
+    )
 }

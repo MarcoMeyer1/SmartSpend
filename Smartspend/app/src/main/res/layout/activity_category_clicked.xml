@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:id="@+id/main"
+    android:background="#1b1b1b">
+
+    <!-- Title and Edit Icon -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tv_category_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Groceries"
+            android:textSize="38sp"
+            android:textStyle="bold"
+            android:textColor="#92D1E1" />
+
+        <ImageView
+            android:id="@+id/iv_edit_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add"
+            android:contentDescription="Edit category" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_available_budget_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Available Budget"
+        android:textColor="#808080"
+        android:textSize="14dp"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/tv_available_budget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="R445/R600"
+        android:textSize="24sp"
+        android:textColor="#70FFB5"
+        android:layout_marginTop="8dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:background="#333333" />
+
+    <TextView
+        android:id="@+id/tv_set_monthly_limit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14dp"
+        android:text="Set Monthly Limit"
+        android:textColor="#808080"
+        android:layout_marginTop="16dp" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:background="#333333" />
+
+
+    <!-- Set Amount Manually TextView and EditText -->
+    <TextView
+        android:id="@+id/tv_set_amount_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set Amount Manually"
+        android:textColor="#808080"
+        android:layout_marginTop="16dp" />
+
+    <EditText
+        android:id="@+id/et_set_amount_manually"
+        android:layout_width="169dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/custom_edittext_green_border"
+        android:gravity="center"
+        android:hint="R600"
+        android:inputType="number" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:background="#333333" />
+
+    <TextView
+        android:id="@+id/tv_history_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="History"
+        android:textColor="#808080"
+        android:layout_marginTop="16dp" />
+
+    <!-- RecyclerView for Transaction History -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_history"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="8dp" />
+
+    <!-- Floating Action Button for Adding a Transaction -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add_transaction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_add"
+        android:contentDescription="Add Transaction" />
+
+</LinearLayout>

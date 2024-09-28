@@ -3,8 +3,6 @@ package com.example.smartspend
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import androidx.appcompat.app.AppCompatActivity
-
 
 class MainActivity : BaseActivity() {
 
@@ -18,6 +16,7 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setActiveNavButton(R.id.home_nav)
+
         // Initialize buttons
         detailedViewButton = findViewById(R.id.buttonDetailedView)
         savingGoalsButton = findViewById(R.id.buttonSavingGoals)
@@ -43,9 +42,10 @@ class MainActivity : BaseActivity() {
     }
 
     // Method for Detailed View button
-    private fun openDetailedView() {//TODO
-      //  val intent = Intent(this, DetailedViewActivity::class.java)
-      //  startActivity(intent)
+    private fun openDetailedView() {
+        // Uncomment when DetailedViewActivity is ready
+        // val intent = Intent(this, DetailedViewActivity::class.java)
+        // startActivity(intent)
     }
 
     // Method for Saving Goals button
@@ -55,15 +55,14 @@ class MainActivity : BaseActivity() {
     }
 
     // Method for Reminders button
-    private fun openReminders() {//TODO
+    private fun openReminders() {
         val intent = Intent(this, Reminders::class.java)
         startActivity(intent)
     }
 
     // Method for Settings button
-    private fun openSettings() {//TODO
+    private fun openSettings() {
         val intent = Intent(this, Settings::class.java)
         startActivity(intent)
-
     }
 }

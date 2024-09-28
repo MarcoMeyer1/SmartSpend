@@ -10,7 +10,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.RecyclerView
 
-class Notifications : AppCompatActivity() {
+class Notifications : BaseActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var noNotificationsMessage: TextView
     private lateinit var notificationAdapter: NotificationAdapter
@@ -19,7 +19,7 @@ class Notifications : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notifications)
-
+        setActiveNavButton(R.id.notifications_nav)
         recyclerView = findViewById(R.id.notificationsRecyclerView)
         noNotificationsMessage = findViewById(R.id.noNotificationsMessage)
 

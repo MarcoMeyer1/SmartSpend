@@ -1,5 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/navbar_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -8,22 +10,23 @@
     android:layout_gravity="bottom"
     android:padding="1dp">
 
+    <!-- Home Navigation -->
     <LinearLayout
+        android:id="@+id/home_nav_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
         android:gravity="center"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:clickable="true"
+        android:focusable="true">
 
         <FrameLayout
-            android:id="@+id/home_nav_container"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@drawable/circle_background"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true">
+            android:gravity="center">
 
             <ImageView
                 android:id="@+id/home_nav"
@@ -44,22 +47,23 @@
             android:gravity="center" />
     </LinearLayout>
 
+    <!-- Notifications Navigation -->
     <LinearLayout
+        android:id="@+id/notifications_nav_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
         android:gravity="center"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:clickable="true"
+        android:focusable="true">
 
         <FrameLayout
-            android:id="@+id/notifications_nav_container"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@drawable/circle_background"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true">
+            android:gravity="center">
 
             <ImageView
                 android:id="@+id/notifications_nav"
@@ -80,22 +84,23 @@
             android:gravity="center" />
     </LinearLayout>
 
+    <!-- Add Record Navigation -->
     <LinearLayout
+        android:id="@+id/add_record_nav_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
         android:gravity="center"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:clickable="true"
+        android:focusable="true">
 
         <FrameLayout
-            android:id="@+id/add_record_nav_container"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@drawable/circle_background"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true">
+            android:gravity="center">
 
             <ImageView
                 android:id="@+id/add_record_nav"
@@ -116,22 +121,23 @@
             android:gravity="center" />
     </LinearLayout>
 
+    <!-- History Navigation -->
     <LinearLayout
+        android:id="@+id/history_nav_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
         android:gravity="center"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:clickable="true"
+        android:focusable="true">
 
         <FrameLayout
-            android:id="@+id/history_nav_container"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@drawable/circle_background"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true">
+            android:gravity="center">
 
             <ImageView
                 android:id="@+id/history_nav"
@@ -152,22 +158,23 @@
             android:gravity="center" />
     </LinearLayout>
 
+    <!-- Settings Navigation -->
     <LinearLayout
+        android:id="@+id/settings_nav_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
         android:gravity="center"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:clickable="true"
+        android:focusable="true">
 
         <FrameLayout
-            android:id="@+id/settings_nav_container"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@drawable/circle_background"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true">
+            android:gravity="center">
 
             <ImageView
                 android:id="@+id/settings_nav"

@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="#1b1b1b">
 
+    <!-- Main Content -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -33,13 +34,18 @@
             android:textStyle="bold"
             android:layout_marginTop="16dp" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_upcoming_reminders"
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:layout_marginTop="8dp"
-            android:scrollbars="vertical" />
+            android:layout_marginTop="8dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_upcoming_reminders"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical" />
+        </ScrollView>
 
         <TextView
             android:id="@+id/tv_completed"
@@ -51,23 +57,38 @@
             android:textStyle="bold"
             android:layout_marginTop="16dp" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_completed_reminders"
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:layout_marginTop="8dp"
-            android:scrollbars="vertical" />
+            android:layout_marginTop="8dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_completed_reminders"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical" />
+        </ScrollView>
     </LinearLayout>
+
+    <!-- Navbar at the bottom -->
+    <include
+        android:id="@+id/bottom_nav"
+        layout="@layout/activity_base"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
 
     <!-- Floating Action Button (FAB) -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_reminder"
         android:layout_width="wrap_content"
+        android:contentDescription="add_reminder"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:src="@drawable/plus"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="76dp"
+    android:src="@drawable/plus"
     app:backgroundTint="#70FFB5"
     app:tint="#000000" />
 

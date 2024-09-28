@@ -6,15 +6,15 @@
     android:id="@+id/main"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
+    android:padding="8dp"
     android:background="#1b1b1b"
     android:gravity="center_horizontal">
 
     <!-- Logo Image -->
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="148dp"
-        android:layout_height="106dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_gravity="center"
         app:srcCompat="@drawable/smartspend_logo" />
 
@@ -23,54 +23,38 @@
         android:id="@+id/appTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:fontFamily="sans-serif-condensed"
         android:gravity="center"
         android:text="smartspend"
         android:textColor="#FFFFFF"
-        android:textSize="40sp" />
+        android:textSize="32sp" />
 
     <!-- Continue with Google Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnGoogleSignIn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:backgroundTint="#1b1b1b"
         android:gravity="center"
         app:iconGravity="textStart"
-        app:iconPadding="10dp"
+        app:iconPadding="8dp"
         android:text="Continue with Google"
         android:textColor="#FFFFFF"
         app:icon="@drawable/google_icon"
-        app:iconSize="32dp"
+        app:iconSize="28dp"
         app:strokeColor="#70FFB5"
         app:strokeWidth="1dp" />
 
     <!-- Continue with SSO Button -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnSSOSignIn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:backgroundTint="#1b1b1b"
-        android:text="Continue with SSO"
-        android:textColor="#FFFFFF"
-        app:iconPadding="15dp"
-        app:icon="@drawable/fingerprint_icon"
-        app:iconSize="32dp"
-    app:iconGravity="textStart"
-    android:iconTint="#70FFB5"
-    app:strokeColor="#70FFB5"
-    app:strokeWidth="1dp"
-    android:gravity="center" />
 
     <!-- Horizontal Divider with "or" -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:gravity="center_vertical">
 
         <!-- Left Divider -->
@@ -88,7 +72,7 @@
             android:layout_height="wrap_content"
             android:text="or"
             android:textColor="#FFFFFF"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp" />
 
@@ -108,7 +92,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         app:boxStrokeColor="#70FFB5"
-        app:boxStrokeWidth="2dp"
+        app:boxStrokeWidth="1dp"
         app:boxBackgroundMode="outline">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -129,7 +113,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         app:boxStrokeColor="#70FFB5"
-        app:boxStrokeWidth="2dp"
+        app:boxStrokeWidth="1dp"
         app:boxBackgroundMode="outline">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -143,39 +127,60 @@
             android:textColorHint="#70FFB5" />
     </com.google.android.material.textfield.TextInputLayout>
 
+
+
     <!-- Sign In Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSignIn"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginTop="24dp"
-        android:backgroundTint="#31453a"
-        android:text="Sign In"
-        android:textColor="#FFFFFF"
-        android:alpha="0.75"
-        app:strokeColor="#70FFB5"
-        app:strokeWidth="1dp" />
+        android:layout_height="48dp"
+        android:layout_marginTop="30dp"
+    android:backgroundTint="#31453a"
+    android:text="Sign In"
+    android:textColor="#FFFFFF"
+    android:alpha="0.75"
+    app:strokeColor="#70FFB5"
+    app:strokeWidth="1dp" />
 
     <!-- Create Account Text -->
     <TextView
         android:id="@+id/createAccountText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
         android:text="Don't have an account? Create an account"
         android:textColor="#70FFB5"
-        android:textSize="14sp"
-        android:layout_marginTop="12dp"
-        android:gravity="center" />
+        android:textSize="15sp" />
 
     <!-- Forgot Password Text -->
     <TextView
         android:id="@+id/forgotPasswordText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
         android:text="Forgot password?"
         android:textColor="#FFFFFF"
-        android:textSize="12sp"
-        android:layout_marginTop="8dp"
-        android:gravity="center" />
+        android:textSize="13sp" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="131dp"
+        android:layout_height="62dp"
+        android:layout_marginTop="25dp"
+        android:backgroundTint="#70FFB5"
+        android:clickable="false"
+        app:srcCompat="@drawable/fingerprint_icon"
+        app:tint="#6370FFB5" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="131dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Biometric Login"
+        android:textAlignment="center"
+        android:textColor="#7FFFFFFF" />
 
 </LinearLayout>

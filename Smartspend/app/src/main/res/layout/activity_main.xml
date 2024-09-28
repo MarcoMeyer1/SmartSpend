@@ -134,7 +134,7 @@
             android:layout_margin="8dp"
             android:background="@drawable/button_background"
             android:padding="12dp"
-            android:text="Settings"
+            android:text="History"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
             android:textSize="16sp" />

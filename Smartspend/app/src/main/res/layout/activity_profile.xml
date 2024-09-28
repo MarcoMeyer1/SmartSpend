@@ -7,33 +7,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#1b1b1b"
-    tools:context=".ProfileActivity">
-
-    <!-- Back Button -->
-    <ImageButton
-        android:id="@+id/back_button"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="@null"
-        android:src="@drawable/ic_add"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="16dp" />
+    tools:context=".Profile">
 
     <!-- Profile Title -->
     <TextView
         android:id="@+id/profile_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="28dp"
         android:gravity="center"
         android:text="Profile"
         android:textColor="#FFFFFF"
         android:textSize="32sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -43,144 +30,148 @@
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:background="@drawable/ic_add"
-    app:layout_constraintTop_toBottomOf="@id/profile_title"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    android:layout_marginTop="32dp">
+        app:layout_constraintTop_toBottomOf="@id/profile_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp">
 
-    <ImageView
-        android:id="@+id/profile_icon"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/ic_add"
-        android:layout_gravity="center" />
-</FrameLayout>
+        <ImageView
+            android:id="@+id/profile_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_add"
+            android:layout_gravity="center" />
+    </FrameLayout>
 
     <!-- First Name Section -->
-<TextView
-android:id="@+id/first_name_label"
-android:layout_width="wrap_content"
-android:layout_height="wrap_content"
-android:text="First Name"
-android:textColor="#808080"
-android:textSize="20sp"
-android:textStyle="bold"
-app:layout_constraintTop_toBottomOf="@id/profile_image_frame"
-app:layout_constraintStart_toStartOf="parent"
-android:layout_marginTop="24dp"
-android:layout_marginStart="16dp" />
+    <TextView
+        android:id="@+id/first_name_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="First Name"
+        android:textColor="#808080"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/profile_image_frame"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="16dp" />
 
     <!-- Divider Line -->
-<View
-android:layout_width="0dp"
-android:layout_height="1dp"
-android:layout_marginStart="16dp"
-android:layout_marginTop="24dp"
-android:layout_marginEnd="16dp"
-android:background="#808080"
-app:layout_constraintEnd_toEndOf="parent"
-app:layout_constraintHorizontal_bias="0.0"
-app:layout_constraintStart_toStartOf="parent"
-app:layout_constraintTop_toBottomOf="@id/first_name_label" />
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:background="#808080"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/first_name_label" />
 
     <!-- Surname Section -->
-<TextView
-android:id="@+id/surname_label"
-android:layout_width="wrap_content"
-android:layout_height="wrap_content"
-android:layout_marginStart="16dp"
-android:layout_marginTop="56dp"
-android:text="Surname"
-android:textColor="#808080"
-android:textSize="20sp"
-android:textStyle="bold"
-app:layout_constraintStart_toStartOf="parent"
-app:layout_constraintTop_toBottomOf="@id/first_name_label" />
+    <TextView
+        android:id="@+id/surname_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="56dp"
+        android:text="Surname"
+        android:textColor="#808080"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/first_name_label" />
 
     <!-- Divider Line for Surname -->
-<View
-android:layout_width="0dp"
-android:layout_height="2dp"
-android:layout_marginStart="16dp"
-android:layout_marginTop="24dp"
-android:layout_marginEnd="16dp"
-android:background="#808080"
-app:layout_constraintEnd_toEndOf="parent"
-app:layout_constraintHorizontal_bias="0.0"
-app:layout_constraintStart_toStartOf="parent"
-app:layout_constraintTop_toBottomOf="@id/surname_label" />
+    <View
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:background="#808080"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/surname_label" />
 
     <!-- Email Section -->
-<TextView
-android:id="@+id/email_label"
-android:layout_width="wrap_content"
-android:layout_height="wrap_content"
-android:layout_marginStart="16dp"
-android:layout_marginTop="56dp"
-android:text="Email"
-android:textColor="#808080"
-android:textSize="20sp"
-android:textStyle="bold"
-app:layout_constraintStart_toStartOf="parent"
-app:layout_constraintTop_toBottomOf="@id/surname_label" />
+    <TextView
+        android:id="@+id/email_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="56dp"
+        android:text="Email"
+        android:textColor="#808080"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/surname_label" />
 
     <!-- Divider Line for Email -->
-<View
-android:layout_width="0dp"
-android:layout_height="1dp"
-android:layout_marginStart="16dp"
-android:layout_marginTop="24dp"
-android:layout_marginEnd="16dp"
-android:background="#808080"
-app:layout_constraintEnd_toEndOf="parent"
-app:layout_constraintHorizontal_bias="0.0"
-app:layout_constraintStart_toStartOf="parent"
-app:layout_constraintTop_toBottomOf="@id/email_label" />
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:background="#808080"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/email_label" />
 
     <!-- Phone Number Section -->
-<TextView
-android:id="@+id/phone_label"
-android:layout_width="wrap_content"
-android:layout_height="wrap_content"
-android:layout_marginStart="16dp"
-android:layout_marginTop="72dp"
-android:text="Phone Number"
-android:textColor="#808080"
-android:textSize="20sp"
-android:textStyle="bold"
-app:layout_constraintStart_toStartOf="parent"
-app:layout_constraintTop_toBottomOf="@id/email_label" />
+    <TextView
+        android:id="@+id/phone_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="72dp"
+        android:text="Phone Number"
+        android:textColor="#808080"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/email_label" />
 
     <!-- Divider Line for Phone -->
-<View
-android:layout_width="0dp"
-android:layout_height="1dp"
-android:layout_marginStart="16dp"
-android:layout_marginTop="24dp"
-android:layout_marginEnd="16dp"
-android:background="#808080"
-app:layout_constraintEnd_toEndOf="parent"
-app:layout_constraintHorizontal_bias="0.0"
-app:layout_constraintStart_toStartOf="parent"
-app:layout_constraintTop_toBottomOf="@id/phone_label" />
+    <View
+        android:id="@+id/view"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:background="#808080"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/phone_label" />
 
     <!-- Set Button -->
-<Button
-android:id="@+id/btn_set"
-android:layout_width="200dp"
-android:layout_height="wrap_content"
-android:layout_gravity="center_horizontal"
-android:layout_marginTop="32dp"
-android:backgroundTint="#31453a"
-android:text="Set"
-android:textColor="#FFFFFF"
-app:layout_constraintBottom_toBottomOf="parent"
-app:layout_constraintEnd_toEndOf="parent"
-app:layout_constraintHorizontal_bias="0.497"
-app:layout_constraintStart_toStartOf="parent"
-app:layout_constraintTop_toBottomOf="@+id/phone_label"
-app:layout_constraintVertical_bias="0.285"
-app:strokeColor="#70FFB5"
-app:strokeWidth="1dp" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Navbar at the bottom -->
+
+    <Button
+        android:id="@+id/btn_set"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="96dp"
+        android:backgroundTint="#31453a"
+        android:text="Set"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <include
+        android:id="@+id/bottom_nav"
+        layout="@layout/activity_base"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

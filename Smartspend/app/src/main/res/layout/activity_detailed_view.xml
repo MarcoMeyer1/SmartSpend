@@ -1,10 +1,10 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#2E2E2E"
-    android:id="@+id/main"
     android:padding="16dp">
 
     <!-- Graph/Bar Chart -->
@@ -49,8 +49,9 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/categoriesRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"/>
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1" />
 
     <!-- Floating Action Button to add more categories -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -64,4 +65,15 @@
         android:elevation="8dp"
         android:src="@drawable/baseline_add_24"
         app:tint="#212226" />
+
+    <!-- Navbar at the bottom -->
+    <include
+        android:id="@+id/bottom_nav"
+        layout="@layout/activity_base"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
+
 </LinearLayout>
+
+

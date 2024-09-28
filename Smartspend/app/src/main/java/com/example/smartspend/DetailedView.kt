@@ -32,7 +32,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 
-class DetailedView : AppCompatActivity() {
+class DetailedView : BaseActivity() {
 
     private var selectedColorHex: String = "#FFFFFF" // Default color
     private val categories = mutableListOf<Category>()
@@ -46,7 +46,7 @@ class DetailedView : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Set the layout file
+
         setContentView(R.layout.activity_detailed_view)
 
         // Initialize the bar chart view

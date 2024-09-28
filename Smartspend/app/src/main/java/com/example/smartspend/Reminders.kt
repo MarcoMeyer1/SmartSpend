@@ -24,7 +24,7 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class Reminders : AppCompatActivity() {
+class Reminders : BaseActivity() {
 
     private lateinit var rvUpcomingReminders: RecyclerView
     private lateinit var rvCompletedReminders: RecyclerView

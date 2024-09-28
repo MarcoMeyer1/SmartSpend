@@ -14,6 +14,9 @@ import java.io.IOException
 
 class NotificationsActivity : AppCompatActivity() {
 
+
+class Notifications : BaseActivity() {
+
     private lateinit var recyclerView: RecyclerView
     private lateinit var noNotificationsMessage: MaterialTextView
     private lateinit var notificationAdapter: NotificationAdapter
@@ -23,7 +26,7 @@ class NotificationsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notifications)
-
+        setActiveNavButton(R.id.notifications_nav)
         recyclerView = findViewById(R.id.notificationsRecyclerView)
         noNotificationsMessage = findViewById(R.id.noNotificationsMessage)
 

@@ -12,7 +12,16 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.anychart.AnyChart
 import com.anychart.AnyChartView
+import com.anychart.chart.common.dataentry.DataEntry
+import com.anychart.chart.common.dataentry.ValueDataEntry
+import com.anychart.charts.Cartesian
+import com.anychart.core.cartesian.series.Column
+import com.anychart.enums.*
+import com.anychart.graphics.vector.SolidFill
+import com.anychart.graphics.vector.text.HAlign
+import com.anychart.graphics.vector.text.VAlign
 import com.flask.colorpicker.ColorPickerView
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
 import com.google.android.material.button.MaterialButton
@@ -31,11 +40,17 @@ class DetailedView : AppCompatActivity() {
     private val client = OkHttpClient()
     private var userID: Int = -1
 
+    private lateinit var barChart: AnyChartView
+    private val categoryTotals = mutableListOf<CategoryTotal>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // Set the layout file
         setContentView(R.layout.activity_detailed_view)
+
+        // Initialize the bar chart view
+        barChart = findViewById(R.id.barChart)
 
         // Get userID from SharedPreferences
         val sharedPreferences: SharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
@@ -55,6 +70,9 @@ class DetailedView : AppCompatActivity() {
 
         // Fetch categories from the API
         fetchCategories()
+
+        // Fetch category totals for the bar chart
+        fetchCategoryTotals()
     }
 
     private fun fetchCategories() {
@@ -101,6 +119,137 @@ class DetailedView : AppCompatActivity() {
             }
         })
     }
+
+    private fun fetchCategoryTotals() {
+        val url = "https://smartspendapi.azurewebsites.net/api/Expense/totals/user/$userID"
+
+        val request = Request.Builder()
+            .url(url)
+            .get()
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                runOnUiThread {
+                    Toast.makeText(this@DetailedView, "Network Error: ${e.message}", Toast.LENGTH_LONG).show()
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val responseBody = response.body?.string()
+
+                runOnUiThread {
+                    if (response.isSuccessful && responseBody != null) {
+                        try {
+                            val jsonArray = JSONArray(responseBody)
+                            categoryTotals.clear()
+                            for (i in 0 until jsonArray.length()) {
+                                val jsonObject = jsonArray.getJSONObject(i)
+                                val categoryID = jsonObject.getInt("categoryID")
+                                val categoryName = jsonObject.getString("categoryName")
+                                val colorCode = jsonObject.getString("colorCode")
+                                val maxBudget = jsonObject.getDouble("maxBudget")
+                                val totalSpent = jsonObject.getDouble("totalSpent")
+
+                                val categoryTotal = CategoryTotal(
+                                    categoryID,
+                                    categoryName,
+                                    colorCode,
+                                    maxBudget,
+                                    totalSpent
+                                )
+                                categoryTotals.add(categoryTotal)
+                            }
+                            setupBarChart()
+                        } catch (e: Exception) {
+                            Toast.makeText(this@DetailedView, "Error parsing category totals", Toast.LENGTH_LONG).show()
+                        }
+                    } else {
+                        Toast.makeText(this@DetailedView, "Failed to fetch category totals", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        })
+    }
+
+    private fun setupBarChart() {
+        val cartesian: Cartesian = AnyChart.column()
+
+        val data: MutableList<DataEntry> = ArrayList()
+        for (categoryTotal in categoryTotals) {
+            data.add(CustomDataEntry(categoryTotal.categoryName, categoryTotal.totalSpent, categoryTotal.colorCode))
+        }
+
+        val column: Column = cartesian.column(data)
+
+        // Set the colors and styles
+        cartesian.background().fill("#232323") // Set chart background color
+
+        // Set axes labels and titles to white
+        cartesian.xAxis(0).labels().fontColor("#FFFFFF")
+        cartesian.yAxis(0).labels().fontColor("#FFFFFF")
+        cartesian.xAxis(0).title().fontColor("#FFFFFF")
+        cartesian.yAxis(0).title().fontColor("#FFFFFF")
+
+        // Set chart title color
+        cartesian.title().fontColor("#FFFFFF")
+
+        // Customize tooltip
+        cartesian.tooltip()
+            .title(true)
+            .titleFormat("{%X}")
+            .format("R{%Value}{groupsSeparator: }")
+            .background().fill("#232323") // Tooltip background color
+        cartesian.tooltip().fontColor("#FFFFFF")
+
+        // Customize legend
+        cartesian.legend().enabled(false) // Disable legend if not needed
+
+        column.tooltip()
+            .titleFormat("{%X}")
+            .position(Position.CENTER_BOTTOM)
+            .anchor(Anchor.CENTER_BOTTOM)
+            .offsetX(0.0)
+            .offsetY(5.0)
+            .format("R{%Value}{groupsSeparator: }")
+            .fontColor("#FFFFFF") // Tooltip text color
+
+        cartesian.animation(true)
+        cartesian.title("Total Spent per Category")
+
+        cartesian.yScale().minimum(0.0)
+
+        cartesian.yAxis(0).labels().format("R{%Value}{groupsSeparator: }")
+
+        cartesian.tooltip().positionMode(TooltipPositionMode.POINT)
+
+        cartesian.interactivity().hoverMode(HoverMode.BY_X)
+
+        cartesian.xAxis(0).title("Categories")
+        cartesian.yAxis(0).title("Amount Spent")
+
+        barChart.setChart(cartesian)
+    }
+
+    // Custom DataEntry class to include color
+    inner class CustomDataEntry(
+        x: String,
+        value: Number,
+        color: String
+    ) : ValueDataEntry(x, value) {
+        init {
+            setValue("fill", color)
+        }
+    }
+
+    // Data class for category totals
+    data class CategoryTotal(
+        val categoryID: Int,
+        val categoryName: String,
+        val colorCode: String,
+        val maxBudget: Double,
+        val totalSpent: Double
+    )
 
     private fun showAddCategoryDialog() {
         // Inflate the dialog layout
@@ -198,6 +347,7 @@ class DetailedView : AppCompatActivity() {
                             Toast.makeText(this@DetailedView, "Category created successfully", Toast.LENGTH_LONG).show()
                             // Update the categories list
                             fetchCategories()
+                            fetchCategoryTotals() // Refresh the bar chart data
                             dialog.dismiss()
                         } else {
                             val errorMessage = responseBody ?: "Category creation failed"
@@ -217,7 +367,6 @@ class DetailedView : AppCompatActivity() {
         val colorCode: String
     )
 
-    // Adapter to handle displaying categories in the RecyclerView
     // Adapter to handle displaying categories in the RecyclerView
     class CategoryAdapter(private val categories: List<Category>) :
         RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
@@ -245,9 +394,7 @@ class DetailedView : AppCompatActivity() {
             }
         }
 
-
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
             val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.card_category, parent, false)
             return CategoryViewHolder(view)

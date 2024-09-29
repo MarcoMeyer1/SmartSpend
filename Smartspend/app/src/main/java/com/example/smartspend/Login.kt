@@ -54,7 +54,7 @@ class Login : AppCompatActivity() {
 
         // Google Sign-In configuration
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("943237529042-a7mmtuj8nfb2f91nhqfpgjrbvhtreet5.apps.googleusercontent.com")
+            .requestIdToken("1085780885439-1iuludmfbgbhgp4k41nlbi7emqf0j43n.apps.googleusercontent.com")
             .requestEmail()
             .build()
 
@@ -180,10 +180,23 @@ class Login : AppCompatActivity() {
         try {
             val account = completedTask.getResult(ApiException::class.java)
 
-            // Send ID token to your backend
+            // Handle the signed-in account here
             val idToken = account?.idToken
             Log.d("Login", "Google sign-in successful, ID Token: $idToken")
-            sendIdTokenToServer(idToken)
+
+            // Save signed-in account info to SharedPreferences (optional)
+            if (account != null) {
+                val email = account.email
+                val sharedPreferences: SharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putString("userEmail", email)
+                editor.apply()
+
+                // Navigate to main activity after successful Google sign-in
+                val intent = Intent(this@Login, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
 
         } catch (e: ApiException) {
             // Log error with status code for better debugging
@@ -193,67 +206,5 @@ class Login : AppCompatActivity() {
             Log.e("Login", "Google sign-in failed", e)
             Toast.makeText(this, "Google Sign-In failed", Toast.LENGTH_LONG).show()
         }
-    }
-
-    // Function to send the Google ID Token to your backend for verification
-    private fun sendIdTokenToServer(idToken: String?) {
-        if (idToken == null) {
-            Toast.makeText(this, "Failed to get ID Token", Toast.LENGTH_SHORT).show()
-            Log.e("Login", "ID Token is null, cannot send to server.")
-            return
-        }
-
-        val url = "https://smartspendapi.azurewebsites.net/api/User/googleSignIn"
-
-        val json = JSONObject()
-        json.put("idToken", idToken)
-
-        val body = RequestBody.create(
-            "application/json; charset=utf-8".toMediaTypeOrNull(),
-            json.toString()
-        )
-
-        val request = Request.Builder()
-            .url(url)
-            .post(body)
-            .build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                runOnUiThread {
-                    Log.e("Login", "Network error while sending ID Token to server: ${e.message}", e)
-                    Toast.makeText(this@Login, "Network Error: ${e.message}", Toast.LENGTH_LONG).show()
-                }
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                val responseBody = response.body?.string()
-
-                runOnUiThread {
-                    if (response.isSuccessful && responseBody != null) {
-                        try {
-                            // Parse response and proceed as necessary
-                            val jsonResponse = JSONObject(responseBody)
-                            val userID = jsonResponse.getInt("userID")
-
-                            // Save userID to SharedPreferences
-                            saveUserIDToPreferences(userID)
-
-                            // Navigate to the main activity
-                            val intent = Intent(this@Login, MainActivity::class.java)
-                            startActivity(intent)
-                            finish()
-
-                        } catch (e: Exception) {
-                            Log.e("Login", "Error parsing response from server", e)
-                            Toast.makeText(this@Login, "Error parsing response", Toast.LENGTH_LONG).show()
-                        }
-                    } else {
-                        Log.e("Login", "Google Sign-In server error: ${response.message}")
-                        Toast.makeText(this@Login, "Google Sign-In failed", Toast.LENGTH_LONG).show()
-                    }
-                }
-            }
-        })
     }
 }

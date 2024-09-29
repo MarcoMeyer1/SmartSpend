@@ -42,7 +42,7 @@
         app:iconPadding="8dp"
         android:text="Continue with Google"
         android:textColor="#FFFFFF"
-        app:icon="@drawable/google_icon"
+        app:icon="@drawable/ic_add"
         app:iconSize="28dp"
         app:strokeColor="#70FFB5"
         app:strokeWidth="1dp" />

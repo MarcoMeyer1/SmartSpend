@@ -21,23 +21,27 @@ jobs:
           distribution: 'zulu'
           java-version: '11'
 
-      # Change directory to where `gradlew` is located
-      - name: Change directory to project root
-        run: cd Smartspend/Smartspend
-
       # Grant execute permission for gradlew
       - name: Grant execute permission for gradlew
-        run: chmod +x Smartspend/Smartspend/gradlew
+        working-directory: Smartspend/Smartspend
+        run: chmod +x ./gradlew
 
+      # Build with Gradle
       - name: Build with Gradle
-        run: Smartspend/Smartspend/gradlew build
+        working-directory: Smartspend/Smartspend
+        run: ./gradlew build
 
+      # Run Unit Tests
       - name: Run Unit Tests
-        run: Smartspend/Smartspend/gradlew test
+        working-directory: Smartspend/Smartspend
+        run: ./gradlew test
 
+      # Run Instrumentation Tests
       - name: Run Instrumentation Tests
-        run: Smartspend/Smartspend/gradlew connectedAndroidTest
+        working-directory: Smartspend/Smartspend
+        run: ./gradlew connectedAndroidTest
 
+      # Upload Test Results
       - name: Upload Test Results
         uses: actions/upload-artifact@v3
         with:

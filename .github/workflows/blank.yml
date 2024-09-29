@@ -35,14 +35,22 @@ jobs:
       - name: Run Unit Tests
         working-directory: Smartspend
         run: ./gradlew test
-
-            # Upload JUnit Test Results for UI Display
+        
+      # Upload JUnit Test Results for UI Display
       - name: Upload JUnit Test Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: junit-test-results
+          path: Smartspend/app/build/test-results/testDebugUnitTest/ # Path to your JUnit test result XML files
+      
+      # Display test results in GitHub UI
+      - name: Publish Test Report
         uses: dorny/test-reporter@v1
         with:
           name: JUnit Tests
-          path: Smartspend/app/build/test-results/testDebugUnitTest/*.xml
-          reporter: junit-xml
+          path: Smartspend/app/build/test-results/testDebugUnitTest/**/*.xml # Ensure correct path to the test XML files
+          reporter: junit
+          fail-on-error: true
 
 
       # Upload Test Results Artifact

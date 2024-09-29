@@ -43,15 +43,15 @@ jobs:
           name: junit-test-results
           path: Smartspend/app/build/test-results/testDebugUnitTest/ # Path to your JUnit test result XML files
       
-      # Display test results in GitHub UI
-      - name: Publish Test Report
+      # Upload JUnit Test Results for UI Display
+      - name: Publish JUnit Test Results
         uses: dorny/test-reporter@v1
+        if: success() || failure()
         with:
           name: JUnit Tests
-          path: Smartspend/app/build/test-results/testDebugUnitTest/**/*.xml # Ensure correct path to the test XML files
-          reporter: junit
-          fail-on-error: true
-
+          path: Smartspend/app/build/test-results/testDebugUnitTest/**/*.xml  # Path to your test results
+          reporter: java-junit  # Correct reporter format for JUnit
+          fail-on-error: false
 
       # Upload Test Results Artifact
       - name: Upload Test Results Artifact

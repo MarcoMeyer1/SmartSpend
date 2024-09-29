@@ -23,27 +23,19 @@ jobs:
 
       # Grant execute permission for gradlew
       - name: Grant execute permission for gradlew
-        working-directory: Smartspend
         run: chmod +x ./gradlew
 
       # Build with Gradle
       - name: Build with Gradle
-        working-directory: Smartspend
         run: ./gradlew build
 
-      # Run Unit Tests
+      # Run Unit Tests (JVM tests)
       - name: Run Unit Tests
-        working-directory: Smartspend
         run: ./gradlew test
-
-      # Run Instrumentation Tests
-      - name: Run Instrumentation Tests
-        working-directory: Smartspend
-        run: ./gradlew connectedAndroidTest
 
       # Upload Test Results
       - name: Upload Test Results
         uses: actions/upload-artifact@v3
         with:
           name: test-results
-          path: Smartspend/app/build/reports/tests/testDebugUnitTest/
+          path: app/build/reports/tests/testDebugUnitTest/

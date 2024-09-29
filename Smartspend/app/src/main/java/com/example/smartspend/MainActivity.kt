@@ -1,8 +1,18 @@
 package com.example.smartspend
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
+import com.anychart.AnyChart
+import com.anychart.AnyChartView
+import com.anychart.chart.common.dataentry.DataEntry
+import com.anychart.chart.common.dataentry.ValueDataEntry
+import okhttp3.*
+import org.json.JSONArray
+import java.io.IOException
 
 class MainActivity : BaseActivity() {
 
@@ -11,6 +21,15 @@ class MainActivity : BaseActivity() {
     private lateinit var savingGoalsButton: Button
     private lateinit var remindersButton: Button
     private lateinit var settingsButton: Button
+
+    // UI Elements
+    private lateinit var budgetAmountTextView: TextView
+    private lateinit var anyChartView: AnyChartView
+
+    // Networking and Data
+    private val client = OkHttpClient()
+    private var userID: Int = -1
+    private val categoryTotals = mutableListOf<CategoryTotal>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +41,17 @@ class MainActivity : BaseActivity() {
         savingGoalsButton = findViewById(R.id.buttonSavingGoals)
         remindersButton = findViewById(R.id.buttonReminders)
         settingsButton = findViewById(R.id.buttonSettings)
+
+        // Initialize TextView and AnyChartView
+        budgetAmountTextView = findViewById(R.id.budgetAmount)
+        anyChartView = findViewById(R.id.anyChartView)
+
+        // Get userID from SharedPreferences
+        val sharedPreferences: SharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        userID = sharedPreferences.getInt("userID", -1)
+
+        // Fetch category totals and update UI
+        fetchCategoryTotals()
 
         // Set click listeners for each button
         detailedViewButton.setOnClickListener {
@@ -41,29 +71,124 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    // Method for Detailed View button
+    private fun fetchCategoryTotals() {
+        val url = "https://smartspendapi.azurewebsites.net/api/Expense/totals/user/$userID"
 
-    private fun openDetailedView() {//TODO
-        val intent = Intent(this, DetailedView::class.java)
-        startActivity(intent)
+        val request = Request.Builder()
+            .url(url)
+            .get()
+            .build()
 
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                runOnUiThread {
+                    Toast.makeText(this@MainActivity, "Network Error: ${e.message}", Toast.LENGTH_LONG).show()
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val responseBody = response.body?.string()
+
+                runOnUiThread {
+                    if (response.isSuccessful && responseBody != null) {
+                        try {
+                            val jsonArray = JSONArray(responseBody)
+                            categoryTotals.clear()
+                            var totalBudget = 0.0
+                            var totalExpenses = 0.0
+
+                            for (i in 0 until jsonArray.length()) {
+                                val jsonObject = jsonArray.getJSONObject(i)
+                                val categoryID = jsonObject.getInt("categoryID")
+                                val categoryName = jsonObject.getString("categoryName")
+                                val colorCode = jsonObject.getString("colorCode")
+                                val maxBudget = jsonObject.getDouble("maxBudget")
+                                val totalSpent = jsonObject.getDouble("totalSpent")
+
+                                val categoryTotal = CategoryTotal(
+                                    categoryID,
+                                    categoryName,
+                                    colorCode,
+                                    maxBudget,
+                                    totalSpent
+                                )
+                                categoryTotals.add(categoryTotal)
+
+                                totalBudget += maxBudget
+                                totalExpenses += totalSpent
+                            }
+
+                            // Calculate remaining budget
+                            val remainingBudget = totalBudget - totalExpenses
+
+                            // Update the budgetAmountTextView
+                            budgetAmountTextView.text = "R${"%.2f".format(remainingBudget)}"
+
+                            // Set up the AnyChart graph
+                            setupChart()
+
+                        } catch (e: Exception) {
+                            Toast.makeText(this@MainActivity, "Error parsing category totals", Toast.LENGTH_LONG).show()
+                        }
+                    } else {
+                        Toast.makeText(this@MainActivity, "Failed to fetch category totals", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        })
     }
 
-    // Method for Saving Goals button
+    private fun setupChart() {
+        val pie = AnyChart.pie()
+
+        val dataEntries = ArrayList<DataEntry>()
+
+        for (categoryTotal in categoryTotals) {
+            dataEntries.add(ValueDataEntry(categoryTotal.categoryName, categoryTotal.totalSpent))
+        }
+
+        pie.data(dataEntries)
+
+        pie.title("Expenses per Category")
+
+        // Customize chart appearance
+        pie.background().fill("#272727")
+        pie.labels().fontColor("#FFFFFF")
+        pie.title().fontColor("#FFFFFF")
+        pie.legend().enabled(true)
+        pie.legend().title().enabled(false)
+        pie.legend().fontColor("#FFFFFF")
+
+        anyChartView.setChart(pie)
+    }
+
+    // Methods for opening other activities
+    private fun openDetailedView() {
+        val intent = Intent(this, DetailedView::class.java)
+        startActivity(intent)
+    }
+
     private fun openSavingGoals() {
         val intent = Intent(this, SavingGoals::class.java)
         startActivity(intent)
     }
 
-    // Method for Reminders button
     private fun openReminders() {
         val intent = Intent(this, Reminders::class.java)
         startActivity(intent)
     }
 
-    // Method for Settings button
     private fun openSettings() {
         val intent = Intent(this, Settings::class.java)
         startActivity(intent)
     }
+
+    // Data class for category totals
+    data class CategoryTotal(
+        val categoryID: Int,
+        val categoryName: String,
+        val colorCode: String,
+        val maxBudget: Double,
+        val totalSpent: Double
+    )
 }

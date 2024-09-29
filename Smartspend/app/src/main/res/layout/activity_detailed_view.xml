@@ -30,7 +30,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="August 2024"
+            android:text="September 2024"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             android:textStyle="bold" />

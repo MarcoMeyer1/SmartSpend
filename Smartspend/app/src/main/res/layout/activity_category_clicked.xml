@@ -21,16 +21,17 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Groceries"
+            android:gravity="center"
             android:textSize="38sp"
             android:textStyle="bold"
             android:textColor="#92D1E1" />
 
         <ImageView
             android:id="@+id/iv_edit_category"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_add"
-            android:contentDescription="Edit category" />
+            android:layout_width="54dp"
+            android:layout_height="51dp"
+            android:contentDescription="Edit category"
+            android:src="@drawable/baseline_edit_24" />
     </LinearLayout>
 
     <TextView
@@ -72,7 +73,6 @@
         android:background="#333333" />
 
 
-    <!-- Set Amount Manually TextView and EditText -->
     <TextView
         android:id="@+id/tv_set_amount_label"
         android:layout_width="wrap_content"
@@ -83,9 +83,10 @@
 
     <EditText
         android:id="@+id/et_set_amount_manually"
-        android:layout_width="169dp"
-        android:layout_height="wrap_content"
+        android:layout_width="171dp"
+        android:layout_height="38dp"
         android:layout_marginTop="8dp"
+        android:textColor="#FFFFFF"
         android:background="@drawable/custom_edittext_green_border"
         android:gravity="center"
         android:hint="R600"
@@ -105,7 +106,6 @@
         android:textColor="#808080"
         android:layout_marginTop="16dp" />
 
-    <!-- RecyclerView for Transaction History -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_history"
         android:layout_width="match_parent"
@@ -113,14 +113,14 @@
         android:layout_weight="1"
         android:layout_marginTop="8dp" />
 
-    <!-- Floating Action Button for Adding a Transaction -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_transaction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_add"
-        android:contentDescription="Add Transaction" />
+        android:contentDescription="Add Transaction"
+        android:src="@drawable/baseline_add_25"
+        android:backgroundTint="#70FFB5"/>
 
 </LinearLayout>

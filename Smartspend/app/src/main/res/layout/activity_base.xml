@@ -123,7 +123,7 @@
 
     <!-- History Navigation -->
     <LinearLayout
-        android:id="@+id/history_nav_container"
+        android:id="@+id/profile_nav_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -140,19 +140,19 @@
             android:gravity="center">
 
             <ImageView
-                android:id="@+id/history_nav"
+                android:id="@+id/profile_nav"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="center"
-                android:src="@drawable/history"
-                android:contentDescription="History" />
+                android:src="@drawable/ic_profile"
+                android:contentDescription="Profile" />
         </FrameLayout>
 
         <TextView
-            android:id="@+id/history_label"
+            android:id="@+id/profile_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="History"
+            android:text="Profile"
             android:textColor="#FFFFFF"
             android:textSize="10sp"
             android:gravity="center" />

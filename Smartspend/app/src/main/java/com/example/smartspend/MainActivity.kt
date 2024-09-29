@@ -20,7 +20,7 @@ class MainActivity : BaseActivity() {
     private lateinit var detailedViewButton: Button
     private lateinit var savingGoalsButton: Button
     private lateinit var remindersButton: Button
-    private lateinit var settingsButton: Button
+    private lateinit var historyButton: Button
 
     // UI Elements
     private lateinit var budgetAmountTextView: TextView
@@ -40,7 +40,7 @@ class MainActivity : BaseActivity() {
         detailedViewButton = findViewById(R.id.buttonDetailedView)
         savingGoalsButton = findViewById(R.id.buttonSavingGoals)
         remindersButton = findViewById(R.id.buttonReminders)
-        settingsButton = findViewById(R.id.buttonSettings)
+        historyButton = findViewById(R.id.buttonHistory)
 
         // Initialize TextView and AnyChartView
         budgetAmountTextView = findViewById(R.id.budgetAmount)
@@ -66,8 +66,8 @@ class MainActivity : BaseActivity() {
             openReminders()
         }
 
-        settingsButton.setOnClickListener {
-            openSettings()
+        historyButton.setOnClickListener {
+            openHistory()
         }
     }
 
@@ -151,6 +151,7 @@ class MainActivity : BaseActivity() {
 
         pie.title("Expenses per Category")
 
+
         // Customize chart appearance
         pie.background().fill("#272727")
         pie.labels().fontColor("#FFFFFF")
@@ -163,6 +164,7 @@ class MainActivity : BaseActivity() {
     }
 
     // Methods for opening other activities
+
     private fun openDetailedView() {
         val intent = Intent(this, DetailedView::class.java)
         startActivity(intent)
@@ -178,8 +180,10 @@ class MainActivity : BaseActivity() {
         startActivity(intent)
     }
 
-    private fun openSettings() {
-        val intent = Intent(this, Settings::class.java)
+
+    // Method for Settings button
+    private fun openHistory() {
+        val intent = Intent(this, History::class.java)
         startActivity(intent)
     }
 

@@ -127,7 +127,7 @@
 
         <!-- Button for Settings -->
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/buttonSettings"
+            android:id="@+id/buttonHistory"
             android:layout_width="0dp"
             android:layout_height="73dp"
             android:layout_columnWeight="1"

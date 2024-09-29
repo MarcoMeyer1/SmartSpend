@@ -15,6 +15,9 @@
         android:theme="@style/Theme.SmartSpend"
         tools:targetApi="31">
         <activity
+            android:name=".History"
+            android:exported="false" />
+        <activity
             android:name=".CategoryClicked"
             android:exported="false" />
         <activity

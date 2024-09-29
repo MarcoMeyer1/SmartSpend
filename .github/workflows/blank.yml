@@ -33,6 +33,7 @@ jobs:
 
       # Run Unit Tests (JVM tests)
       - name: Run Unit Tests
+        working-directory: Smartspend
         run: ./gradlew test
 
       # Upload Test Results

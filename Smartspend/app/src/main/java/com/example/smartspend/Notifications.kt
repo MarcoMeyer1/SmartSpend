@@ -54,7 +54,7 @@ class Notifications : BaseActivity() {
                     runOnUiThread {
                         Toast.makeText(
                             this@Notifications,
-                            "Error fetching notifications: ${e.message}",
+                            "No notifications yet: ${e.message}",
                             Toast.LENGTH_LONG
                         ).show()
                     }

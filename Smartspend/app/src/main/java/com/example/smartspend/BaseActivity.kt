@@ -42,7 +42,7 @@ abstract class BaseActivity : AppCompatActivity() {
         val homeNavContainer: LinearLayout = findViewById(R.id.home_nav_container)
         val notificationsNavContainer: LinearLayout = findViewById(R.id.notifications_nav_container)
         val addRecordNavContainer: LinearLayout = findViewById(R.id.add_record_nav_container)
-        val historyNavContainer: LinearLayout = findViewById(R.id.history_nav_container)
+        val historyNavContainer: LinearLayout = findViewById(R.id.profile_nav_container)
         val settingsNavContainer: LinearLayout = findViewById(R.id.settings_nav_container)
 
         homeNavContainer.setOnClickListener {
@@ -62,7 +62,8 @@ abstract class BaseActivity : AppCompatActivity() {
         }
 
         historyNavContainer.setOnClickListener {
-            // TODO: Implement history navigation
+            val intent = Intent(this, Profile::class.java)
+            startActivity(intent)
         }
 
         settingsNavContainer.setOnClickListener {
@@ -77,7 +78,7 @@ abstract class BaseActivity : AppCompatActivity() {
         val homeNav: ImageView = findViewById(R.id.home_nav)
         val notificationsNav: ImageView = findViewById(R.id.notifications_nav)
         val addRecordNav: ImageView = findViewById(R.id.add_record_nav)
-        val historyNav: ImageView = findViewById(R.id.history_nav)
+        val historyNav: ImageView = findViewById(R.id.profile_nav)
         val settingsNav: ImageView = findViewById(R.id.settings_nav)
 
         homeNav.setColorFilter(Color.parseColor("#FFFFFF"))
@@ -94,7 +95,7 @@ abstract class BaseActivity : AppCompatActivity() {
             R.id.home_nav -> findViewById<ImageView>(R.id.home_nav)?.setColorFilter(Color.parseColor("#70FFB5"))
             R.id.notifications_nav -> findViewById<ImageView>(R.id.notifications_nav)?.setColorFilter(Color.parseColor("#70FFB5"))
             R.id.add_record_nav -> findViewById<ImageView>(R.id.add_record_nav)?.setColorFilter(Color.parseColor("#70FFB5"))
-            R.id.history_nav -> findViewById<ImageView>(R.id.history_nav)?.setColorFilter(Color.parseColor("#70FFB5"))
+            R.id.profile_nav -> findViewById<ImageView>(R.id.profile_nav)?.setColorFilter(Color.parseColor("#70FFB5"))
             R.id.settings_nav -> findViewById<ImageView>(R.id.settings_nav)?.setColorFilter(Color.parseColor("#70FFB5"))
         }
     }

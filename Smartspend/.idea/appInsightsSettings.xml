@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.smartspend" />
+                  <option name="mobileSdkAppId" value="1:1085780885439:android:d812eddc38dc1077e16b0a" />
+                  <option name="projectId" value="smartspend-d240c" />
+                  <option name="projectNumber" value="1085780885439" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

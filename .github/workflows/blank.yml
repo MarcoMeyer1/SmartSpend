@@ -38,11 +38,13 @@ jobs:
 
       # Upload JUnit Test Results for UI Display
       - name: Upload JUnit Test Results
-        uses: actions/upload-test-report@v1
+        uses: dorny/test-reporter@v1
         with:
-          path: Smartspend/app/build/test-results/testDebugUnitTest/ # Path to the test result XML files
-          
-      # Upload Test Results (as artifacts for additional use, if needed)
+          name: JUnit Tests
+          path: Smartspend/app/build/test-results/testDebugUnitTest/*.xml
+          reporter: junit
+
+      # Upload Test Results Artifact
       - name: Upload Test Results Artifact
         uses: actions/upload-artifact@v3
         with:

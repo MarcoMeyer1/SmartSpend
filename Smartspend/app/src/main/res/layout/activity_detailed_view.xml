@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#2E2E2E"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:layout_weight="1">
 
     <!-- Graph/Bar Chart -->
     <com.anychart.AnyChartView
@@ -72,7 +73,10 @@
         layout="@layout/activity_base"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom" />
+        android:layout_gravity="bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </LinearLayout>
 

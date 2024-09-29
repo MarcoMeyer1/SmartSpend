@@ -1,18 +1,16 @@
 package com.example.smartspend
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textview.MaterialTextView
 import okhttp3.*
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
-
-
 
 class Notifications : BaseActivity() {
 
@@ -37,7 +35,6 @@ class Notifications : BaseActivity() {
     }
 
     private fun loadNotifications() {
-        // Replace this with the actual user ID from SharedPreferences or any other source
         val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         val userId = sharedPreferences.getInt("userID", -1)
 
@@ -62,15 +59,26 @@ class Notifications : BaseActivity() {
 
                 override fun onResponse(call: Call, response: Response) {
                     val responseBody = response.body?.string()
+                    Log.d("Notifications", "Response: $responseBody")  // Log the full response
+
                     if (response.isSuccessful && responseBody != null) {
                         val jsonArray = JSONArray(responseBody)
                         notifications.clear()
 
                         for (i in 0 until jsonArray.length()) {
                             val jsonNotification = jsonArray.getJSONObject(i)
+
+                            // Safely get NotificationText and NotificationDate, with better logging
+                            val notificationText = jsonNotification.optString("notificationText").takeIf { it.isNotBlank() }
+                                ?: "No notification text available"
+                            val notificationDate = jsonNotification.optString("notificationDate").takeIf { it.isNotBlank() }
+                                ?: "Unknown date"
+
+                            Log.d("Notifications", "Parsed notificationText: $notificationText, notificationDate: $notificationDate")
+
                             val notification = Notification(
-                                jsonNotification.getString("NotificationText"),
-                                jsonNotification.getString("NotificationDate")
+                                notificationText,
+                                notificationDate
                             )
                             notifications.add(notification)
                         }
@@ -121,6 +129,7 @@ class Notifications : BaseActivity() {
 
         override fun onBindViewHolder(holder: NotificationViewHolder, position: Int) {
             val notification = notifications[position]
+            Log.d("Notifications", "Binding notification to UI: ${notification.message}, ${notification.timestamp}")
             holder.message.text = notification.message
             holder.time.text = notification.timestamp
         }

@@ -1,5 +1,6 @@
 package com.example.smartspend
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
@@ -7,9 +8,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.anychart.AnyChart
@@ -43,14 +45,19 @@ class DetailedView : BaseActivity() {
     private lateinit var barChart: AnyChartView
     private val categoryTotals = mutableListOf<CategoryTotal>()
 
+    // Reference for dynamic total amount display
+    private lateinit var totalAmountTextView: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
 
         setContentView(R.layout.activity_detailed_view)
 
         // Initialize the bar chart view
         barChart = findViewById(R.id.barChart)
+
+        // Initialize the totalAmountTextView
+        totalAmountTextView = findViewById(R.id.totalAmount)
 
         // Get userID from SharedPreferences
         val sharedPreferences: SharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
@@ -143,6 +150,8 @@ class DetailedView : BaseActivity() {
                         try {
                             val jsonArray = JSONArray(responseBody)
                             categoryTotals.clear()
+                            var totalExpenses = 0.0 // Variable to store the total expenses
+
                             for (i in 0 until jsonArray.length()) {
                                 val jsonObject = jsonArray.getJSONObject(i)
                                 val categoryID = jsonObject.getInt("categoryID")
@@ -159,7 +168,13 @@ class DetailedView : BaseActivity() {
                                     totalSpent
                                 )
                                 categoryTotals.add(categoryTotal)
+
+                                totalExpenses += totalSpent // Add each category's totalSpent to totalExpenses
                             }
+
+                            // Update the total expenses TextView with the calculated total
+                            totalAmountTextView.text = "R${"%.2f".format(totalExpenses)}"
+
                             setupBarChart()
                         } catch (e: Exception) {
                             Toast.makeText(this@DetailedView, "Error parsing category totals", Toast.LENGTH_LONG).show()

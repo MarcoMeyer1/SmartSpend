@@ -50,7 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:text="R6,543.50"
+        android:text="R0.00"
         android:textColor="#70FFB5"
         android:textSize="36sp"
         android:textStyle="bold"
@@ -58,27 +58,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Expenses Section -->
-    <RelativeLayout
-        android:id="@+id/relativeLayout"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="@drawable/gradient_expenses"
-        android:padding="16dp"
+    <!-- AnyChartView for displaying important information -->
+    <com.anychart.AnyChartView
+        android:id="@+id/anyChartView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintTop_toBottomOf="@id/budgetAmount"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/navigationGrid" />
 
     <!-- Grid Layout for Navigation Buttons -->
     <GridLayout
         android:id="@+id/navigationGrid"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:alignmentMode="alignMargins"
         android:columnCount="2"
         android:padding="16dp"
         android:rowCount="2"
-        app:layout_constraintTop_toBottomOf="@id/relativeLayout"
+        app:layout_constraintTop_toBottomOf="@id/anyChartView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bottom_nav">
@@ -125,7 +127,7 @@
             android:textColor="#FFFFFF"
             android:textSize="16sp" />
 
-        <!-- Button for Settings -->
+        <!-- Button for History -->
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonHistory"
             android:layout_width="0dp"

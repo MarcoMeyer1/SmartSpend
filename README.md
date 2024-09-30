@@ -88,6 +88,17 @@ GitHub Actions are used to automatically trigger unit tests upon each commit, en
 
 The use of dorny/test-reporter@v1 neatly formats the test results, providing clear feedback on test success or failure directly within the GitHub interface. 
 
+##Please see submitted word document for more screenshots
+
+# Useful Links
+Our Group Members: ST10038846, ST10157649, ST10050798
+
+SmartSpend App Repo: https://github.com/MarcoMeyer1/SmartSpend 
+SmartSpend API Repo: https://github.com/MarcoMeyer1/SmartSpendAPI 
+Youtube Presentation: https://www.youtube.com/watch?v=RSxYxgywO40 
+ 
+
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.

@@ -26,7 +26,7 @@ class Notifications : BaseActivity() {
         setActiveNavButton(R.id.notifications_nav)
         recyclerView = findViewById(R.id.notificationsRecyclerView)
         noNotificationsMessage = findViewById(R.id.noNotificationsMessage)
-
+        setActiveNavButton(R.id.notifications_nav)
         notificationAdapter = NotificationAdapter(notifications)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = notificationAdapter

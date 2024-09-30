@@ -33,7 +33,7 @@ class Settings : BaseActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_settings)
-
+        setActiveNavButton(R.id.settings_nav)
         // Initialize UI elements
         checkboxNotifications = findViewById(R.id.checkbox_notifications)
         checkboxSSO = findViewById(R.id.checkbox_sso)
@@ -259,7 +259,7 @@ class Settings : BaseActivity() {
                     } else {
                         Log.e(TAG, "Failed to update settings. Response code: ${response.code}")
                         val errorMessage = if (!responseBody.isNullOrEmpty()) responseBody else "Settings update failed"
-                        Toast.makeText(this@Settings, errorMessage, Toast.LENGTH_LONG).show()
+
                     }
                 }
             }

@@ -76,6 +76,17 @@ To set up the project locally, follow these steps:
 3. Set savings goals and track your progress in the **Goals** section.
 4. Manage and view detailed reports of your finances in the **Detailed View** section.
 
+# Comprehensive Report
+## Purpose of the app
+SmartSpend is a way for you to manage and control your finances all in one application. It is a great way to see how you are spending your money and see where it is all going. This gives all the users a way to control and track all their finances, from seeing your expenses and income history to setting saving and purchasing goals. SmartSpend is a brilliant and efficient way to track all of these things while having an easy time navigating the application.
+
+## Design considerations
+The SmartSpend team has considered that a dark theme would suit this application, the light black and green tones compliments the application well, we have also added a colour feature for our categories so the user can easily track what they are spending their money on for each category, it just gives the user a better experience seeing the colour they have designated for that category instead of searching for it if each category was the same.
+
+## Utilisation of Github and Github Actions
+GitHub Actions are used to automatically trigger unit tests upon each commit, ensuring code quality is maintained throughout the development process.
+
+The use of dorny/test-reporter@v1 neatly formats the test results, providing clear feedback on test success or failure directly within the GitHub interface. 
 
 ## License
 

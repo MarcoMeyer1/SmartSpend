@@ -93,8 +93,8 @@ The use of dorny/test-reporter@v1 neatly formats the test results, providing cle
 # Useful Links
 Our Group Members: ST10038846, ST10157649, ST10050798
 
-SmartSpend App Repo: https://github.com/MarcoMeyer1/SmartSpend 
-SmartSpend API Repo: https://github.com/MarcoMeyer1/SmartSpendAPI 
+SmartSpend App Repo: https://github.com/MarcoMeyer1/SmartSpend
+SmartSpend API Repo: https://github.com/MarcoMeyer1/SmartSpendAPI
 Youtube Presentation: https://www.youtube.com/watch?v=RSxYxgywO40 
  
 

@@ -23,56 +23,49 @@ class Settings : BaseActivity() {
     private val client = OkHttpClient()
     private var userID: Int = -1
 
-    private var settingsID: Int = -1 // To track the settings ID if needed
+    private var settingsID: Int = -1
 
-    private val TAG = "SettingsActivity" // Tag for logging
+    private val TAG = "SettingsActivity"
 
-    private var isUpdatingUI = false // Flag to prevent updateUserSettings from being called when updating UI programmatically
+    private var isUpdatingUI = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_settings)
         setActiveNavButton(R.id.settings_nav)
-        // Initialize UI elements
+
         checkboxNotifications = findViewById(R.id.checkbox_notifications)
         checkboxSSO = findViewById(R.id.checkbox_sso)
         spinnerLanguage = findViewById(R.id.spinner_language)
         btnSignOut = findViewById(R.id.btn_sign_out)
         tvViewProfile = findViewById(R.id.view_profile)
 
-        // Get userID from SharedPreferences
         val sharedPreferences: SharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         userID = sharedPreferences.getInt("userID", -1)
 
         Log.d(TAG, "UserID retrieved from SharedPreferences: $userID")
 
         if (userID != -1) {
-            // Fetch settings data
             fetchUserSettings()
         } else {
             Toast.makeText(this, "User ID not found. Please log in again.", Toast.LENGTH_LONG).show()
             Log.e(TAG, "UserID is -1. Redirecting to Login activity.")
-            // Redirect to login screen
             val intent = Intent(this, Login::class.java)
             startActivity(intent)
             finish()
         }
 
-        // Set up Spinner
         setupLanguageSpinner()
 
-        // Set listeners for UI elements
         checkboxNotifications.setOnCheckedChangeListener { _, _ ->
             if (!isUpdatingUI) {
-                // Save settings when the checkbox state changes
                 updateUserSettings()
             }
         }
 
         checkboxSSO.setOnCheckedChangeListener { _, _ ->
             if (!isUpdatingUI) {
-                // Save settings when the checkbox state changes
                 updateUserSettings()
             }
         }
@@ -82,13 +75,11 @@ class Settings : BaseActivity() {
                 parent: AdapterView<*>, view: android.view.View, position: Int, id: Long
             ) {
                 if (!isUpdatingUI) {
-                    // Save settings when the selected language changes
                     updateUserSettings()
                 }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
-                // Do nothing
             }
         }
 
@@ -102,6 +93,7 @@ class Settings : BaseActivity() {
         }
     }
 
+    // Sets up the language spinner
     private fun setupLanguageSpinner() {
         val adapter = ArrayAdapter.createFromResource(
             this,
@@ -112,6 +104,7 @@ class Settings : BaseActivity() {
         spinnerLanguage.adapter = adapter
     }
 
+    // Fetches the user settings from the server
     private fun fetchUserSettings() {
         val url = "https://smartspendapi.azurewebsites.net/api/Settings/$userID"
 
@@ -122,6 +115,7 @@ class Settings : BaseActivity() {
             .get()
             .build()
 
+        // Makes the network request
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.e(TAG, "Network Error during fetchUserSettings: ${e.message}")
@@ -145,7 +139,6 @@ class Settings : BaseActivity() {
                             val allowSSO = jsonResponse.getBoolean("allowSSO")
                             val language = jsonResponse.getString("language")
 
-                            // Update UI elements
                             isUpdatingUI = true
                             checkboxNotifications.isChecked = allowNotifications
                             checkboxSSO.isChecked = allowSSO
@@ -158,7 +151,6 @@ class Settings : BaseActivity() {
                             Toast.makeText(this@Settings, "Error parsing settings data", Toast.LENGTH_LONG).show()
                         }
                     } else if (response.code == 404) {
-                        // Settings not found for the user, create default settings
                         Log.d(TAG, "Settings not found for the user. Creating default settings.")
                         createDefaultSettings()
                     } else {
@@ -170,6 +162,7 @@ class Settings : BaseActivity() {
         })
     }
 
+    // Sets the selection in the spinner
     private fun setSpinnerSelection(spinner: Spinner, value: String) {
         val adapter = spinner.adapter as ArrayAdapter<String>
         val position = adapter.getPosition(value)
@@ -178,12 +171,12 @@ class Settings : BaseActivity() {
         }
     }
 
+    // Updates the user settings on the server
     private fun updateUserSettings() {
         val allowNotifications = checkboxNotifications.isChecked
         val allowSSO = checkboxSSO.isChecked
         val language = spinnerLanguage.selectedItem.toString()
 
-        // Prepare JSON object
         val json = JSONObject()
         json.put("settingID", settingsID)
         json.put("userID", userID)
@@ -195,7 +188,6 @@ class Settings : BaseActivity() {
         val request: Request
 
         if (settingsID == -1) {
-            // Settings do not exist, create new settings
             url = "https://smartspendapi.azurewebsites.net/api/Settings"
             Log.d(TAG, "Creating new user settings at URL: $url")
             Log.d(TAG, "Settings JSON: ${json.toString()}")
@@ -210,7 +202,6 @@ class Settings : BaseActivity() {
                 .post(body)
                 .build()
         } else {
-            // Update existing settings
             url = "https://smartspendapi.azurewebsites.net/api/Settings/$settingsID"
             Log.d(TAG, "Updating user settings at URL: $url")
             Log.d(TAG, "Settings JSON: ${json.toString()}")
@@ -226,6 +217,7 @@ class Settings : BaseActivity() {
                 .build()
         }
 
+        // Makes the network request
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.e(TAG, "Network Error during updateUserSettings: ${e.message}")
@@ -243,9 +235,7 @@ class Settings : BaseActivity() {
                 runOnUiThread {
                     if (response.isSuccessful) {
                         Log.d(TAG, "Settings updated successfully.")
-                        // If we just created new settings, set the settingsID
                         if (settingsID == -1) {
-                            // Assuming the server returns the settingsID in the response
                             try {
                                 val jsonResponse = JSONObject(responseBody)
                                 settingsID = jsonResponse.getInt("settingID")
@@ -254,8 +244,7 @@ class Settings : BaseActivity() {
                                 Log.e(TAG, "Error parsing response after creating settings: ${e.message}")
                             }
                         }
-                        // Optionally show a success message
-                        // Toast.makeText(this@Settings, "Settings updated successfully", Toast.LENGTH_LONG).show()
+
                     } else {
                         Log.e(TAG, "Failed to update settings. Response code: ${response.code}")
                         val errorMessage = if (!responseBody.isNullOrEmpty()) responseBody else "Settings update failed"
@@ -266,28 +255,26 @@ class Settings : BaseActivity() {
         })
     }
 
+    // Creates default settings
     private fun createDefaultSettings() {
-        // Set default values
         isUpdatingUI = true
         checkboxNotifications.isChecked = false
         checkboxSSO.isChecked = false
         setSpinnerSelection(spinnerLanguage, "English")
         isUpdatingUI = false
 
-        // Update settingsID to -1 to indicate that settings need to be created
+        // Updates settingsID to -1 to indicate that settings need to be created
         settingsID = -1
 
-        // Call updateUserSettings() to create new settings
         updateUserSettings()
     }
 
+    // Signs out the user
     private fun signOut() {
-        // Show confirmation dialog
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Sign Out")
         builder.setMessage("Are you sure you want to sign out?")
         builder.setPositiveButton("Yes") { _, _ ->
-            // Clear SharedPreferences
             val sharedPreferences: SharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
             val editor = sharedPreferences.edit()
             editor.clear()
@@ -295,7 +282,6 @@ class Settings : BaseActivity() {
 
             Log.d(TAG, "User signed out. SharedPreferences cleared.")
 
-            // Navigate to Login activity
             val intent = Intent(this@Settings, Login::class.java)
             startActivity(intent)
             finish()

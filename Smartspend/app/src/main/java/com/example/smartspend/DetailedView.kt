@@ -45,7 +45,6 @@ class DetailedView : BaseActivity() {
     private lateinit var barChart: AnyChartView
     private val categoryTotals = mutableListOf<CategoryTotal>()
 
-    // Reference for dynamic total amount display
     private lateinit var totalAmountTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,35 +52,31 @@ class DetailedView : BaseActivity() {
 
         setContentView(R.layout.activity_detailed_view)
 
-        // Initialize the bar chart view
         barChart = findViewById(R.id.barChart)
 
-        // Initialize the totalAmountTextView
         totalAmountTextView = findViewById(R.id.totalAmount)
 
-        // Get userID from SharedPreferences
+        // Retrieve user ID from SharedPreferences
         val sharedPreferences: SharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         userID = sharedPreferences.getInt("userID", -1)
 
-        // Set up the RecyclerView
+        // Sets up the RecyclerView
         val recyclerView = findViewById<RecyclerView>(R.id.categoriesRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
         categoryAdapter = CategoryAdapter(categories)
         recyclerView.adapter = categoryAdapter
 
-        // Initialize the Floating Action Button
         val fabAddCategory: FloatingActionButton = findViewById(R.id.fabAddCategory)
         fabAddCategory.setOnClickListener {
             showAddCategoryDialog()
         }
 
-        // Fetch categories from the API
         fetchCategories()
 
-        // Fetch category totals for the bar chart
         fetchCategoryTotals()
     }
 
+    // Fetches categories from the server
     public fun fetchCategories() {
         val url = "https://smartspendapi.azurewebsites.net/api/Category/user/$userID"
 
@@ -97,6 +92,7 @@ class DetailedView : BaseActivity() {
                 }
             }
 
+            // Parses the categories response
             override fun onResponse(call: Call, response: Response) {
                 val responseBody = response.body?.string()
 
@@ -127,6 +123,7 @@ class DetailedView : BaseActivity() {
         })
     }
 
+    // Fetches category totals from the server
     private fun fetchCategoryTotals() {
         val url = "https://smartspendapi.azurewebsites.net/api/Expense/totals/user/$userID"
 
@@ -142,6 +139,7 @@ class DetailedView : BaseActivity() {
                 }
             }
 
+            // Parses the category totals response
             override fun onResponse(call: Call, response: Response) {
                 val responseBody = response.body?.string()
 
@@ -187,6 +185,7 @@ class DetailedView : BaseActivity() {
         })
     }
 
+    // Sets up the bar chart
     private fun setupBarChart() {
         val cartesian: Cartesian = AnyChart.column()
 
@@ -197,28 +196,24 @@ class DetailedView : BaseActivity() {
 
         val column: Column = cartesian.column(data)
 
-        // Set the colors and styles
-        cartesian.background().fill("#232323") // Set chart background color
+        cartesian.background().fill("#232323")
 
-        // Set axes labels and titles to white
         cartesian.xAxis(0).labels().fontColor("#FFFFFF")
         cartesian.yAxis(0).labels().fontColor("#FFFFFF")
         cartesian.xAxis(0).title().fontColor("#FFFFFF")
         cartesian.yAxis(0).title().fontColor("#FFFFFF")
 
-        // Set chart title color
         cartesian.title().fontColor("#FFFFFF")
 
-        // Customize tooltip
         cartesian.tooltip()
             .title(true)
             .titleFormat("{%X}")
             .format("R{%Value}{groupsSeparator: }")
-            .background().fill("#232323") // Tooltip background color
+            .background().fill("#232323")
         cartesian.tooltip().fontColor("#FFFFFF")
 
-        // Customize legend
-        cartesian.legend().enabled(false) // Disable legend if not needed
+
+        cartesian.legend().enabled(false)
 
         column.tooltip()
             .titleFormat("{%X}")
@@ -227,7 +222,7 @@ class DetailedView : BaseActivity() {
             .offsetX(0.0)
             .offsetY(5.0)
             .format("R{%Value}{groupsSeparator: }")
-            .fontColor("#FFFFFF") // Tooltip text color
+            .fontColor("#FFFFFF")
 
         cartesian.animation(true)
         cartesian.title("Total Spent per Category")
@@ -246,7 +241,7 @@ class DetailedView : BaseActivity() {
         barChart.setChart(cartesian)
     }
 
-    // Custom DataEntry class to include color
+    // Custom data entry class for the bar chart
     inner class CustomDataEntry(
         x: String,
         value: Number,
@@ -257,7 +252,7 @@ class DetailedView : BaseActivity() {
         }
     }
 
-    // Data class for category totals
+    // Data class to represent category totals
     data class CategoryTotal(
         val categoryID: Int,
         val categoryName: String,
@@ -266,8 +261,8 @@ class DetailedView : BaseActivity() {
         val totalSpent: Double
     )
 
+    // Shows the add category dialog
     private fun showAddCategoryDialog() {
-        // Inflate the dialog layout
         val dialogView = layoutInflater.inflate(R.layout.dialog_add_category, null)
         val editTextCategoryName: EditText = dialogView.findViewById(R.id.editTextCategoryName)
         val editTextSetAmountManually: EditText = dialogView.findViewById(R.id.editTextSetAmountManually)
@@ -275,16 +270,13 @@ class DetailedView : BaseActivity() {
         val buttonPickColor: Button = dialogView.findViewById(R.id.buttonPickColor)
         val btnCreateCategory: MaterialButton = dialogView.findViewById(R.id.btnCreateCategory)
 
-        // Set up the dialog with a custom style
         val builder = AlertDialog.Builder(this, R.style.CustomDialog)
         builder.setTitle("Add New Category")
             .setView(dialogView)
             .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
 
-        // Create the dialog
         val dialog = builder.create()
 
-        // Show the dialog and adjust its width
         dialog.show()
         dialog.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -307,7 +299,7 @@ class DetailedView : BaseActivity() {
                 .show()
         }
 
-        // Create Category Button Logic
+        // Create Category Logic
         btnCreateCategory.setOnClickListener {
             val categoryName = editTextCategoryName.text.toString().trim()
             val setAmountManually = editTextSetAmountManually.text.toString().trim()
@@ -328,7 +320,6 @@ class DetailedView : BaseActivity() {
                 return@setOnClickListener
             }
 
-            // Prepare JSON object
             val json = JSONObject()
             json.put("categoryName", categoryName)
             json.put("colorCode", selectedColorHex)
@@ -347,6 +338,7 @@ class DetailedView : BaseActivity() {
                 .post(body)
                 .build()
 
+            // Makes the API request
             client.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     runOnUiThread {
@@ -360,9 +352,8 @@ class DetailedView : BaseActivity() {
                     runOnUiThread {
                         if (response.isSuccessful) {
                             Toast.makeText(this@DetailedView, "Category created successfully", Toast.LENGTH_LONG).show()
-                            // Update the categories list
                             fetchCategories()
-                            fetchCategoryTotals() // Refresh the bar chart data
+                            fetchCategoryTotals()
                             dialog.dismiss()
                         } else {
                             val errorMessage = responseBody ?: "Category creation failed"
@@ -374,7 +365,7 @@ class DetailedView : BaseActivity() {
         }
     }
 
-    // Category data class to represent category items
+    // Data class to represent a category
     data class Category(
         val categoryID: Int,
         val name: String,
@@ -382,27 +373,24 @@ class DetailedView : BaseActivity() {
         val colorCode: String
     )
 
-    // Adapter to handle displaying categories in the RecyclerView
+    // Adapter for the RecyclerView
     class CategoryAdapter(private val categories: List<Category>) :
         RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
         inner class CategoryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val categoryName: TextView = view.findViewById(R.id.categoryName)
             val categoryAmount: TextView = view.findViewById(R.id.categoryAmount)
-            val categoryContainer: View = view  // Use the entire item view as the container
+            val categoryContainer: View = view
 
             init {
-                // Set click listener on the itemView
                 view.setOnClickListener {
                     val position = adapterPosition
                     if (position != RecyclerView.NO_POSITION) {
                         val category = categories[position]
-                        // Start CategoryClicked activity
                         val intent = Intent(view.context, CategoryClicked::class.java)
                         intent.putExtra("categoryName", category.name)
                         intent.putExtra("colorCode", category.colorCode)
-                        intent.putExtra("categoryID", category.categoryID) // Pass categoryID
-                        // Pass other necessary data if needed
+                        intent.putExtra("categoryID", category.categoryID)
                         view.context.startActivity(intent)
                     }
                 }
@@ -422,14 +410,13 @@ class DetailedView : BaseActivity() {
 
             try {
                 val color = Color.parseColor(category.colorCode)
-                // Set the text color of the category name to the saved color
                 holder.categoryName.setTextColor(color)
             } catch (e: Exception) {
-                // Handle invalid color code
-                holder.categoryName.setTextColor(Color.WHITE) // Set to default color
+                holder.categoryName.setTextColor(Color.WHITE)
             }
         }
 
+        // Returns the number of categories
         override fun getItemCount(): Int {
             return categories.size
         }

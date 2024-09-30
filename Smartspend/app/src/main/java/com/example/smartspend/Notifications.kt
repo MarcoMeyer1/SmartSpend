@@ -34,6 +34,7 @@ class Notifications : BaseActivity() {
         loadNotifications()
     }
 
+    // Fetches notifications from the server
     private fun loadNotifications() {
         val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         val userId = sharedPreferences.getInt("userID", -1)
@@ -46,6 +47,7 @@ class Notifications : BaseActivity() {
                 .get()
                 .build()
 
+            // Makes the network request
             client.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     runOnUiThread {
@@ -68,7 +70,6 @@ class Notifications : BaseActivity() {
                         for (i in 0 until jsonArray.length()) {
                             val jsonNotification = jsonArray.getJSONObject(i)
 
-                            // Safely get NotificationText and NotificationDate, with better logging
                             val notificationText = jsonNotification.optString("notificationText").takeIf { it.isNotBlank() }
                                 ?: "No notification text available"
                             val notificationDate = jsonNotification.optString("notificationDate").takeIf { it.isNotBlank() }
@@ -107,14 +108,17 @@ class Notifications : BaseActivity() {
         }
     }
 
+    // Represents a notification
     data class Notification(
         val message: String,
         val timestamp: String
     )
 
+    // Adapter for the RecyclerView
     class NotificationAdapter(private val notifications: List<Notification>) :
         RecyclerView.Adapter<NotificationAdapter.NotificationViewHolder>() {
 
+        // ViewHolder for each notification item
         class NotificationViewHolder(itemView: android.view.View) :
             RecyclerView.ViewHolder(itemView) {
             val message: MaterialTextView = itemView.findViewById(R.id.notificationMessage)
@@ -134,6 +138,7 @@ class Notifications : BaseActivity() {
             holder.time.text = notification.timestamp
         }
 
+        // Returns the number of notifications
         override fun getItemCount(): Int = notifications.size
     }
 }

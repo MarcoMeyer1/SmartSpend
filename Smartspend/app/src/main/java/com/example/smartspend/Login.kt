@@ -33,8 +33,9 @@ class Login : AppCompatActivity() {
     private lateinit var btnGoogleSignIn: MaterialButton
     private lateinit var googleSignInClient: GoogleSignInClient
 
+    // OkHttpClient for making network requests
     private val client = OkHttpClient()
-    private val RC_SIGN_IN = 1 // Request code for Google sign-in
+    private val RC_SIGN_IN = 1  // Request code for Google Sign-In
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,14 +47,14 @@ class Login : AppCompatActivity() {
             insets
         }
 
-        // Initialize UI elements
+        // Initializes the  UI elements
         etEmail = findViewById(R.id.etEmail)
         etPassword = findViewById(R.id.etPassword)
         btnSignIn = findViewById(R.id.btnSignIn)
         tvCreateAccount = findViewById(R.id.createAccountText)
         btnGoogleSignIn = findViewById(R.id.btnGoogleSignIn)
 
-        // Google Sign-In configuration
+        // Configures Google Sign-In
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken("1085780885439-1iuludmfbgbhgp4k41nlbi7emqf0j43n.apps.googleusercontent.com")
             .requestEmail()
@@ -70,13 +71,12 @@ class Login : AppCompatActivity() {
         }
 
         tvCreateAccount.setOnClickListener {
-            // Navigate to Register activity
             val intent = Intent(this, Register::class.java)
             startActivity(intent)
         }
     }
 
-    // Function for regular login
+    // Performs login procedure
      fun loginUser() {
         val email = etEmail.text.toString().trim()
         val password = etPassword.text.toString().trim()
@@ -109,6 +109,7 @@ class Login : AppCompatActivity() {
             .post(body)
             .build()
 
+        // Makes the network request
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 runOnUiThread {
@@ -117,33 +118,28 @@ class Login : AppCompatActivity() {
                 }
             }
 
+            // Parses the response
             override fun onResponse(call: Call, response: Response) {
                 val responseBody = response.body?.string()
 
                 runOnUiThread {
                     if (response.isSuccessful && responseBody != null) {
                         try {
-                            // Parse the response as JSON
                             val jsonResponse = JSONObject(responseBody)
                             val userID = jsonResponse.getInt("userID")
                             val message = jsonResponse.getString("message")
 
-                            // Save userID to SharedPreferences
                             saveUserIDToPreferences(userID)
 
-                            // Handle successful login
                             Toast.makeText(this@Login, message, Toast.LENGTH_LONG).show()
 
-                            // Navigate to the next activity
                             val intent = Intent(this@Login, MainActivity::class.java)
                             startActivity(intent)
                             finish()
                         } catch (e: Exception) {
-                            // Handle parsing error
                             Toast.makeText(this@Login, "Error parsing response", Toast.LENGTH_LONG).show()
                         }
                     } else {
-                        // Handle failed login
                         val errorMessage = responseBody ?: "Login failed"
                         Toast.makeText(this@Login, errorMessage, Toast.LENGTH_LONG).show()
                     }
@@ -152,7 +148,7 @@ class Login : AppCompatActivity() {
         })
     }
 
-    // Function to save userID to SharedPreferences
+    // Saves userID to SharedPreferences
     public fun saveUserIDToPreferences(userID: Int) {
         val sharedPreferences: SharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         val editor = sharedPreferences.edit()
@@ -160,13 +156,13 @@ class Login : AppCompatActivity() {
         editor.apply()
     }
 
-    // Function to start Google Sign-In process
+    // Initiates Google Sign-In
     private fun signInWithGoogle() {
         val signInIntent = googleSignInClient.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
 
-    // Handle Google Sign-In result
+    // Handles the result of Google Sign-In
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -176,16 +172,14 @@ class Login : AppCompatActivity() {
         }
     }
 
-    // Process the Google Sign-In result
+    // Handles the result of Google Sign-In
     public fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
 
-            // Handle the signed-in account here
             val idToken = account?.idToken
             Log.d("Login", "Google sign-in successful, ID Token: $idToken")
 
-            // Save signed-in account info to SharedPreferences (optional)
             if (account != null) {
                 val email = account.email
                 val sharedPreferences: SharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
@@ -193,14 +187,12 @@ class Login : AppCompatActivity() {
                 editor.putString("userEmail", email)
                 editor.apply()
 
-                // Navigate to main activity after successful Google sign-in
                 val intent = Intent(this@Login, MainActivity::class.java)
                 startActivity(intent)
                 finish()
             }
 
         } catch (e: ApiException) {
-            // Log error with status code for better debugging
             Log.e("Login", "Google sign-in failed. Status Code: ${e.statusCode}", e)
             Toast.makeText(this, "Google Sign-In failed: ${e.statusCode}", Toast.LENGTH_LONG).show()
         } catch (e: Exception) {
@@ -211,7 +203,7 @@ class Login : AppCompatActivity() {
 }
 
 object LoginValidator {
-
+    // Regular expression pattern for email validation
     private val EMAIL_PATTERN = Pattern.compile(
         "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
     )
@@ -226,23 +218,21 @@ object LoginValidator {
         return password.isNotEmpty()
     }
 
-    // Simulated login API request (returns a mocked response for testing)
+    // Mock login function (just a simulation for testing)
     fun loginUserMock(email: String, password: String): Map<String, Any> {
         return if (isValidEmail(email) && isValidPassword(password)) {
-            // Return a map for a successful login
             mapOf(
                 "userID" to 123,
                 "message" to "Login successful"
             )
         } else {
-            // Return a map for a failed login
             mapOf(
                 "message" to "Login failed"
             )
         }
     }
 
-    // Mock shared preferences save function (just a simulation for testing)
+    // Mock function to save userID to SharedPreferences
     fun saveUserIDToPreferencesMock(userID: Int): Boolean {
         return userID > 0
     }

@@ -27,7 +27,7 @@ class Register : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        // Initialize UI elements
+        // Initializes the UI elements
         etEmail = findViewById(R.id.etEmail)
         etPassword = findViewById(R.id.etPassword)
         etConfirmPassword = findViewById(R.id.etConfirmPassword)
@@ -45,6 +45,7 @@ class Register : AppCompatActivity() {
         }
     }
 
+    // Registers a new user on the server
     private fun registerUser() {
         val email = etEmail.text.toString().trim()
         val password = etPassword.text.toString().trim()
@@ -84,6 +85,7 @@ class Register : AppCompatActivity() {
             .post(body)
             .build()
 
+        // Makes the network request
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 runOnUiThread {
@@ -110,7 +112,7 @@ class Register : AppCompatActivity() {
     }
 }
 object Validator {
-    // Regex for a simple email validation (you can customize this as per your needs)
+    // Regular expression pattern for email validation
     private val EMAIL_PATTERN = Pattern.compile(
         "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
     )
@@ -120,7 +122,7 @@ object Validator {
         return EMAIL_PATTERN.matcher(email).matches()
     }
 
-    // Password validation (minimum 8 characters, must contain letters and numbers)
+    // Password validation
     fun isValidPassword(password: String): Boolean {
         return password.length >= 8 && password.any { it.isDigit() } && password.any { it.isLetter() }
     }

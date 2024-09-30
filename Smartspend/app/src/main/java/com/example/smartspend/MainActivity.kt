@@ -16,17 +16,14 @@ import java.io.IOException
 
 class MainActivity : BaseActivity() {
 
-    // Declare the buttons
     private lateinit var detailedViewButton: Button
     private lateinit var savingGoalsButton: Button
     private lateinit var remindersButton: Button
     private lateinit var historyButton: Button
 
-    // UI Elements
     private lateinit var budgetAmountTextView: TextView
     private lateinit var anyChartView: AnyChartView
 
-    // Networking and Data
     private val client = OkHttpClient()
     private var userID: Int = -1
     private val categoryTotals = mutableListOf<CategoryTotal>()
@@ -36,24 +33,22 @@ class MainActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
         setActiveNavButton(R.id.home_nav)
 
-        // Initialize buttons
+        // Initializes the buttons
         detailedViewButton = findViewById(R.id.buttonDetailedView)
         savingGoalsButton = findViewById(R.id.buttonSavingGoals)
         remindersButton = findViewById(R.id.buttonReminders)
         historyButton = findViewById(R.id.buttonHistory)
 
-        // Initialize TextView and AnyChartView
+        // Initializes the TextView and AnyChartView
         budgetAmountTextView = findViewById(R.id.budgetAmount)
         anyChartView = findViewById(R.id.anyChartView)
 
-        // Get userID from SharedPreferences
+        // Retrieves the user ID from SharedPreferences
         val sharedPreferences: SharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         userID = sharedPreferences.getInt("userID", -1)
 
-        // Fetch category totals and update UI
         fetchCategoryTotals()
 
-        // Set click listeners for each button
         detailedViewButton.setOnClickListener {
             openDetailedView()
         }
@@ -71,6 +66,7 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    // Fetches category totals from the server
     private fun fetchCategoryTotals() {
         val url = "https://smartspendapi.azurewebsites.net/api/Expense/totals/user/$userID"
 
@@ -79,6 +75,7 @@ class MainActivity : BaseActivity() {
             .get()
             .build()
 
+        // Makes the network request
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 runOnUiThread {
@@ -118,13 +115,11 @@ class MainActivity : BaseActivity() {
                                 totalExpenses += totalSpent
                             }
 
-                            // Calculate remaining budget
                             val remainingBudget = totalBudget - totalExpenses
 
-                            // Update the budgetAmountTextView
+                            // Updates the budget amount TextView
                             budgetAmountTextView.text = "R${"%.2f".format(remainingBudget)}"
 
-                            // Set up the AnyChart graph
                             setupChart()
 
                         } catch (e: Exception) {
@@ -138,6 +133,7 @@ class MainActivity : BaseActivity() {
         })
     }
 
+    // Sets up the chart
     private fun setupChart() {
         val pie = AnyChart.pie()
 
@@ -152,7 +148,6 @@ class MainActivity : BaseActivity() {
         pie.title("Expenses per Category")
 
 
-        // Customize chart appearance
         pie.background().fill("#272727")
         pie.labels().fontColor("#FFFFFF")
         pie.title().fontColor("#FFFFFF")
@@ -163,7 +158,6 @@ class MainActivity : BaseActivity() {
         anyChartView.setChart(pie)
     }
 
-    // Methods for opening other activities
 
     private fun openDetailedView() {
         val intent = Intent(this, DetailedView::class.java)
@@ -181,13 +175,12 @@ class MainActivity : BaseActivity() {
     }
 
 
-    // Method for Settings button
     private fun openHistory() {
         val intent = Intent(this, History::class.java)
         startActivity(intent)
     }
 
-    // Data class for category totals
+    // Represents a category total
     data class CategoryTotal(
         val categoryID: Int,
         val categoryName: String,

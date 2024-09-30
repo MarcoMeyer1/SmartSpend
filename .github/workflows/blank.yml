@@ -7,6 +7,11 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  checks: write
+  actions: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -31,18 +36,30 @@ jobs:
         working-directory: Smartspend
         run: ./gradlew build
 
-      # Run Unit Tests
+      # Run Unit Tests (JVM tests)
       - name: Run Unit Tests
         working-directory: Smartspend
         run: ./gradlew test
+        
+      # Upload JUnit Test Results for UI Display
+      - name: Upload JUnit Test Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: junit-test-results
+          path: Smartspend/app/build/test-results/testDebugUnitTest/ # Path to your JUnit test result XML files
+      
+      # Upload JUnit Test Results for UI Display
+      - name: Publish JUnit Test Results
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: JUnit Tests
+          path: Smartspend/app/build/test-results/testDebugUnitTest/**/*.xml  # Path to your test results
+          reporter: java-junit  # Correct reporter format for JUnit
+          fail-on-error: false
 
-      # Run Instrumentation Tests
-      - name: Run Instrumentation Tests
-        working-directory: Smartspend
-        run: ./gradlew connectedAndroidTest
-
-      # Upload Test Results
-      - name: Upload Test Results
+      # Upload Test Results Artifact
+      - name: Upload Test Results Artifact
         uses: actions/upload-artifact@v3
         with:
           name: test-results

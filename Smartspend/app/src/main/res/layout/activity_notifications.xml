@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="#2E2E2E">
 
-    <!-- Title Text -->
     <TextView
         android:id="@+id/notificationsTitle"
         android:layout_width="wrap_content"
@@ -19,7 +18,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- RecyclerView for Notifications -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/notificationsRecyclerView"
         android:layout_width="match_parent"
@@ -30,7 +28,6 @@
         app:layout_constraintTop_toBottomOf="@id/notificationsTitle"
         app:layout_constraintBottom_toTopOf="@id/bottom_nav" />
 
-    <!-- No Notifications Message -->
     <TextView
         android:id="@+id/noNotificationsMessage"
         android:layout_width="wrap_content"
@@ -44,7 +41,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Bottom Navigation Bar -->
     <include
         android:id="@+id/bottom_nav"
         layout="@layout/activity_base"

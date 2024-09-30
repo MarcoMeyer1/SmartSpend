@@ -36,34 +36,31 @@ class Profile : BaseActivity() {
             insets
         }
 
-        // Initialize UI elements
+        // Initializes the UI elements
         etFirstName = findViewById(R.id.etFirstName)
         etSurname = findViewById(R.id.etSurname)
         etEmail = findViewById(R.id.etEmail)
         etPhoneNumber = findViewById(R.id.etPhoneNumber)
         btnSet = findViewById(R.id.btn_set)
 
-        // Disable editing of email field
         etEmail.isEnabled = false
 
-        // Get userID from SharedPreferences
+        // Retrieves the user ID from SharedPreferences
         val sharedPreferences: SharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         userID = sharedPreferences.getInt("userID", -1)
 
         if (userID != -1) {
-            // Fetch user profile data
             fetchUserProfile()
         } else {
             Toast.makeText(this, "User ID not found. Please log in again.", Toast.LENGTH_LONG).show()
-            // Optionally, redirect to login screen
         }
 
-        // Set click listener for the 'Set' button
         btnSet.setOnClickListener {
             updateUserProfile()
         }
     }
 
+    // Fetches user profile from the server
     private fun fetchUserProfile() {
         val url = "https://smartspendapi.azurewebsites.net/api/User/$userID"
 
@@ -72,6 +69,7 @@ class Profile : BaseActivity() {
             .get()
             .build()
 
+        // Makes the network request
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 runOnUiThread {
@@ -91,7 +89,6 @@ class Profile : BaseActivity() {
                             val email = jsonResponse.getString("email")
                             val phoneNumber = jsonResponse.optString("phoneNumber", "")
 
-                            // Populate the UI fields
                             etFirstName.setText(firstName)
                             etSurname.setText(lastName)
                             etEmail.setText(email)
@@ -108,6 +105,7 @@ class Profile : BaseActivity() {
         })
     }
 
+    // Updates the user profile on the server
     private fun updateUserProfile() {
         val firstName = etFirstName.text.toString().trim()
         val lastName = etSurname.text.toString().trim()
@@ -125,12 +123,11 @@ class Profile : BaseActivity() {
             return
         }
 
-        // Prepare JSON object
         val json = JSONObject()
         json.put("userID", userID)
         json.put("firstName", firstName)
         json.put("lastName", lastName)
-        json.put("email", etEmail.text.toString()) // Email is disabled, but include it
+        json.put("email", etEmail.text.toString())
         json.put("phoneNumber", if (phoneNumber.isNotEmpty()) phoneNumber else JSONObject.NULL)
 
         val url = "https://smartspendapi.azurewebsites.net/api/User/update"
@@ -145,6 +142,7 @@ class Profile : BaseActivity() {
             .put(body)
             .build()
 
+        // Makes the network request
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 runOnUiThread {

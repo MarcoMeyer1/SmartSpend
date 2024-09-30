@@ -38,23 +38,21 @@ class Reminders : BaseActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_reminders)
 
-        // Adjust padding for edge-to-edge display
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        // Get userID from SharedPreferences
+        // Retrieve user ID
         val sharedPreferences: SharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         userID = sharedPreferences.getInt("userID", -1)
         if (userID == -1) {
-            // User not logged in, handle accordingly
             finish()
             return
         }
 
-        // Initialize RecyclerViews
+        // Initializes the RecyclerView
         rvUpcomingReminders = findViewById(R.id.rv_upcoming_reminders)
         rvCompletedReminders = findViewById(R.id.rv_completed_reminders)
 
@@ -71,16 +69,15 @@ class Reminders : BaseActivity() {
         rvUpcomingReminders.adapter = upcomingRemindersAdapter
         rvCompletedReminders.adapter = completedRemindersAdapter
 
-        // Fetch reminders
         fetchReminders()
 
-        // Handle FAB click to show the Create Reminder dialog
         val fab = findViewById<FloatingActionButton>(R.id.fab_add_reminder)
         fab.setOnClickListener {
             showCreateReminderDialog()
         }
     }
 
+    // Fetches reminders from the server
     private fun fetchReminders() {
         val url = "https://smartspendapi.azurewebsites.net/api/Reminder/$userID"
 
@@ -89,6 +86,7 @@ class Reminders : BaseActivity() {
             .get()
             .build()
 
+        // Makes the network request
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 runOnUiThread {
@@ -115,7 +113,7 @@ class Reminders : BaseActivity() {
                                     dateDue = jsonObject.getString("dateDue"),
                                     notificationDate = if (jsonObject.isNull("notificationDate")) null else jsonObject.getString("notificationDate"),
                                     isEnabled = jsonObject.getBoolean("isEnabled"),
-                                    isCompleted = jsonObject.getBoolean("isCompleted") // Ensure this field exists
+                                    isCompleted = jsonObject.getBoolean("isCompleted")
                                 )
 
                                 if (reminder.isCompleted) {
@@ -125,7 +123,6 @@ class Reminders : BaseActivity() {
                                 }
                             }
 
-                            // Update the adapters
                             upcomingRemindersAdapter.setReminders(upcomingReminders)
                             completedRemindersAdapter.setReminders(completedReminders)
                         } catch (e: Exception) {
@@ -139,16 +136,14 @@ class Reminders : BaseActivity() {
         })
     }
 
+    // Shows the dialog to create a new reminder
     private fun showCreateReminderDialog() {
-        // Inflate the custom layout for the dialog
         val builder = AlertDialog.Builder(this)
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_create_reminder, null)
 
-        // Set the custom view for the dialog
         builder.setView(dialogView)
         val dialog = builder.create()
 
-        // Initialize UI elements from the dialog layout
         val descriptionField: EditText = dialogView.findViewById(R.id.reminder_description)
         val dateDueField: EditText = dialogView.findViewById(R.id.date_due_button)
         val dateToNotifyField: EditText = dialogView.findViewById(R.id.date_to_notify_button)
@@ -157,13 +152,11 @@ class Reminders : BaseActivity() {
         val enabledText: TextView = dialogView.findViewById(R.id.enabled_text)
         val disabledText: TextView = dialogView.findViewById(R.id.disabled_text)
 
-        var isEnabled = true // default value
+        var isEnabled = true
 
-        // Set initial colors
         enabledText.setTextColor(Color.parseColor("#70FFB5"))
         disabledText.setTextColor(Color.parseColor("#FFFFFF"))
 
-        // Set click listeners
         enabledText.setOnClickListener {
             isEnabled = true
             enabledText.setTextColor(Color.parseColor("#70FFB5"))
@@ -181,7 +174,6 @@ class Reminders : BaseActivity() {
             dateToNotifyField.setTextColor(Color.parseColor("#AAAAAA"))
         }
 
-        // Make the date fields clickable and show DatePickerDialogs
         dateDueField.setOnClickListener {
             showDatePickerDialog { date -> dateDueField.setText(date) }
         }
@@ -192,7 +184,6 @@ class Reminders : BaseActivity() {
             }
         }
 
-        // Handle create button click
         createButton.setOnClickListener {
             val description = descriptionField.text.toString().trim()
             val dateDue = dateDueField.text.toString().trim()
@@ -209,7 +200,6 @@ class Reminders : BaseActivity() {
                 return@setOnClickListener
             }
 
-            // Send data to API
             createReminder(description, dateDue, dateToNotify, isEnabled)
             dialog.dismiss()
         }
@@ -217,6 +207,7 @@ class Reminders : BaseActivity() {
         dialog.show()
     }
 
+    // Creates a new reminder on the server
     private fun createReminder(description: String, dateDue: String, dateToNotify: String?, isEnabled: Boolean) {
         val url = "https://smartspendapi.azurewebsites.net/api/Reminder/create"
 
@@ -245,6 +236,7 @@ class Reminders : BaseActivity() {
             .post(body)
             .build()
 
+        // Makes the network request
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 runOnUiThread {
@@ -266,6 +258,7 @@ class Reminders : BaseActivity() {
         })
     }
 
+    // Updates an existing reminder on the server
     private fun updateReminder(reminder: Reminder) {
         val url = "https://smartspendapi.azurewebsites.net/api/Reminder/update"
 
@@ -298,7 +291,6 @@ class Reminders : BaseActivity() {
             override fun onResponse(call: Call, response: Response) {
                 runOnUiThread {
                     if (response.isSuccessful) {
-                        // Optionally refresh the reminders
                         fetchReminders()
                     } else {
                         val errorMessage = response.body?.string() ?: "Error updating reminder"
@@ -309,7 +301,7 @@ class Reminders : BaseActivity() {
         })
     }
 
-    // Function to display DatePickerDialog
+    // Shows the date picker dialog
     private fun showDatePickerDialog(onDateSet: (String) -> Unit) {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
@@ -324,6 +316,7 @@ class Reminders : BaseActivity() {
         datePickerDialog.show()
     }
 
+    // Parses the date string to API format
     private fun parseDateToApiFormat(dateString: String): String {
         val inputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         val outputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
@@ -332,7 +325,7 @@ class Reminders : BaseActivity() {
     }
 }
 
-// Reminder data class with isCompleted field
+// Reminder data class
 data class Reminder(
     val reminderID: Int,
     val userID: Int,
@@ -343,13 +336,14 @@ data class Reminder(
     var isCompleted: Boolean // Added isCompleted field
 )
 
-// ReminderAdapter class
+// Reminder adapter
 class ReminderAdapter(
     private val onUpdateReminder: (Reminder) -> Unit
 ) : RecyclerView.Adapter<ReminderAdapter.ReminderViewHolder>() {
 
     private val reminders = mutableListOf<Reminder>()
 
+    // Updates the list of reminders
     fun setReminders(reminders: List<Reminder>) {
         this.reminders.clear()
         this.reminders.addAll(reminders)
@@ -367,6 +361,7 @@ class ReminderAdapter(
         holder.bind(reminder)
     }
 
+    // Returns the number of reminders
     override fun getItemCount(): Int {
         return reminders.size
     }
@@ -379,21 +374,19 @@ class ReminderAdapter(
         private val tvReminder: TextView = itemView.findViewById(R.id.tv_reminder)
         private val cbReminder: CheckBox = itemView.findViewById(R.id.cb_reminder)
 
+        // Binds the reminder data to the view
         fun bind(reminder: Reminder) {
             tvReminder.text = reminder.description
 
-            // Parse and format the dateDue string
             val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
             val outputFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
             val date = inputFormat.parse(reminder.dateDue)
             val dateString = outputFormat.format(date)
             tvDate.text = dateString
 
-            // Remove previous listener to prevent multiple triggers
             cbReminder.setOnCheckedChangeListener(null)
             cbReminder.isChecked = reminder.isCompleted
 
-            // Set the CheckBox listener
             cbReminder.setOnCheckedChangeListener { _, isChecked ->
                 reminder.isCompleted = isChecked
                 onUpdateReminder(reminder)

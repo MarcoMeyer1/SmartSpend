@@ -9,7 +9,6 @@
     android:background="#1b1b1b"
     tools:context=".Profile">
 
-    <!-- Profile Title -->
     <TextView
         android:id="@+id/profile_title"
         android:layout_width="wrap_content"
@@ -26,7 +25,6 @@
 
 
 
-    <!-- First Name Section -->
     <TextView
         android:id="@+id/first_name_label"
         android:layout_width="wrap_content"
@@ -53,7 +51,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Divider Line -->
     <View
         android:layout_width="0dp"
         android:layout_height="1dp"
@@ -65,7 +62,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Surname Section -->
     <TextView
         android:id="@+id/surname_label"
         android:layout_width="wrap_content"
@@ -92,7 +88,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Divider Line for Surname -->
     <View
         android:layout_width="0dp"
         android:layout_height="1dp"
@@ -104,7 +99,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Email Section -->
     <TextView
         android:id="@+id/email_label"
         android:layout_width="wrap_content"
@@ -132,7 +126,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Divider Line for Email -->
     <View
         android:layout_width="0dp"
         android:layout_height="1dp"
@@ -144,7 +137,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Phone Number Section -->
     <TextView
         android:id="@+id/phone_label"
         android:layout_width="wrap_content"
@@ -172,7 +164,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Divider Line for Phone -->
     <View
         android:layout_width="0dp"
         android:layout_height="1dp"
@@ -184,7 +175,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Set Button -->
     <Button
         android:id="@+id/btn_set"
         android:layout_width="200dp"
@@ -198,7 +188,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- Navbar at the bottom -->
     <include
         android:id="@+id/bottom_nav"
         layout="@layout/activity_base"

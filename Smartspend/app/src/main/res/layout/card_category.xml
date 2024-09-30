@@ -14,7 +14,6 @@
         android:background="#434343"
         android:padding="16dp">
 
-        <!-- Category Name -->
         <TextView
             android:id="@+id/categoryName"
             android:layout_width="0dp"
@@ -24,7 +23,6 @@
             android:textColor="#FFFFFF"
             android:textSize="18sp" />
 
-        <!-- Category Amount -->
         <TextView
             android:id="@+id/categoryAmount"
             android:layout_width="wrap_content"

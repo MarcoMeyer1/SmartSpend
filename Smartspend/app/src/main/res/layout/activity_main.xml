@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     android:background="#272727">
 
-    <!-- Logo Image -->
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="148dp"
@@ -18,7 +17,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Welcome Text -->
     <TextView
         android:id="@+id/welcomeText"
         android:layout_width="wrap_content"
@@ -32,7 +30,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Available Budget Text -->
     <TextView
         android:id="@+id/availableBudgetText"
         android:layout_width="wrap_content"
@@ -44,7 +41,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Budget Amount Text -->
     <TextView
         android:id="@+id/budgetAmount"
         android:layout_width="wrap_content"
@@ -58,7 +54,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- AnyChartView for displaying important information -->
     <com.anychart.AnyChartView
         android:id="@+id/anyChartView"
         android:layout_width="0dp"
@@ -71,7 +66,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/navigationGrid" />
 
-    <!-- Grid Layout for Navigation Buttons -->
     <GridLayout
         android:id="@+id/navigationGrid"
         android:layout_width="0dp"
@@ -85,7 +79,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bottom_nav">
 
-        <!-- Button for Detailed View -->
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonDetailedView"
             android:layout_width="0dp"
@@ -99,7 +92,6 @@
             android:textColor="#FFFFFF"
             android:textSize="16sp" />
 
-        <!-- Button for Saving Goals -->
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonSavingGoals"
             android:layout_width="0dp"
@@ -113,7 +105,6 @@
             android:textColor="#FFFFFF"
             android:textSize="16sp" />
 
-        <!-- Button for Reminders -->
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonReminders"
             android:layout_width="0dp"
@@ -127,7 +118,6 @@
             android:textColor="#FFFFFF"
             android:textSize="16sp" />
 
-        <!-- Button for History -->
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonHistory"
             android:layout_width="0dp"
@@ -142,7 +132,6 @@
             android:textSize="16sp" />
     </GridLayout>
 
-    <!-- Navbar at the bottom -->
     <include
         android:id="@+id/bottom_nav"
         layout="@layout/activity_base"

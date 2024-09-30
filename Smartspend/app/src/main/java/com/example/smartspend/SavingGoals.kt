@@ -49,7 +49,6 @@ class SavingGoals : BaseActivity() {
         goalAdapter = GoalAdapter(goalList)
         recyclerViewGoals.adapter = goalAdapter
 
-        // Fetch goals from API and populate RecyclerView
         fetchGoals()
 
         fabAddGoal.setOnClickListener {
@@ -81,13 +80,13 @@ class SavingGoals : BaseActivity() {
                         return@setOnClickListener
                     }
 
-                    // Fetch the userID from SharedPreferences
+                    // Fetches the userID from SharedPreferences
                     val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
                     val userID = sharedPreferences.getInt("userID", -1)
 
                     if (userID != -1) {
                         val newGoal = Goal(
-                            goalID = 0, // Will be set by the server
+                            goalID = 0,
                             userID = userID,
                             goalName = goalName,
                             totalAmount = totalAmountDecimal,
@@ -97,7 +96,6 @@ class SavingGoals : BaseActivity() {
 
                         createGoal(newGoal) { success ->
                             if (success) {
-                                // Goal created successfully, refresh the goals list
                                 fetchGoals()
                                 dialog.dismiss()
                             } else {
@@ -121,8 +119,8 @@ class SavingGoals : BaseActivity() {
         }
     }
 
+    // Fetches the goals from the server
     private fun fetchGoals() {
-        // Fetch the userID from SharedPreferences
         val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         val userID = sharedPreferences.getInt("userID", -1)
 
@@ -134,6 +132,7 @@ class SavingGoals : BaseActivity() {
                 .get()
                 .build()
 
+            // Makes the network request
             client.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     runOnUiThread {
@@ -177,6 +176,7 @@ class SavingGoals : BaseActivity() {
         }
     }
 
+    // Creates a new goal on the server
     private fun createGoal(goal: Goal, callback: (Boolean) -> Unit) {
         val url = "$apiBaseUrl/Goal/create"
 
@@ -197,6 +197,7 @@ class SavingGoals : BaseActivity() {
             .post(body)
             .build()
 
+        // Makes the network request
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 runOnUiThread {
@@ -212,7 +213,7 @@ class SavingGoals : BaseActivity() {
         })
     }
 
-    // Method to handle the login and save userID to SharedPreferences
+    // Logs in the user
     fun loginUser(email: String, password: String) {
         val url = "$apiBaseUrl/login"
 
@@ -230,6 +231,7 @@ class SavingGoals : BaseActivity() {
             .post(requestBody)
             .build()
 
+        // Makes the network request
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 runOnUiThread {
@@ -242,22 +244,19 @@ class SavingGoals : BaseActivity() {
                 if (response.isSuccessful && responseBody != null) {
                     val jsonResponse = JSONObject(responseBody)
 
-                    // Assuming the response contains a field called "userID"
                     val userID = jsonResponse.getInt("userID")
 
-                    // Save the userID to SharedPreferences
                     saveUserID(userID)
 
                     runOnUiThread {
                         Toast.makeText(this@SavingGoals, "Login successful", Toast.LENGTH_SHORT).show()
-                        // Redirect to the main activity or dashboard
                     }
                 }
             }
         })
     }
 
-    // Method to save userID to SharedPreferences
+    // Saves the user ID to SharedPreferences
     private fun saveUserID(userID: Int) {
         val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         val editor = sharedPreferences.edit()
@@ -266,7 +265,7 @@ class SavingGoals : BaseActivity() {
     }
 }
 
-// Data class for Goal
+// Data class for a goal
 data class Goal(
     val goalID: Int,
     val userID: Int,
@@ -276,7 +275,7 @@ data class Goal(
     val completionDate: String?
 )
 
-// Adapter for RecyclerView
+// Adapter for the RecyclerView
 class GoalAdapter(private val goals: List<Goal>) :
     RecyclerView.Adapter<GoalAdapter.GoalViewHolder>() {
 
@@ -296,7 +295,6 @@ class GoalAdapter(private val goals: List<Goal>) :
         val goal = goals[position]
         holder.tvGoalTitle.text = goal.goalName
 
-        // Format amounts with currency symbols
         val numberFormat = NumberFormat.getCurrencyInstance(Locale.getDefault())
         holder.tvGoalProgress.text =
             "${numberFormat.format(goal.savedAmount)}/${numberFormat.format(goal.totalAmount)}"
@@ -305,25 +303,26 @@ class GoalAdapter(private val goals: List<Goal>) :
             .multiply(BigDecimal(100))).toInt()
         holder.tvGoalPercentage.text = "$progressPercentage%"
 
-        // Set the color of the percentage text based on progress
+        // Set the progress bar color based on the percentage
         val percentageColor = when {
             progressPercentage <= 30 -> {
-                Color.parseColor("#FFB3B3") // Pastel red
+                Color.parseColor("#FFB3B3")
             }
             progressPercentage <= 60 -> {
-                Color.parseColor("#FFD9B3") // Pastel orange
+                Color.parseColor("#FFD9B3")
             }
             progressPercentage <= 90 -> {
-                Color.parseColor("#FFFFCC") // Pastel yellow
+                Color.parseColor("#FFFFCC")
             }
             else -> {
-                Color.parseColor("#B3FFB3") // Pastel green
+                Color.parseColor("#B3FFB3")
             }
         }
 
         holder.tvGoalPercentage.setTextColor(percentageColor)
     }
 
+    // Returns the number of items in the list
     override fun getItemCount(): Int {
         return goals.size
     }

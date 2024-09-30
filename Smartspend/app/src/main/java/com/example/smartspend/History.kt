@@ -35,17 +35,17 @@ class History : BaseActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_history)
 
-        // Initialize RecyclerView and its adapter
+        // Initializes the RecyclerView and adapter
         rvTransactionHistory = findViewById(R.id.rv_transaction_history)
         rvTransactionHistory.layoutManager = LinearLayoutManager(this)
         transactionAdapter = TransactionAdapter(transactions)
         rvTransactionHistory.adapter = transactionAdapter
 
-        // Initialize TextViews for total income and expenses
+        // Initializes the TextViews for total income and expenses
         tvIncomeValue = findViewById(R.id.tv_income_value)
         tvExpensesValue = findViewById(R.id.tv_expenses_value)
 
-        // Get userID from SharedPreferences
+        // Retrieves the user ID from SharedPreferences
         val sharedPreferences: SharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         userID = sharedPreferences.getInt("userID", -1)
 
@@ -57,17 +57,20 @@ class History : BaseActivity() {
         }
     }
 
+    // Fetches data from the server
     private fun fetchData() {
         fetchIncome()
         fetchExpenses()
     }
 
+    // Lists of transactions
     private var incomeList = mutableListOf<Transaction>()
     private var expenseList = mutableListOf<Transaction>()
 
     private var totalIncome = 0.0
     private var totalExpenses = 0.0
 
+    // Fetches income data from the server
     private fun fetchIncome() {
         val url = "https://smartspendapi.azurewebsites.net/api/Income/$userID"
 
@@ -83,6 +86,7 @@ class History : BaseActivity() {
                 }
             }
 
+            // Parses the income data
             override fun onResponse(call: Call, response: Response) {
                 val responseBody = response.body?.string()
 
@@ -123,6 +127,7 @@ class History : BaseActivity() {
         })
     }
 
+    // Fetches expense data from the server
     private fun fetchExpenses() {
         val url = "https://smartspendapi.azurewebsites.net/api/Expense/$userID"
 
@@ -138,6 +143,7 @@ class History : BaseActivity() {
                 }
             }
 
+            // Parses the expense data
             override fun onResponse(call: Call, response: Response) {
                 val responseBody = response.body?.string()
 
@@ -178,14 +184,17 @@ class History : BaseActivity() {
         })
     }
 
+    // Updates the total income and expenses
     private fun updateTotalIncome() {
         tvIncomeValue.text = "R${totalIncome.format(2)}"
     }
 
+    // Updates the total expenses
     private fun updateTotalExpenses() {
         tvExpensesValue.text = "R${totalExpenses.format(2)}"
     }
 
+    // Merges and sorts the transactions
     private fun mergeAndSortTransactions() {
         transactions.clear()
         transactions.addAll(incomeList)
@@ -196,6 +205,7 @@ class History : BaseActivity() {
         transactionAdapter.notifyDataSetChanged()
     }
 
+    // Parses the date string
     private fun parseDate(dateString: String): Date {
         val inputFormats = arrayOf(
             "yyyy-MM-dd'T'HH:mm:ss",
@@ -217,7 +227,7 @@ class History : BaseActivity() {
     // Extension function to format Double values
     private fun Double.format(digits: Int) = "%.${digits}f".format(this)
 
-    // Transaction data class
+    // Data class to represent a transaction
     data class Transaction(
         val date: String,
         val description: String,
@@ -225,7 +235,7 @@ class History : BaseActivity() {
         val isIncome: Boolean
     )
 
-    // Adapter for transactions
+    // Adapter for the RecyclerView
     class TransactionAdapter(private val transactions: List<Transaction>) :
         RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>() {
 
@@ -241,10 +251,11 @@ class History : BaseActivity() {
             return TransactionViewHolder(view)
         }
 
+        // Binds the transaction data to the view
         override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
             val transaction = transactions[position]
 
-            // Format the date
+            // Formats the date
             val inputFormats = arrayOf(
                 "yyyy-MM-dd'T'HH:mm:ss",
                 "yyyy-MM-dd'T'HH:mm:ss.SSS",
@@ -269,13 +280,14 @@ class History : BaseActivity() {
 
             if (transaction.isIncome) {
                 holder.tvAmount.text = "+ R${transaction.amount.format(2)}"
-                holder.tvAmount.setTextColor(Color.parseColor("#70FFB5")) // Green color
+                holder.tvAmount.setTextColor(Color.parseColor("#70FFB5"))
             } else {
                 holder.tvAmount.text = "- R${transaction.amount.format(2)}"
-                holder.tvAmount.setTextColor(Color.parseColor("#FF7070")) // Red color
+                holder.tvAmount.setTextColor(Color.parseColor("#FF7070"))
             }
         }
 
+        // Returns the number of items in the list
         override fun getItemCount(): Int {
             return transactions.size
         }

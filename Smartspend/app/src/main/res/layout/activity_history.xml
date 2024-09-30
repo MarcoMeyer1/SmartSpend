@@ -9,7 +9,6 @@
     android:background="#1b1b1b"
     tools:context=".History">
 
-    <!-- Title of the History Page -->
     <TextView
         android:id="@+id/tv_history_title"
         android:layout_width="wrap_content"
@@ -23,7 +22,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:gravity="center" />
 
-    <!-- Income and Expenses Container -->
     <LinearLayout
         android:id="@+id/income_expenses_container"
         android:layout_width="match_parent"
@@ -35,7 +33,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Income Label and TextView -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -96,7 +93,6 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- RecyclerView for Transaction History -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_transaction_history"
         android:layout_width="match_parent"
@@ -109,7 +105,6 @@
         android:scrollbars="vertical"
         tools:listitem="@layout/item_transaction_card" />
 
-    <!-- Bottom Navigation View -->
     <include
         android:id="@+id/bottom_nav"
         layout="@layout/activity_base"

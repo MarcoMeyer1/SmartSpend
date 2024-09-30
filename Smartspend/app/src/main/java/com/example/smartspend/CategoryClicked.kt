@@ -44,41 +44,38 @@ class CategoryClicked : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_category_clicked)
 
-        // Adjust padding for edge-to-edge display
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        // Initialize UI elements
+        // Initializes views
         tvCategoryTitle = findViewById(R.id.tv_category_title)
         ivEditCategory = findViewById(R.id.iv_edit_category)
         tvAvailableBudget = findViewById(R.id.tv_available_budget)
         recyclerViewHistory = findViewById(R.id.recycler_view_history)
 
-        // Initialize RecyclerView
+        // Sets up RecyclerView
         transactionAdapter = TransactionAdapter(transactions)
         recyclerViewHistory.layoutManager = LinearLayoutManager(this)
         recyclerViewHistory.adapter = transactionAdapter
 
-        // Get userID from SharedPreferences
+        // Retrieves user ID from SharedPreferences
         val sharedPreferences: SharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         userID = sharedPreferences.getInt("userID", -1)
 
-        // Retrieve Intent extras
+        // Retrieves category details from intent
         categoryName = intent.getStringExtra("categoryName")
         colorCode = intent.getStringExtra("colorCode")
         categoryID = intent.getIntExtra("categoryID", -1)
 
-        // Set the title text and color
         tvCategoryTitle.text = categoryName ?: "Category"
         try {
             val color = Color.parseColor(colorCode)
             tvCategoryTitle.setTextColor(color)
         } catch (e: Exception) {
-            // Handle invalid color code
-            tvCategoryTitle.setTextColor(Color.WHITE) // Set to default color
+            tvCategoryTitle.setTextColor(Color.WHITE)
         }
 
         if (categoryID != -1) {
@@ -90,6 +87,7 @@ class CategoryClicked : AppCompatActivity() {
         }
     }
 
+    // Fetches category details from the server
     private fun fetchCategoryDetails() {
         val url = "https://smartspendapi.azurewebsites.net/api/Category/$categoryID"
 
@@ -105,6 +103,7 @@ class CategoryClicked : AppCompatActivity() {
                 }
             }
 
+            // Parses the category details response
             override fun onResponse(call: Call, response: Response) {
                 val responseBody = response.body?.string()
 
@@ -125,6 +124,7 @@ class CategoryClicked : AppCompatActivity() {
         })
     }
 
+    // Fetches expenses for the selected category
     public fun fetchExpenses() {
         val url = "https://smartspendapi.azurewebsites.net/api/Expense/category/$userID/$categoryID"
 
@@ -140,6 +140,7 @@ class CategoryClicked : AppCompatActivity() {
                 }
             }
 
+            // Parses the expenses response
             override fun onResponse(call: Call, response: Response) {
                 val responseBody = response.body?.string()
 
@@ -174,6 +175,7 @@ class CategoryClicked : AppCompatActivity() {
         })
     }
 
+    // Updates the available budget text
     private fun updateAvailableBudget() {
         val remainingBudget = maxBudget - usedBudget
         tvAvailableBudget.text = "R${remainingBudget.format(2)}/R${maxBudget.format(2)}"
@@ -182,15 +184,13 @@ class CategoryClicked : AppCompatActivity() {
     // Extension function to format Double values
     private fun Double.format(digits: Int) = "%.${digits}f".format(this)
 
-    // Transaction data class
     data class Transaction(
         val date: String,
         val description: String,
         val amount: Double
     )
 
-    // Adapter for transactions
-    // Adapter for transactions
+    // Adapter for RecyclerView
     class TransactionAdapter(private val transactions: List<Transaction>) :
         RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>() {
 
@@ -209,7 +209,7 @@ class CategoryClicked : AppCompatActivity() {
         override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
             val transaction = transactions[position]
 
-            // Format the date
+            // Formats the date
             val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
             val outputFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
             val date = inputFormat.parse(transaction.date)

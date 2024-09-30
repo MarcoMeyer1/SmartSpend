@@ -29,8 +29,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Do not call setContentView here
-        // setupNavbar will be called after setContentView in child classes
+
     }
 
     override fun setContentView(layoutResID: Int) {
@@ -74,6 +73,7 @@ abstract class BaseActivity : AppCompatActivity() {
         resetNavIcons()
     }
 
+// Makes sure that Nav buttons are white
     private fun resetNavIcons() {
         val homeNav: ImageView = findViewById(R.id.home_nav)
         val notificationsNav: ImageView = findViewById(R.id.notifications_nav)
@@ -88,6 +88,7 @@ abstract class BaseActivity : AppCompatActivity() {
         settingsNav.setColorFilter(Color.parseColor("#FFFFFF"))
     }
 
+    // Sets the active Nav button
     protected fun setActiveNavButton(navButtonId: Int?) {
         resetNavIcons()
 
@@ -137,6 +138,7 @@ abstract class BaseActivity : AppCompatActivity() {
             val amountStr = etAmount.text.toString().trim()
             val reference = etReference.text.toString().trim()
 
+            // Validates the inputs
             if (amountStr.isEmpty()) {
                 etAmount.error = "Amount is required"
                 etAmount.requestFocus()
@@ -163,9 +165,9 @@ abstract class BaseActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Format the current date to ISO 8601
+            // Formats the current date to ISO 8601
             val currentDateTime = Date()
-            val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault()) // ISO 8601 format
+            val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
             val incomeDate = formatter.format(currentDateTime)
 
             val incomeJson = JSONObject()
@@ -179,6 +181,7 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
+    // Sends the income data to the server
     private fun sendIncomeDataToServer(incomeJson: JSONObject) {
         val url = "https://smartspendapi.azurewebsites.net/api/Income/create"
         val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
@@ -207,6 +210,7 @@ abstract class BaseActivity : AppCompatActivity() {
         })
     }
 
+    // Fetches the categories from the server
     private fun fetchCategoriesAndShowExpenseDialog() {
         val sharedPreferences: SharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         val userID = sharedPreferences.getInt("userID", -1)
@@ -267,7 +271,7 @@ abstract class BaseActivity : AppCompatActivity() {
         val etAmount: EditText = expenseDialogView.findViewById(R.id.amount)
         val confirmButton: Button = expenseDialogView.findViewById(R.id.confirmButton)
 
-        // Populate Spinner with categories
+        // Populates the Spinner with categories
         val categoryNames = categoryList.map { it.categoryName }
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categoryNames)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -278,6 +282,7 @@ abstract class BaseActivity : AppCompatActivity() {
             val expenseName = etExpenseName.text.toString().trim()
             val selectedCategoryPosition = spinnerCategory.selectedItemPosition
 
+            // Validates the inputs
             if (amountStr.isEmpty()) {
                 etAmount.error = "Amount is required"
                 etAmount.requestFocus()
@@ -311,7 +316,7 @@ abstract class BaseActivity : AppCompatActivity() {
             }
 
             val currentDateTime = Date()
-            val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault()) // ISO 8601 format
+            val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
             val expenseDate = formatter.format(currentDateTime)
 
             val expenseJson = JSONObject()
@@ -326,6 +331,7 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
+    // Sends the expense data to the server
     private fun sendExpenseDataToServer(expenseJson: JSONObject) {
         val url = "https://smartspendapi.azurewebsites.net/api/Expense/create"
         val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
@@ -354,7 +360,7 @@ abstract class BaseActivity : AppCompatActivity() {
         })
     }
 
-    // Define the Category data class
+    // Defines the Category data class
     data class Category(
         val categoryID: Int,
         val categoryName: String,

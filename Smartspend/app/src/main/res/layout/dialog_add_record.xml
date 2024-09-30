@@ -9,7 +9,6 @@
 
     android:gravity="center">
 
-    <!-- Dialog title -->
 <TextView
 android:id="@+id/dialog_title"
 android:layout_width="wrap_content"
@@ -21,7 +20,6 @@ android:layout_gravity="center"
 android:textStyle="bold"
 android:paddingBottom="16dp" />
 
-    <!-- Income Button -->
     <Button
         android:id="@+id/button_income"
         android:layout_width="305dp"
@@ -37,7 +35,6 @@ android:paddingBottom="16dp" />
         app:strokeColor="#6FFDB4"
         app:strokeWidth="3dp" />
 
-    <!-- Expense Button -->
     <Button
         android:id="@+id/button_expense"
         android:layout_width="304dp"

@@ -10,7 +10,6 @@
     android:layout_gravity="bottom"
     android:padding="1dp">
 
-    <!-- Home Navigation -->
     <LinearLayout
         android:id="@+id/home_nav_container"
         android:layout_width="0dp"
@@ -47,7 +46,6 @@
             android:gravity="center" />
     </LinearLayout>
 
-    <!-- Notifications Navigation -->
     <LinearLayout
         android:id="@+id/notifications_nav_container"
         android:layout_width="0dp"
@@ -84,7 +82,6 @@
             android:gravity="center" />
     </LinearLayout>
 
-    <!-- Add Record Navigation -->
     <LinearLayout
         android:id="@+id/add_record_nav_container"
         android:layout_width="0dp"
@@ -121,7 +118,6 @@
             android:gravity="center" />
     </LinearLayout>
 
-    <!-- History Navigation -->
     <LinearLayout
         android:id="@+id/profile_nav_container"
         android:layout_width="0dp"
@@ -158,7 +154,6 @@
             android:gravity="center" />
     </LinearLayout>
 
-    <!-- Settings Navigation -->
     <LinearLayout
         android:id="@+id/settings_nav_container"
         android:layout_width="0dp"

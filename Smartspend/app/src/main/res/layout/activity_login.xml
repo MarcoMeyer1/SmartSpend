@@ -10,7 +10,6 @@
     android:background="#1b1b1b"
     android:gravity="center_horizontal">
 
-    <!-- Logo Image -->
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="120dp"
@@ -18,7 +17,6 @@
         android:layout_gravity="center"
         app:srcCompat="@drawable/smartspend_logo" />
 
-    <!-- App Title -->
     <TextView
         android:id="@+id/appTitle"
         android:layout_width="wrap_content"
@@ -30,7 +28,6 @@
         android:textColor="#FFFFFF"
         android:textSize="32sp" />
 
-    <!-- Continue with Google Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnGoogleSignIn"
         android:layout_width="match_parent"
@@ -47,9 +44,7 @@
         app:strokeColor="#70FFB5"
         app:strokeWidth="1dp" />
 
-    <!-- Continue with SSO Button -->
 
-    <!-- Horizontal Divider with "or" -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -57,7 +52,6 @@
         android:layout_marginTop="16dp"
         android:gravity="center_vertical">
 
-        <!-- Left Divider -->
         <View
             android:id="@+id/dividerLeft"
             android:layout_width="0dp"
@@ -65,7 +59,6 @@
             android:layout_weight="1"
             android:background="#FFFFFF" />
 
-        <!-- "or" Text -->
         <TextView
             android:id="@+id/orText"
             android:layout_width="wrap_content"
@@ -76,7 +69,6 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp" />
 
-        <!-- Right Divider -->
         <View
             android:id="@+id/dividerRight"
             android:layout_width="0dp"
@@ -85,7 +77,6 @@
             android:background="#FFFFFF" />
     </LinearLayout>
 
-    <!-- Email EditText -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/emailTextInputLayout"
         android:layout_width="match_parent"
@@ -106,7 +97,6 @@
             android:textColorHint="#FFFFFF" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Password EditText -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/passwordTextInputLayout"
         android:layout_width="match_parent"
@@ -129,7 +119,6 @@
 
 
 
-    <!-- Sign In Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSignIn"
         android:layout_width="match_parent"
@@ -142,7 +131,6 @@
     app:strokeColor="#70FFB5"
     app:strokeWidth="1dp" />
 
-    <!-- Create Account Text -->
     <TextView
         android:id="@+id/createAccountText"
         android:layout_width="wrap_content"
@@ -153,7 +141,6 @@
         android:textColor="#70FFB5"
         android:textSize="15sp" />
 
-    <!-- Forgot Password Text -->
     <TextView
         android:id="@+id/forgotPasswordText"
         android:layout_width="wrap_content"

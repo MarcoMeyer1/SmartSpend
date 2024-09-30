@@ -9,7 +9,6 @@
     android:background="#1b1b1b"
     tools:context=".Register">
 
-    <!-- Register Title -->
     <TextView
         android:id="@+id/registerTitle"
         android:layout_width="wrap_content"
@@ -24,7 +23,6 @@
         android:layout_marginTop="40dp"
         android:fontFamily="sans-serif" />
 
-    <!-- Email Address Field -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/emailTextInputLayout"
         android:layout_width="0dp"
@@ -49,7 +47,6 @@
             android:fontFamily="sans-serif" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Password Field -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/passwordTextInputLayout"
         android:layout_width="0dp"
@@ -76,7 +73,7 @@
             android:fontFamily="sans-serif" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Confirm Password Field -->
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/confirmPasswordTextInputLayout"
         android:layout_width="0dp"
@@ -103,7 +100,7 @@
             android:fontFamily="sans-serif" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Sign In Button -->
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnRegister"
         android:layout_width="0dp"
@@ -121,7 +118,6 @@
         app:strokeColor="#70FFB5"
         app:strokeWidth="1dp" />
 
-    <!-- Horizontal Divider with "or" -->
     <View
         android:id="@+id/dividerLeft"
         android:layout_width="0dp"
@@ -158,7 +154,6 @@
         android:layout_marginTop="24dp"
         app:layout_constraintWidth_percent="0.35"/>
 
-    <!-- Already have an account? Login Text -->
     <LinearLayout
         android:id="@+id/loginSection"
         android:layout_width="wrap_content"

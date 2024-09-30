@@ -39,7 +39,7 @@ Below are some screenshots of key parts of the SmartSpend app:
 
 2. **Detailed View**: Shows detailed information about a specific category, including all associated expenses and income.
    
-   ![Detailed View Screenshot](Screenshots/detailedView.png)
+   ![Detailed View Screenshot](Screenshots/detailedview.png)
 
 3. **Goals Page**: Allows users to create, track, and manage their savings goals.
    
@@ -51,21 +51,21 @@ To set up the project locally, follow these steps:
 
 1. Clone the repository:
 
-    \`\`\`bash
+    ```bash
     git clone https://github.com/MarcoMeyer1/SmartSpend
-    \`\`\`
+    ```
 
 2. Navigate into the project directory:
 
-    \`\`\`bash
+    ```bash
     cd smartspend-api
-    \`\`\`
+    ```
 
 3. Install dependencies:
 
-    \`\`\`bash
+    ```bash
     ./gradlew build
-    \`\`\`
+    ```
 
 
 

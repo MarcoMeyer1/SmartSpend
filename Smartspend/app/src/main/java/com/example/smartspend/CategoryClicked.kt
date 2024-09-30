@@ -35,7 +35,7 @@ class CategoryClicked : AppCompatActivity() {
     private var userID: Int = -1
 
     private val client = OkHttpClient()
-    private val transactions = mutableListOf<Transaction>()
+    public val transactions = mutableListOf<Transaction>()
     private var maxBudget: Double = 0.0
     private var usedBudget: Double = 0.0
 
@@ -125,7 +125,7 @@ class CategoryClicked : AppCompatActivity() {
         })
     }
 
-    private fun fetchExpenses() {
+    public fun fetchExpenses() {
         val url = "https://smartspendapi.azurewebsites.net/api/Expense/category/$userID/$categoryID"
 
         val request = Request.Builder()

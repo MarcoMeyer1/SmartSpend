@@ -4,16 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import org.json.JSONObject
 import java.io.IOException
+import java.util.regex.Pattern
 
 class Register : AppCompatActivity() {
 
@@ -27,13 +25,7 @@ class Register : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_register)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
 
         // Initialize UI elements
         etEmail = findViewById(R.id.etEmail)
@@ -47,7 +39,6 @@ class Register : AppCompatActivity() {
         }
 
         tvLoginLink.setOnClickListener {
-            // Navigate to Login activity
             val intent = Intent(this, Login::class.java)
             startActivity(intent)
             finish()
@@ -59,14 +50,14 @@ class Register : AppCompatActivity() {
         val password = etPassword.text.toString().trim()
         val confirmPassword = etConfirmPassword.text.toString().trim()
 
-        if (email.isEmpty()) {
-            etEmail.error = "Email is required"
+        if (!Validator.isValidEmail(email)) {
+            etEmail.error = "Invalid email address"
             etEmail.requestFocus()
             return
         }
 
-        if (password.isEmpty()) {
-            etPassword.error = "Password is required"
+        if (!Validator.isValidPassword(password)) {
+            etPassword.error = "Password must be at least 8 characters, with letters and numbers"
             etPassword.requestFocus()
             return
         }
@@ -82,14 +73,11 @@ class Register : AppCompatActivity() {
         val json = JSONObject()
         json.put("email", email)
         json.put("password", password)
-        json.put("firstName", "John") // Replace with actual values or collect from user
-        json.put("lastName", "Doe")   // Replace with actual values or collect from user
-        json.put("phoneNumber", "")   // Optional
+        json.put("firstName", "John")
+        json.put("lastName", "Doe")
+        json.put("phoneNumber", "")
 
-        val body = RequestBody.create(
-            "application/json; charset=utf-8".toMediaTypeOrNull(),
-            json.toString()
-        )
+        val body = RequestBody.create("application/json; charset=utf-8".toMediaTypeOrNull(), json.toString())
 
         val request = Request.Builder()
             .url(url)
@@ -98,13 +86,8 @@ class Register : AppCompatActivity() {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                // Handle error
                 runOnUiThread {
-                    Toast.makeText(
-                        this@Register,
-                        "Network Error: ${e.message}",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    Toast.makeText(this@Register, "Network Error: ${e.message}", Toast.LENGTH_LONG).show()
                 }
             }
 
@@ -113,23 +96,32 @@ class Register : AppCompatActivity() {
 
                 runOnUiThread {
                     if (response.isSuccessful) {
-                        // Handle successful registration
-                        Toast.makeText(
-                            this@Register,
-                            "Registration successful",
-                            Toast.LENGTH_LONG
-                        ).show()
-                        // Navigate to the Login activity
+                        Toast.makeText(this@Register, "Registration successful", Toast.LENGTH_LONG).show()
                         val intent = Intent(this@Register, Login::class.java)
                         startActivity(intent)
                         finish()
                     } else {
-                        // Handle failed registration
                         val errorMessage = responseBody ?: "Registration failed"
                         Toast.makeText(this@Register, errorMessage, Toast.LENGTH_LONG).show()
                     }
                 }
             }
         })
+    }
+}
+object Validator {
+    // Regex for a simple email validation (you can customize this as per your needs)
+    private val EMAIL_PATTERN = Pattern.compile(
+        "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
+    )
+
+    // Email validation
+    fun isValidEmail(email: String): Boolean {
+        return EMAIL_PATTERN.matcher(email).matches()
+    }
+
+    // Password validation (minimum 8 characters, must contain letters and numbers)
+    fun isValidPassword(password: String): Boolean {
+        return password.length >= 8 && password.any { it.isDigit() } && password.any { it.isLetter() }
     }
 }

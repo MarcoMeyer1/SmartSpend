@@ -37,7 +37,7 @@ import java.io.IOException
 class DetailedView : BaseActivity() {
 
     private var selectedColorHex: String = "#FFFFFF" // Default color
-    private val categories = mutableListOf<Category>()
+    public val categories = mutableListOf<Category>()
     private lateinit var categoryAdapter: CategoryAdapter
     private val client = OkHttpClient()
     private var userID: Int = -1
@@ -82,7 +82,7 @@ class DetailedView : BaseActivity() {
         fetchCategoryTotals()
     }
 
-    private fun fetchCategories() {
+    public fun fetchCategories() {
         val url = "https://smartspendapi.azurewebsites.net/api/Category/user/$userID"
 
         val request = Request.Builder()

@@ -22,11 +22,12 @@ import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import org.json.JSONObject
 import java.io.IOException
+import java.util.regex.Pattern
 
 class Login : AppCompatActivity() {
 
-    private lateinit var etEmail: TextInputEditText
-    private lateinit var etPassword: TextInputEditText
+    public lateinit var etEmail: TextInputEditText
+    public lateinit var etPassword: TextInputEditText
     private lateinit var btnSignIn: MaterialButton
     private lateinit var tvCreateAccount: TextView
     private lateinit var btnGoogleSignIn: MaterialButton
@@ -76,7 +77,7 @@ class Login : AppCompatActivity() {
     }
 
     // Function for regular login
-    private fun loginUser() {
+     fun loginUser() {
         val email = etEmail.text.toString().trim()
         val password = etPassword.text.toString().trim()
 
@@ -152,7 +153,7 @@ class Login : AppCompatActivity() {
     }
 
     // Function to save userID to SharedPreferences
-    private fun saveUserIDToPreferences(userID: Int) {
+    public fun saveUserIDToPreferences(userID: Int) {
         val sharedPreferences: SharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.putInt("userID", userID)
@@ -176,7 +177,7 @@ class Login : AppCompatActivity() {
     }
 
     // Process the Google Sign-In result
-    private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
+    public fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
 
@@ -206,5 +207,43 @@ class Login : AppCompatActivity() {
             Log.e("Login", "Google sign-in failed", e)
             Toast.makeText(this, "Google Sign-In failed", Toast.LENGTH_LONG).show()
         }
+    }
+}
+
+object LoginValidator {
+
+    private val EMAIL_PATTERN = Pattern.compile(
+        "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
+    )
+
+    // Email validation method
+    fun isValidEmail(email: String): Boolean {
+        return EMAIL_PATTERN.matcher(email).matches()
+    }
+
+    // Password validation method
+    fun isValidPassword(password: String): Boolean {
+        return password.isNotEmpty()
+    }
+
+    // Simulated login API request (returns a mocked response for testing)
+    fun loginUserMock(email: String, password: String): Map<String, Any> {
+        return if (isValidEmail(email) && isValidPassword(password)) {
+            // Return a map for a successful login
+            mapOf(
+                "userID" to 123,
+                "message" to "Login successful"
+            )
+        } else {
+            // Return a map for a failed login
+            mapOf(
+                "message" to "Login failed"
+            )
+        }
+    }
+
+    // Mock shared preferences save function (just a simulation for testing)
+    fun saveUserIDToPreferencesMock(userID: Int): Boolean {
+        return userID > 0
     }
 }

@@ -27,7 +27,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="September 2024"
+            android:text="October 2024"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -36,7 +36,7 @@
             android:id="@+id/totalAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="R2523"
+            android:text="R0"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             android:textStyle="bold" />

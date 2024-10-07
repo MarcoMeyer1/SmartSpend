@@ -21,9 +21,6 @@ import com.anychart.chart.common.dataentry.ValueDataEntry
 import com.anychart.charts.Cartesian
 import com.anychart.core.cartesian.series.Column
 import com.anychart.enums.*
-import com.anychart.graphics.vector.SolidFill
-import com.anychart.graphics.vector.text.HAlign
-import com.anychart.graphics.vector.text.VAlign
 import com.flask.colorpicker.ColorPickerView
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
 import com.google.android.material.button.MaterialButton
@@ -37,7 +34,6 @@ import java.io.IOException
 class DetailedView : BaseActivity() {
 
     private var selectedColorHex: String = "#FFFFFF" // Default color
-    public val categories = mutableListOf<Category>()
     private lateinit var categoryAdapter: CategoryAdapter
     private val client = OkHttpClient()
     private var userID: Int = -1
@@ -63,7 +59,8 @@ class DetailedView : BaseActivity() {
         // Sets up the RecyclerView
         val recyclerView = findViewById<RecyclerView>(R.id.categoriesRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        categoryAdapter = CategoryAdapter(categories)
+        // Initialize the adapter with categoryTotals
+        categoryAdapter = CategoryAdapter(categoryTotals)
         recyclerView.adapter = categoryAdapter
 
         val fabAddCategory: FloatingActionButton = findViewById(R.id.fabAddCategory)
@@ -71,56 +68,7 @@ class DetailedView : BaseActivity() {
             showAddCategoryDialog()
         }
 
-        fetchCategories()
-
         fetchCategoryTotals()
-    }
-
-    // Fetches categories from the server
-    public fun fetchCategories() {
-        val url = "https://smartspendapi.azurewebsites.net/api/Category/user/$userID"
-
-        val request = Request.Builder()
-            .url(url)
-            .get()
-            .build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                runOnUiThread {
-                    Toast.makeText(this@DetailedView, "Network Error: ${e.message}", Toast.LENGTH_LONG).show()
-                }
-            }
-
-            // Parses the categories response
-            override fun onResponse(call: Call, response: Response) {
-                val responseBody = response.body?.string()
-
-                runOnUiThread {
-                    if (response.isSuccessful && responseBody != null) {
-                        try {
-                            val jsonArray = JSONArray(responseBody)
-                            categories.clear()
-                            for (i in 0 until jsonArray.length()) {
-                                val jsonObject = jsonArray.getJSONObject(i)
-                                val categoryID = jsonObject.getInt("categoryID")
-                                val categoryName = jsonObject.getString("categoryName")
-                                val maxBudget = jsonObject.getDouble("maxBudget")
-                                val colorCode = jsonObject.getString("colorCode")
-
-                                val category = Category(categoryID, categoryName, maxBudget.toString(), colorCode)
-                                categories.add(category)
-                            }
-                            categoryAdapter.notifyDataSetChanged()
-                        } catch (e: Exception) {
-                            Toast.makeText(this@DetailedView, "Error parsing categories", Toast.LENGTH_LONG).show()
-                        }
-                    } else {
-                        Toast.makeText(this@DetailedView, "Failed to fetch categories", Toast.LENGTH_LONG).show()
-                    }
-                }
-            }
-        })
     }
 
     // Fetches category totals from the server
@@ -173,6 +121,9 @@ class DetailedView : BaseActivity() {
                             // Update the total expenses TextView with the calculated total
                             totalAmountTextView.text = "R${"%.2f".format(totalExpenses)}"
 
+                            // Notify the adapter that data has changed
+                            categoryAdapter.notifyDataSetChanged()
+
                             setupBarChart()
                         } catch (e: Exception) {
                             Toast.makeText(this@DetailedView, "Error parsing category totals", Toast.LENGTH_LONG).show()
@@ -211,7 +162,6 @@ class DetailedView : BaseActivity() {
             .format("R{%Value}{groupsSeparator: }")
             .background().fill("#232323")
         cartesian.tooltip().fontColor("#FFFFFF")
-
 
         cartesian.legend().enabled(false)
 
@@ -352,7 +302,6 @@ class DetailedView : BaseActivity() {
                     runOnUiThread {
                         if (response.isSuccessful) {
                             Toast.makeText(this@DetailedView, "Category created successfully", Toast.LENGTH_LONG).show()
-                            fetchCategories()
                             fetchCategoryTotals()
                             dialog.dismiss()
                         } else {
@@ -365,16 +314,8 @@ class DetailedView : BaseActivity() {
         }
     }
 
-    // Data class to represent a category
-    data class Category(
-        val categoryID: Int,
-        val name: String,
-        val amount: String,
-        val colorCode: String
-    )
-
     // Adapter for the RecyclerView
-    class CategoryAdapter(private val categories: List<Category>) :
+    class CategoryAdapter(private val categories: List<CategoryTotal>) :
         RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
         inner class CategoryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -388,7 +329,7 @@ class DetailedView : BaseActivity() {
                     if (position != RecyclerView.NO_POSITION) {
                         val category = categories[position]
                         val intent = Intent(view.context, CategoryClicked::class.java)
-                        intent.putExtra("categoryName", category.name)
+                        intent.putExtra("categoryName", category.categoryName)
                         intent.putExtra("colorCode", category.colorCode)
                         intent.putExtra("categoryID", category.categoryID)
                         view.context.startActivity(intent)
@@ -405,8 +346,18 @@ class DetailedView : BaseActivity() {
 
         override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
             val category = categories[position]
-            holder.categoryName.text = category.name
-            holder.categoryAmount.text = "R${category.amount}"
+            holder.categoryName.text = category.categoryName
+
+            // Calculate budget remaining
+            val budgetRemaining = category.maxBudget - category.totalSpent
+            holder.categoryAmount.text = "R${"%.2f".format(budgetRemaining)}"
+
+            // Set text color based on budget remaining
+            if (budgetRemaining < 0) {
+                holder.categoryAmount.setTextColor(Color.RED)
+            } else {
+                holder.categoryAmount.setTextColor(Color.WHITE) // Or your default color
+            }
 
             try {
                 val color = Color.parseColor(category.colorCode)
@@ -415,6 +366,7 @@ class DetailedView : BaseActivity() {
                 holder.categoryName.setTextColor(Color.WHITE)
             }
         }
+
 
         // Returns the number of categories
         override fun getItemCount(): Int {

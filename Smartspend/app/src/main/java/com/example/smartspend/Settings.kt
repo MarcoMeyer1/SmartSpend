@@ -2,11 +2,17 @@ package com.example.smartspend
 
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.Manifest
 import android.widget.*
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import org.json.JSONObject
@@ -28,6 +34,16 @@ class Settings : BaseActivity() {
     private val TAG = "SettingsActivity"
 
     private var isUpdatingUI = false
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            Toast.makeText(this, "Notifications enabled", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "Notifications disabled", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,11 +74,15 @@ class Settings : BaseActivity() {
 
         setupLanguageSpinner()
 
-        checkboxNotifications.setOnCheckedChangeListener { _, _ ->
+        checkboxNotifications.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                checkAndRequestNotificationPermission()
+            }
             if (!isUpdatingUI) {
                 updateUserSettings()
             }
         }
+
 
         checkboxSSO.setOnCheckedChangeListener { _, _ ->
             if (!isUpdatingUI) {
@@ -267,6 +287,26 @@ class Settings : BaseActivity() {
         settingsID = -1
 
         updateUserSettings()
+    }
+
+    private fun checkAndRequestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            when {
+                ContextCompat.checkSelfPermission(
+                    this, Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED -> {
+                    Toast.makeText(this, "Notifications already enabled", Toast.LENGTH_SHORT).show()
+                }
+                ActivityCompat.shouldShowRequestPermissionRationale(
+                    this, Manifest.permission.POST_NOTIFICATIONS
+                ) -> {
+                    Toast.makeText(this, "Please enable notifications in app settings.", Toast.LENGTH_LONG).show()
+                }
+                else -> {
+                    requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
+            }
+        }
     }
 
     // Signs out the user

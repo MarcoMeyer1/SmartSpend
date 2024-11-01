@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("com.google.gms.google-services")
+    kotlin("kapt")
 }
 
 android {
@@ -71,6 +72,12 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation("com.google.android.gms:play-services-auth:20.3.0")
+
+    //offlien sync
+    implementation("androidx.room:room-runtime:2.5.2")
+    kapt("androidx.room:room-compiler:2.5.2")
+    implementation("androidx.room:room-ktx:2.5.2")
+
 
     implementation("com.google.firebase:firebase-auth:22.1.1")
     implementation("androidx.biometric:biometric:1.2.0-alpha03")

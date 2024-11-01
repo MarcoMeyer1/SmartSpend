@@ -157,9 +157,11 @@
         android:layout_height="62dp"
         android:layout_marginTop="25dp"
         android:backgroundTint="#70FFB5"
-        android:clickable="false"
+        android:clickable="true"
+        android:focusable="true"
         app:srcCompat="@drawable/fingerprint_icon"
         app:tint="#6370FFB5" />
+
 
     <TextView
         android:id="@+id/textView"

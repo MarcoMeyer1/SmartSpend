@@ -4,16 +4,17 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricPrompt
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.auth.api.signin.*
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.android.material.button.MaterialButton
@@ -22,7 +23,7 @@ import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import org.json.JSONObject
 import java.io.IOException
-import java.util.regex.Pattern
+import java.util.concurrent.Executor
 
 class Login : AppCompatActivity() {
 
@@ -32,6 +33,9 @@ class Login : AppCompatActivity() {
     private lateinit var tvCreateAccount: TextView
     private lateinit var btnGoogleSignIn: MaterialButton
     private lateinit var googleSignInClient: GoogleSignInClient
+    private lateinit var biometricPrompt: BiometricPrompt
+    private lateinit var promptInfo: BiometricPrompt.PromptInfo
+    private lateinit var executor: Executor
 
     // OkHttpClient for making network requests
     private val client = OkHttpClient()
@@ -47,14 +51,15 @@ class Login : AppCompatActivity() {
             insets
         }
 
-        // Initializes the  UI elements
+        // Initialize UI elements
         etEmail = findViewById(R.id.etEmail)
         etPassword = findViewById(R.id.etPassword)
         btnSignIn = findViewById(R.id.btnSignIn)
         tvCreateAccount = findViewById(R.id.createAccountText)
         btnGoogleSignIn = findViewById(R.id.btnGoogleSignIn)
+        val fingerprintIcon = findViewById<ImageView>(R.id.imageView2)
 
-        // Configures Google Sign-In
+        // Configure Google Sign-In
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken("1085780885439-1iuludmfbgbhgp4k41nlbi7emqf0j43n.apps.googleusercontent.com")
             .requestEmail()
@@ -74,10 +79,76 @@ class Login : AppCompatActivity() {
             val intent = Intent(this, Register::class.java)
             startActivity(intent)
         }
+
+        // Biometric Authentication Setup
+        setupBiometricAuthentication()
+
+        // Set up the biometric login trigger
+        fingerprintIcon.setOnClickListener {
+            biometricPrompt.authenticate(promptInfo)
+        }
+    }
+
+    // Set up Biometric Authentication
+    private fun setupBiometricAuthentication() {
+        val biometricManager = BiometricManager.from(this)
+        when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
+            BiometricManager.BIOMETRIC_SUCCESS ->
+                Log.d("Login", "App can authenticate using biometrics.")
+            BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE ->
+                Log.e("Login", "No biometric features available on this device.")
+            BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE ->
+                Log.e("Login", "Biometric features are currently unavailable.")
+            BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED ->
+                Log.e("Login", "The user hasn't associated any biometric credentials with their account.")
+        }
+
+        executor = ContextCompat.getMainExecutor(this)
+        biometricPrompt = BiometricPrompt(this@Login, executor, object : BiometricPrompt.AuthenticationCallback() {
+            override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                super.onAuthenticationError(errorCode, errString)
+                Toast.makeText(applicationContext, "Authentication error: $errString", Toast.LENGTH_SHORT)
+                    .show()
+            }
+
+            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                super.onAuthenticationSucceeded(result)
+                Toast.makeText(applicationContext, "Authentication succeeded!", Toast.LENGTH_SHORT)
+                    .show()
+                // Auto-login the user here
+                autoLoginUser()
+            }
+
+            override fun onAuthenticationFailed() {
+                super.onAuthenticationFailed()
+                Toast.makeText(applicationContext, "Authentication failed", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        })
+
+        promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Biometric login for SmartSpend")
+            .setSubtitle("Log in using your biometric credential")
+            .setNegativeButtonText("Use account password")
+            .build()
+    }
+
+    // Auto-login the user upon successful biometric authentication
+    private fun autoLoginUser() {
+        val sharedPreferences: SharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        val userID = sharedPreferences.getInt("userID", -1)
+        if (userID != -1) {
+            // User is logged in, proceed to MainActivity
+            val intent = Intent(this@Login, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        } else {
+            Toast.makeText(this, "No user data found, please log in first", Toast.LENGTH_LONG).show()
+        }
     }
 
     // Performs login procedure
-     fun loginUser() {
+    fun loginUser() {
         val email = etEmail.text.toString().trim()
         val password = etPassword.text.toString().trim()
 
@@ -199,41 +270,5 @@ class Login : AppCompatActivity() {
             Log.e("Login", "Google sign-in failed", e)
             Toast.makeText(this, "Google Sign-In failed", Toast.LENGTH_LONG).show()
         }
-    }
-}
-
-object LoginValidator {
-    // Regular expression pattern for email validation
-    private val EMAIL_PATTERN = Pattern.compile(
-        "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
-    )
-
-    // Email validation method
-    fun isValidEmail(email: String): Boolean {
-        return EMAIL_PATTERN.matcher(email).matches()
-    }
-
-    // Password validation method
-    fun isValidPassword(password: String): Boolean {
-        return password.isNotEmpty()
-    }
-
-    // Mock login function (just a simulation for testing)
-    fun loginUserMock(email: String, password: String): Map<String, Any> {
-        return if (isValidEmail(email) && isValidPassword(password)) {
-            mapOf(
-                "userID" to 123,
-                "message" to "Login successful"
-            )
-        } else {
-            mapOf(
-                "message" to "Login failed"
-            )
-        }
-    }
-
-    // Mock function to save userID to SharedPreferences
-    fun saveUserIDToPreferencesMock(userID: Int): Boolean {
-        return userID > 0
     }
 }

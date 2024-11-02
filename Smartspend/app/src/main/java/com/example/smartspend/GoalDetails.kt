@@ -14,7 +14,8 @@ import java.math.BigDecimal
 import java.text.NumberFormat
 import java.util.*
 import android.animation.ObjectAnimator
-
+import android.util.Log
+import java.text.SimpleDateFormat
 
 class GoalDetails : AppCompatActivity() {
 
@@ -74,7 +75,6 @@ class GoalDetails : AppCompatActivity() {
             animator.start()
         }
 
-
         val addToGoal: Button = findViewById(R.id.btnAddToGoal)
         addToGoal.setOnClickListener {
             showAddToGoalDialog()
@@ -97,19 +97,36 @@ class GoalDetails : AppCompatActivity() {
             val enteredAmountStr = amountEditText.text.toString()
             val enteredAmount = enteredAmountStr.toBigDecimalOrNull()
             if (enteredAmount != null) {
-                savedAmount = savedAmount?.add(enteredAmount)
-                // Update UI
-                if (totalAmount != null && savedAmount != null) {
-                    val numberFormat = NumberFormat.getCurrencyInstance(Locale.getDefault())
-                    tvGoalAmount.text = "${numberFormat.format(savedAmount)} / ${numberFormat.format(totalAmount)}"
+                // Logging the entered amount
+                Log.d("GoalDetails", "Entered amount: $enteredAmount")
 
-                    val progressPercentage = (savedAmount!!.divide(totalAmount, 2, BigDecimal.ROUND_HALF_UP)
+                // Update savedAmount safely
+                val newSavedAmount = savedAmount?.add(enteredAmount)
+
+                // Logging the updated saved amount
+                Log.d("GoalDetails", "Updated saved amount: $newSavedAmount")
+
+                // Update UI
+                if (totalAmount != null && newSavedAmount != null) {
+                    val numberFormat = NumberFormat.getCurrencyInstance(Locale.getDefault())
+                    tvGoalAmount.text = "${numberFormat.format(newSavedAmount)} / ${numberFormat.format(totalAmount)}"
+
+                    val progressPercentage = (newSavedAmount.divide(totalAmount, 2, BigDecimal.ROUND_HALF_UP)
                         .multiply(BigDecimal(100))).toInt()
 
                     tvGoalPercentage.text = "$progressPercentage%"
                     progressGoalCompletion.progress = progressPercentage
+
+                    // Check if the goal has been met
+                    if (newSavedAmount >= totalAmount) {
+                        completionDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+                        Log.d("GoalDetails", "Goal met! Completion date set to: $completionDate")
+                    } else {
+                        completionDate = null // Explicitly setting to null when the goal isn't met
+                    }
                 }
                 // Update backend
+                savedAmount = newSavedAmount // Update savedAmount with the new value
                 updateGoalOnServer()
                 alertDialog.dismiss()
             } else {
@@ -130,8 +147,10 @@ class GoalDetails : AppCompatActivity() {
                 put("goalName", goalName)
                 put("totalAmount", totalAmount)
                 put("savedAmount", savedAmount)
-                put("completionDate", completionDate ?: JSONObject.NULL)
+                put("completionDate", completionDate ?: JSONObject.NULL) // Send null if completionDate is null
             }
+
+            Log.d("GoalDetails", "Payload to send: $json") // Log the JSON payload
 
             val body = RequestBody.create(
                 "application/json; charset=utf-8".toMediaTypeOrNull(),
@@ -164,7 +183,7 @@ class GoalDetails : AppCompatActivity() {
                                         goalName = goalName!!,
                                         totalAmount = totalAmount!!,
                                         savedAmount = savedAmount!!,
-                                        completionDate = completionDate,
+                                        completionDate = completionDate, // Use the value here
                                         isSynced = true
                                     )
                                     appDatabase.goalDao().insertGoal(goalEntity)
@@ -187,7 +206,4 @@ class GoalDetails : AppCompatActivity() {
         super.onDestroy()
         scope.cancel()
     }
-
-
 }
-

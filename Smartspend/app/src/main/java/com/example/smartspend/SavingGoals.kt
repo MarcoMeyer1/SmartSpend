@@ -320,7 +320,6 @@ class SavingGoals : BaseActivity(), GoalAdapter.OnItemClickListener {
         }
     }
 
-    // Creates a new goal on the server
     private fun createGoalOnServer(goal: GoalEntity, callback: (Boolean) -> Unit) {
         val url = "$apiBaseUrl/Goal/create"
 
@@ -365,38 +364,18 @@ class SavingGoals : BaseActivity(), GoalAdapter.OnItemClickListener {
                             // Update local goal with server goalID and mark as synced
                             scope.launch {
                                 withContext(Dispatchers.IO) {
-                                    appDatabase.goalDao().deleteGoal(goal)
-                                    appDatabase.goalDao().insertGoal(
-                                        goal.copy(goalID = serverGoalID, isSynced = true)
-                                    )
+                                    appDatabase.goalDao().updateGoal(goal.copy(goalID = serverGoalID, isSynced = true))
                                 }
                             }
+                            fetchGoalsFromLocal()  // Refresh goals after creating
                             callback(true)
                         } catch (e: JSONException) {
-                            // Handle response as plain text
-                            if (responseBody.contains("Goal created successfully", ignoreCase = true)) {
-                                // Mark goal as synced
-                                scope.launch {
-                                    withContext(Dispatchers.IO) {
-                                        appDatabase.goalDao().updateGoal(
-                                            goal.copy(isSynced = true)
-                                        )
-                                    }
-                                }
-                                callback(true)
-                                Toast.makeText(
-                                    this@SavingGoals,
-                                    "Goal created successfully.",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            } else {
-                                Toast.makeText(
-                                    this@SavingGoals,
-                                    "Unexpected response: $responseBody",
-                                    Toast.LENGTH_LONG
-                                ).show()
-                                callback(false)
-                            }
+                            Toast.makeText(
+                                this@SavingGoals,
+                                "Unexpected response: $responseBody",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            callback(false)
                         }
                     }
                 } else {

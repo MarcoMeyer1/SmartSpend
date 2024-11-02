@@ -65,6 +65,7 @@ dependencies {
 
     // Networking library
     implementation("com.squareup.okhttp3:okhttp:4.9.1")
+    implementation(libs.firebase.messaging)
     testImplementation("org.mockito:mockito-core:4.0.0")
     testImplementation("org.robolectric:robolectric:4.6.1")
     // Testing dependencies

@@ -1,6 +1,10 @@
 package com.example.smartspend
 
+import android.app.AlarmManager
 import android.app.DatePickerDialog
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
@@ -299,6 +303,27 @@ class Reminders : BaseActivity() {
                 }
             }
         })
+    }
+
+    private fun scheduleReminderNotification(reminder: Reminder) {
+        if (reminder.notificationDate != null) {
+            val intent = Intent(this, NotificationReceiver::class.java).apply {
+                putExtra("title", "Reminder")
+                putExtra("message", reminder.description)
+            }
+            val pendingIntent = PendingIntent.getBroadcast(
+                this,
+                reminder.reminderID,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
+
+            val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val reminderTime = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+                .parse(reminder.notificationDate)?.time ?: return
+
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, reminderTime, pendingIntent)
+        }
     }
 
     // Shows the date picker dialog

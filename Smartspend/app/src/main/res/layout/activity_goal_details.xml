@@ -58,15 +58,15 @@
                 android:textSize="18sp"
                 tools:text="$500 / $1,000" />
 
-            <ProgressBar
-                android:id="@+id/progressGoalCompletion"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_marginTop="16dp"
-                android:max="100"
-                android:progress="50"
-                android:progressDrawable="@drawable/progress_bar_style" />
+                <ProgressBar
+                    android:id="@+id/progressGoalCompletion"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="16dp"
+                    android:max="100"
+                    android:progress="50"
+                    android:progressDrawable="@drawable/progress_bar_style"/>
 
             <TextView
                 android:id="@+id/tvGoalPercentage"

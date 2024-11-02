@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Background color (change #cccccc to your preferred color) -->
     <item android:id="@android:id/background">
         <shape android:shape="rectangle">
-            <solid android:color="#cccccc"/> <!-- Background color -->
+            <solid android:color="#2C2C2C"/> <!-- Change this color as desired -->
         </shape>
     </item>
+
+    <!-- Progress drawable with scaling effect -->
     <item android:id="@android:id/progress">
-        <shape android:shape="rectangle">
-            <gradient
-                android:startColor="#FF0000"
-                android:centerColor="#FFA500"
-                android:endColor="#32CD32"
-                android:angle="0" />
-        </shape>
+        <scale
+            android:scaleWidth="100%"
+            android:scaleHeight="100%"
+            android:drawable="@drawable/progress_gradient"
+            android:gravity="left"/>
     </item>
+
 </layer-list>

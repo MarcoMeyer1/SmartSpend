@@ -1,11 +1,8 @@
 package com.example.smartspend
 
 import android.content.Context
-import android.graphics.Color
-import android.net.ConnectivityManager
-import android.net.Network
-import android.net.NetworkCapabilities
-import android.net.NetworkRequest
+import android.content.Intent
+import android.net.*
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -20,15 +17,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.*
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import org.json.JSONArray
-import org.json.JSONException
-import org.json.JSONObject
+import org.json.*
 import java.io.IOException
 import java.math.BigDecimal
-import java.text.NumberFormat
 import java.util.Locale
 
-class SavingGoals : BaseActivity() {
+class SavingGoals : BaseActivity(), GoalAdapter.OnItemClickListener {
 
     private lateinit var recyclerViewGoals: RecyclerView
     private lateinit var goalAdapter: GoalAdapter
@@ -56,10 +50,6 @@ class SavingGoals : BaseActivity() {
         // Register network callback
         registerNetworkCallback()
 
-
-
-
-
         setActiveNavButton(null)
 
         appDatabase = AppDatabase.getDatabase(this)
@@ -67,7 +57,7 @@ class SavingGoals : BaseActivity() {
         val fabAddGoal: FloatingActionButton = findViewById(R.id.fabAddGoal)
         recyclerViewGoals = findViewById(R.id.recyclerViewGoals)
         recyclerViewGoals.layoutManager = LinearLayoutManager(this)
-        goalAdapter = GoalAdapter(goalList)
+        goalAdapter = GoalAdapter(goalList, this)
         recyclerViewGoals.adapter = goalAdapter
 
         fabAddGoal.setOnClickListener {
@@ -83,6 +73,19 @@ class SavingGoals : BaseActivity() {
             fetchGoalsFromServer()
         }
     }
+
+    // Implement the OnItemClickListener method
+    override fun onItemClick(goal: GoalEntity) {
+        // Start the GoalDetails activity and pass the goal details
+        val intent = Intent(this, GoalDetails::class.java)
+        intent.putExtra("goalID", goal.goalID)
+        intent.putExtra("goalName", goal.goalName)
+        intent.putExtra("totalAmount", goal.totalAmount.toString())
+        intent.putExtra("savedAmount", goal.savedAmount.toString())
+        intent.putExtra("completionDate", goal.completionDate)
+        startActivity(intent)
+    }
+
     private fun registerNetworkCallback() {
         val networkRequest = NetworkRequest.Builder()
             .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
@@ -290,7 +293,6 @@ class SavingGoals : BaseActivity() {
         }
     }
 
-
     // Sync local unsynced goals with the server
     private fun syncLocalDataWithServer() {
         scope.launch {
@@ -317,7 +319,6 @@ class SavingGoals : BaseActivity() {
             }
         }
     }
-
 
     // Creates a new goal on the server
     private fun createGoalOnServer(goal: GoalEntity, callback: (Boolean) -> Unit) {
@@ -411,64 +412,6 @@ class SavingGoals : BaseActivity() {
                 }
             }
         })
-    }
-
-
-
-
-
-
-    // Adapter for the RecyclerView
-    class GoalAdapter(private val goals: List<GoalEntity>) :
-        RecyclerView.Adapter<GoalAdapter.GoalViewHolder>() {
-
-        class GoalViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            val tvGoalTitle: TextView = itemView.findViewById(R.id.tvGoalTitle)
-            val tvGoalProgress: TextView = itemView.findViewById(R.id.tvGoalProgress)
-            val tvGoalPercentage: TextView = itemView.findViewById(R.id.tvGoalPercentage)
-        }
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GoalViewHolder {
-            val itemView = LayoutInflater.from(parent.context)
-                .inflate(R.layout.goal_card_layout, parent, false)
-            return GoalViewHolder(itemView)
-        }
-
-        override fun onBindViewHolder(holder: GoalViewHolder, position: Int) {
-            val goal = goals[position]
-            holder.tvGoalTitle.text = goal.goalName
-
-            val numberFormat = NumberFormat.getCurrencyInstance(Locale.getDefault())
-            holder.tvGoalProgress.text =
-                "${numberFormat.format(goal.savedAmount)}/${numberFormat.format(goal.totalAmount)}"
-
-            val progressPercentage = (goal.savedAmount.divide(goal.totalAmount, 2, BigDecimal.ROUND_HALF_UP)
-                .multiply(BigDecimal(100))).toInt()
-            holder.tvGoalPercentage.text = "$progressPercentage%"
-
-            // Set the progress bar color based on the percentage
-            val percentageColor = when {
-                progressPercentage <= 30 -> {
-                    Color.parseColor("#FFB3B3")
-                }
-                progressPercentage <= 60 -> {
-                    Color.parseColor("#FFD9B3")
-                }
-                progressPercentage <= 90 -> {
-                    Color.parseColor("#FFFFCC")
-                }
-                else -> {
-                    Color.parseColor("#B3FFB3")
-                }
-            }
-
-            holder.tvGoalPercentage.setTextColor(percentageColor)
-        }
-
-        // Returns the number of items in the list
-        override fun getItemCount(): Int {
-            return goals.size
-        }
     }
 
     override fun onDestroy() {

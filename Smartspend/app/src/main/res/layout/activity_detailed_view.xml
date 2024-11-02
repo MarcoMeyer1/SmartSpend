@@ -6,6 +6,7 @@
     android:orientation="vertical"
     android:background="#2E2E2E"
     android:padding="16dp"
+    android:id="@+id/main"
     android:layout_weight="1">
 
     <com.anychart.AnyChartView

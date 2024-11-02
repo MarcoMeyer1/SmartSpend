@@ -1,10 +1,13 @@
 package com.example.smartspend
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
+import android.net.*
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,24 +15,28 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.anychart.AnyChart
 import com.anychart.AnyChartView
-import com.anychart.chart.common.dataentry.DataEntry
 import com.anychart.chart.common.dataentry.ValueDataEntry
-import com.anychart.charts.Cartesian
 import com.anychart.core.cartesian.series.Column
-import com.anychart.enums.*
+import com.anychart.enums.Anchor
+import com.anychart.enums.HoverMode
+import com.anychart.enums.Position
+import com.anychart.enums.TooltipPositionMode
 import com.flask.colorpicker.ColorPickerView
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.*
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
+import java.math.BigDecimal
 
 class DetailedView : BaseActivity() {
 
@@ -43,9 +50,18 @@ class DetailedView : BaseActivity() {
 
     private lateinit var totalAmountTextView: TextView
 
+    private lateinit var appDatabase: AppDatabase
+    private lateinit var categoryDao: CategoryDao
+    private val scope = CoroutineScope(Dispatchers.Main + Job())
+
+    private lateinit var connectivityManager: ConnectivityManager
+    private lateinit var networkCallback: ConnectivityManager.NetworkCallback
+
+    private val apiBaseUrl = "https://smartspendapi.azurewebsites.net/api"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        enableEdgeToEdge()
         setContentView(R.layout.activity_detailed_view)
 
         barChart = findViewById(R.id.barChart)
@@ -55,6 +71,15 @@ class DetailedView : BaseActivity() {
         // Retrieve user ID from SharedPreferences
         val sharedPreferences: SharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         userID = sharedPreferences.getInt("userID", -1)
+
+        // Initialize AppDatabase and CategoryDao
+        appDatabase = AppDatabase.getDatabase(this)
+        categoryDao = appDatabase.categoryDao()
+
+        // Initialize ConnectivityManager
+        connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        // Register network callback
+        registerNetworkCallback()
 
         // Sets up the RecyclerView
         val recyclerView = findViewById<RecyclerView>(R.id.categoriesRecyclerView)
@@ -68,12 +93,46 @@ class DetailedView : BaseActivity() {
             showAddCategoryDialog()
         }
 
-        fetchCategoryTotals()
+        // Initial sync if network is available
+        if (isNetworkAvailable()) {
+            syncLocalDataWithServer()
+            fetchCategoryTotals()
+        } else {
+            Toast.makeText(this, "No internet connection. Categories will sync when online.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // Register network callback
+    private fun registerNetworkCallback() {
+        val networkRequest = NetworkRequest.Builder()
+            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            .build()
+
+        networkCallback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                super.onAvailable(network)
+                // Network is available, trigger sync
+                runOnUiThread {
+                    syncLocalDataWithServer()
+                    fetchCategoryTotals()
+                }
+            }
+        }
+
+        connectivityManager.registerNetworkCallback(networkRequest, networkCallback)
+    }
+
+    // Check if network is available
+    private fun isNetworkAvailable(): Boolean {
+        val capabilities =
+            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+        return capabilities != null &&
+                capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
     // Fetches category totals from the server
     private fun fetchCategoryTotals() {
-        val url = "https://smartspendapi.azurewebsites.net/api/Expense/totals/user/$userID"
+        val url = "$apiBaseUrl/Expense/totals/user/$userID"
 
         val request = Request.Builder()
             .url(url)
@@ -127,6 +186,7 @@ class DetailedView : BaseActivity() {
                             setupBarChart()
                         } catch (e: Exception) {
                             Toast.makeText(this@DetailedView, "Error parsing category totals", Toast.LENGTH_LONG).show()
+                            Log.e("DetailedView", "Exception parsing category totals", e)
                         }
                     } else {
                         Toast.makeText(this@DetailedView, "Failed to fetch category totals", Toast.LENGTH_LONG).show()
@@ -136,80 +196,128 @@ class DetailedView : BaseActivity() {
         })
     }
 
-    // Sets up the bar chart
-    private fun setupBarChart() {
-        val cartesian: Cartesian = AnyChart.column()
+    // Sync local unsynced categories with the server
+    private fun syncLocalDataWithServer() {
+        scope.launch {
+            if (userID != -1) {
+                val localUnsyncedCategories = withContext(Dispatchers.IO) {
+                    categoryDao.getUnsyncedCategories(userID)
+                }
 
-        val data: MutableList<DataEntry> = ArrayList()
-        for (categoryTotal in categoryTotals) {
-            data.add(CustomDataEntry(categoryTotal.categoryName, categoryTotal.totalSpent, categoryTotal.colorCode))
-        }
-
-        val column: Column = cartesian.column(data)
-
-        cartesian.background().fill("#232323")
-
-        cartesian.xAxis(0).labels().fontColor("#FFFFFF")
-        cartesian.yAxis(0).labels().fontColor("#FFFFFF")
-        cartesian.xAxis(0).title().fontColor("#FFFFFF")
-        cartesian.yAxis(0).title().fontColor("#FFFFFF")
-
-        cartesian.title().fontColor("#FFFFFF")
-
-        cartesian.tooltip()
-            .title(true)
-            .titleFormat("{%X}")
-            .format("R{%Value}{groupsSeparator: }")
-            .background().fill("#232323")
-        cartesian.tooltip().fontColor("#FFFFFF")
-
-        cartesian.legend().enabled(false)
-
-        column.tooltip()
-            .titleFormat("{%X}")
-            .position(Position.CENTER_BOTTOM)
-            .anchor(Anchor.CENTER_BOTTOM)
-            .offsetX(0.0)
-            .offsetY(5.0)
-            .format("R{%Value}{groupsSeparator: }")
-            .fontColor("#FFFFFF")
-
-        cartesian.animation(true)
-        cartesian.title("Total Spent per Category")
-
-        cartesian.yScale().minimum(0.0)
-
-        cartesian.yAxis(0).labels().format("R{%Value}{groupsSeparator: }")
-
-        cartesian.tooltip().positionMode(TooltipPositionMode.POINT)
-
-        cartesian.interactivity().hoverMode(HoverMode.BY_X)
-
-        cartesian.xAxis(0).title("Categories")
-        cartesian.yAxis(0).title("Amount Spent")
-
-        barChart.setChart(cartesian)
-    }
-
-    // Custom data entry class for the bar chart
-    inner class CustomDataEntry(
-        x: String,
-        value: Number,
-        color: String
-    ) : ValueDataEntry(x, value) {
-        init {
-            setValue("fill", color)
+                for (category in localUnsyncedCategories) {
+                    createCategoryOnServer(category) { success ->
+                        if (success) {
+                            // Update local category to mark as synced
+                            scope.launch {
+                                withContext(Dispatchers.IO) {
+                                    categoryDao.insertCategory(category.copy(isSynced = true))
+                                }
+                                // Fetch updated totals from server
+                                fetchCategoryTotals()
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
-    // Data class to represent category totals
-    data class CategoryTotal(
-        val categoryID: Int,
-        val categoryName: String,
-        val colorCode: String,
-        val maxBudget: Double,
-        val totalSpent: Double
-    )
+    // Creates a new category on the server
+    private fun createCategoryOnServer(category: CategoryEntity, callback: (Boolean) -> Unit) {
+        val url = "$apiBaseUrl/Category/create"
+
+        val json = JSONObject().apply {
+            put("categoryName", category.categoryName)
+            put("colorCode", category.colorCode)
+            put("userID", category.userID)
+            put("maxBudget", category.maxBudget)
+        }
+
+        val body = RequestBody.create(
+            "application/json; charset=utf-8".toMediaTypeOrNull(),
+            json.toString()
+        )
+
+        val request = Request.Builder()
+            .url(url)
+            .post(body)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                runOnUiThread {
+                    Toast.makeText(this@DetailedView, "Network error: ${e.message}", Toast.LENGTH_LONG).show()
+                    callback(false)
+                }
+                Log.e("DetailedView", "Network error: ${e.message}")
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val responseBody = response.body?.string()
+                Log.d("DetailedView", "Server Response: $responseBody")
+
+                if (response.isSuccessful && responseBody != null) {
+                    runOnUiThread {
+                        try {
+                            // Try to parse the response as JSON
+                            val jsonResponse = JSONObject(responseBody)
+                            val serverCategoryID = jsonResponse.getInt("categoryID")
+
+                            // Update local category with server categoryID and mark as synced
+                            scope.launch {
+                                withContext(Dispatchers.IO) {
+                                    categoryDao.deleteCategory(category)
+                                    categoryDao.insertCategory(
+                                        category.copy(categoryID = serverCategoryID, isSynced = true)
+                                    )
+                                }
+                                // Fetch updated totals from server
+                                fetchCategoryTotals()
+                            }
+                            callback(true)
+                        } catch (e: Exception) {
+                            // Handle response as plain text
+                            if (responseBody.contains("Category created successfully", ignoreCase = true)) {
+                                // Mark category as synced
+                                scope.launch {
+                                    withContext(Dispatchers.IO) {
+                                        categoryDao.updateCategory(
+                                            category.copy(isSynced = true)
+                                        )
+                                    }
+                                    // Fetch updated totals from server
+                                    fetchCategoryTotals()
+                                }
+                                callback(true)
+                                Toast.makeText(
+                                    this@DetailedView,
+                                    "Category created successfully.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                Toast.makeText(
+                                    this@DetailedView,
+                                    "Unexpected response: $responseBody",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                                callback(false)
+                            }
+                        }
+                    }
+                } else {
+                    runOnUiThread {
+                        Toast.makeText(
+                            this@DetailedView,
+                            "Server error: ${response.code}",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        callback(false)
+                    }
+                    Log.e("DetailedView", "Server error: ${response.code}")
+                }
+            }
+        })
+    }
 
     // Shows the add category dialog
     private fun showAddCategoryDialog() {
@@ -264,55 +372,118 @@ class DetailedView : BaseActivity() {
                 return@setOnClickListener
             }
 
-            val amount = setAmountManually.toDoubleOrNull()
-            if (amount == null) {
+            val amountDecimal = setAmountManually.toBigDecimalOrNull()
+            if (amountDecimal == null) {
                 Toast.makeText(this, "Please enter a valid amount", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            val json = JSONObject()
-            json.put("categoryName", categoryName)
-            json.put("colorCode", selectedColorHex)
-            json.put("userID", userID)
-            json.put("maxBudget", amount)
-
-            val url = "https://smartspendapi.azurewebsites.net/api/Category/create"
-
-            val body = RequestBody.create(
-                "application/json; charset=utf-8".toMediaTypeOrNull(),
-                json.toString()
+            val newCategory = CategoryEntity(
+                categoryID = 0,
+                categoryName = categoryName,
+                colorCode = selectedColorHex,
+                userID = userID,
+                maxBudget = amountDecimal
             )
 
-            val request = Request.Builder()
-                .url(url)
-                .post(body)
-                .build()
-
-            // Makes the API request
-            client.newCall(request).enqueue(object : Callback {
-                override fun onFailure(call: Call, e: IOException) {
-                    runOnUiThread {
-                        Toast.makeText(this@DetailedView, "Network Error: ${e.message}", Toast.LENGTH_LONG).show()
-                    }
+            scope.launch {
+                // Save to local database
+                withContext(Dispatchers.IO) {
+                    categoryDao.insertCategory(newCategory)
                 }
 
-                override fun onResponse(call: Call, response: Response) {
-                    val responseBody = response.body?.string()
-
-                    runOnUiThread {
-                        if (response.isSuccessful) {
-                            Toast.makeText(this@DetailedView, "Category created successfully", Toast.LENGTH_LONG).show()
+                if (isNetworkAvailable()) {
+                    // Sync with server
+                    createCategoryOnServer(newCategory) { success ->
+                        if (success) {
+                            // Fetch updated totals from server
                             fetchCategoryTotals()
                             dialog.dismiss()
                         } else {
-                            val errorMessage = responseBody ?: "Category creation failed"
-                            Toast.makeText(this@DetailedView, errorMessage, Toast.LENGTH_LONG).show()
+                            Toast.makeText(
+                                this@DetailedView,
+                                "Failed to sync with server",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            dialog.dismiss()
                         }
                     }
+                } else {
+                    Toast.makeText(
+                        this@DetailedView,
+                        "Saved locally. Will sync when online.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    dialog.dismiss()
                 }
-            })
+            }
         }
     }
+
+    // Sets up the bar chart
+    private fun setupBarChart() {
+        val cartesian = AnyChart.column()
+
+        val data = categoryTotals.map {
+            ValueDataEntry(it.categoryName, it.totalSpent).apply {
+                setValue("fill", it.colorCode)
+            }
+        }
+
+        val column: Column = cartesian.column(data)
+
+        cartesian.background().fill("#232323")
+
+        cartesian.xAxis(0).labels().fontColor("#FFFFFF")
+        cartesian.yAxis(0).labels().fontColor("#FFFFFF")
+        cartesian.xAxis(0).title().fontColor("#FFFFFF")
+        cartesian.yAxis(0).title().fontColor("#FFFFFF")
+
+        cartesian.title().fontColor("#FFFFFF")
+
+        cartesian.tooltip()
+            .title(true)
+            .titleFormat("{%X}")
+            .format("R{%Value}{groupsSeparator: }")
+            .background().fill("#232323")
+        cartesian.tooltip().fontColor("#FFFFFF")
+
+        cartesian.legend().enabled(false)
+
+        column.tooltip()
+            .titleFormat("{%X}")
+            .position(Position.CENTER_BOTTOM)
+            .anchor(Anchor.CENTER_BOTTOM)
+            .offsetX(0.0)
+            .offsetY(5.0)
+            .format("R{%Value}{groupsSeparator: }")
+            .fontColor("#FFFFFF")
+
+        cartesian.animation(true)
+        cartesian.title("Total Spent per Category")
+
+        cartesian.yScale().minimum(0.0)
+
+        cartesian.yAxis(0).labels().format("R{%Value}{groupsSeparator: }")
+
+        cartesian.tooltip().positionMode(TooltipPositionMode.POINT)
+
+        cartesian.interactivity().hoverMode(HoverMode.BY_X)
+
+        cartesian.xAxis(0).title("Categories")
+        cartesian.yAxis(0).title("Amount Spent")
+
+        barChart.setChart(cartesian)
+    }
+
+    // Data class to represent category totals
+    data class CategoryTotal(
+        val categoryID: Int,
+        val categoryName: String,
+        val colorCode: String,
+        val maxBudget: Double,
+        val totalSpent: Double
+    )
 
     // Adapter for the RecyclerView
     class CategoryAdapter(private val categories: List<CategoryTotal>) :
@@ -321,7 +492,6 @@ class DetailedView : BaseActivity() {
         inner class CategoryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val categoryName: TextView = view.findViewById(R.id.categoryName)
             val categoryAmount: TextView = view.findViewById(R.id.categoryAmount)
-            val categoryContainer: View = view
 
             init {
                 view.setOnClickListener {
@@ -356,7 +526,7 @@ class DetailedView : BaseActivity() {
             if (budgetRemaining < 0) {
                 holder.categoryAmount.setTextColor(Color.RED)
             } else {
-                holder.categoryAmount.setTextColor(Color.WHITE) // Or your default color
+                holder.categoryAmount.setTextColor(Color.WHITE)
             }
 
             try {
@@ -367,10 +537,14 @@ class DetailedView : BaseActivity() {
             }
         }
 
-
-        // Returns the number of categories
         override fun getItemCount(): Int {
             return categories.size
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        scope.cancel()
+        connectivityManager.unregisterNetworkCallback(networkCallback)
     }
 }

@@ -109,9 +109,9 @@ class SavingGoals : BaseActivity() {
         val dialog = builder.create()
 
         val goalNameEditText: EditText = dialogView.findViewById(R.id.goalName)
-        val totalAmountEditText: EditText = dialogView.findViewById(R.id.totalAmount)
+        val totalAmountEditText: EditText = dialogView.findViewById(R.id.edtAmount)
         val savedAmountEditText: EditText = dialogView.findViewById(R.id.savedAmount)
-        val saveButton: Button = dialogView.findViewById(R.id.saveButton)
+        val saveButton: Button = dialogView.findViewById(R.id.btnAddtoGoal)
 
         saveButton.setOnClickListener {
             val goalName = goalNameEditText.text.toString()

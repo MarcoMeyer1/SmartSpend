@@ -50,7 +50,7 @@ class DetailedView : BaseActivity() {
 
         barChart = findViewById(R.id.barChart)
 
-        totalAmountTextView = findViewById(R.id.totalAmount)
+        totalAmountTextView = findViewById(R.id.edtAmount)
 
         // Retrieve user ID from SharedPreferences
         val sharedPreferences: SharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)

@@ -33,7 +33,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/totalAmount"
+            android:id="@+id/edtAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="R0"

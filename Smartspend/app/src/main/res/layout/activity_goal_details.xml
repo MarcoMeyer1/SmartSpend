@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#1b1b1b"
-    tools:context=".GoalDetailsActivity">
+    tools:context=".GoalDetails">
 
     <TextView
         android:id="@+id/tvGoalDetailsTitle"
@@ -20,58 +20,82 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="40dp" />
 
-    <TextView
-        android:id="@+id/tvGoalName"
-        android:layout_width="407dp"
-        android:layout_height="31dp"
-        android:layout_marginTop="44dp"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="24sp"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:cardBackgroundColor="#2C2C2C"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvGoalDetailsTitle"
-        tools:text="Vacation Fund" />
+        app:layout_constraintTop_toBottomOf="@id/tvGoalDetailsTitle">
 
-    <TextView
-        android:id="@+id/tvGoalAmount"
-        android:layout_width="240dp"
-        android:layout_height="33dp"
-        android:layout_marginTop="76dp"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvGoalName"
-        tools:text="$500 / $1,000" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-    <TextView
-        android:id="@+id/tvGoalPercentage"
-        android:layout_width="48dp"
-        android:layout_height="33dp"
-        android:layout_marginTop="116dp"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvGoalAmount"
-        tools:text="50%" />
+            <TextView
+                android:id="@+id/tvGoalName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                tools:text="Vacation Fund" />
+
+            <TextView
+                android:id="@+id/tvGoalAmount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                tools:text="$500 / $1,000" />
+
+            <ProgressBar
+                android:id="@+id/progressGoalCompletion"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginTop="16dp"
+                android:max="100"
+                android:progress="50"
+                android:progressDrawable="@drawable/progress_bar_style" />
+
+            <TextView
+                android:id="@+id/tvGoalPercentage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                tools:text="50%" />
+
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
     <Button
         android:id="@+id/btnAddToGoal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="144dp"
-        android:backgroundTint="#3f6e56"
+        android:layout_marginTop="48dp"
         android:text="Add to Goal"
         android:textColor="#FFFFFF"
+        android:backgroundTint="#31453a"
+        android:alpha="0.75"
+        app:strokeColor="#70FFB5"
+        app:strokeWidth="1dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvGoalPercentage" />
+        app:layout_constraintTop_toBottomOf="@+id/cardView2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

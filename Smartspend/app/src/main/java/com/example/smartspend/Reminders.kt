@@ -1,20 +1,21 @@
 package com.example.smartspend
 
-import android.app.AlarmManager
-import android.app.DatePickerDialog
-import android.app.PendingIntent
+import android.Manifest
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.graphics.Color
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
 import android.widget.*
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,6 +25,7 @@ import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import org.json.JSONArray
 import org.json.JSONObject
+import android.provider.Settings
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -36,6 +38,9 @@ class Reminders : BaseActivity() {
     private lateinit var completedRemindersAdapter: ReminderAdapter
     private val client = OkHttpClient()
     private var userID: Int = -1
+
+    private val REQUEST_NOTIFICATION_PERMISSION = 1 // Permission request code
+    private val TAG = "Reminders" // Tag for logging
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,11 +57,12 @@ class Reminders : BaseActivity() {
         val sharedPreferences: SharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         userID = sharedPreferences.getInt("userID", -1)
         if (userID == -1) {
+            Log.e(TAG, "User ID not found in SharedPreferences")
             finish()
             return
         }
 
-        // Initializes the RecyclerView
+        // Initialize RecyclerViews
         rvUpcomingReminders = findViewById(R.id.rv_upcoming_reminders)
         rvCompletedReminders = findViewById(R.id.rv_completed_reminders)
 
@@ -73,6 +79,9 @@ class Reminders : BaseActivity() {
         rvUpcomingReminders.adapter = upcomingRemindersAdapter
         rvCompletedReminders.adapter = completedRemindersAdapter
 
+        // Check and request notification permission
+        checkNotificationPermission()
+        checkExactAlarmPermission()
         fetchReminders()
 
         val fab = findViewById<FloatingActionButton>(R.id.fab_add_reminder)
@@ -81,69 +90,168 @@ class Reminders : BaseActivity() {
         }
     }
 
-    // Fetches reminders from the server
+    // Check and request notification permission for Android 13+
+    private fun checkNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    REQUEST_NOTIFICATION_PERMISSION
+                )
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == REQUEST_NOTIFICATION_PERMISSION) {
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                // Permission granted
+                Toast.makeText(this, "Notification permission granted", Toast.LENGTH_SHORT).show()
+            } else {
+                // Permission denied
+                Toast.makeText(this, "Notification permission denied", Toast.LENGTH_SHORT).show()
+            }
+            return
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+    private fun checkExactAlarmPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            if (!alarmManager.canScheduleExactAlarms()) {
+                AlertDialog.Builder(this)
+                    .setTitle("Permission Required")
+                    .setMessage("This app requires permission to schedule exact alarms for reminders. Please grant this permission in settings.")
+                    .setPositiveButton("Open Settings") { _, _ ->
+                        val intent = Intent().apply {
+                            action = Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
+                            data = Uri.parse("package:$packageName")
+                        }
+                        startActivity(intent)
+                    }
+                    .setNegativeButton("Cancel", null)
+                    .show()
+            }
+        }
+    }
+    // Fetch reminders from the server
     private fun fetchReminders() {
         val url = "https://smartspendapi.azurewebsites.net/api/Reminder/$userID"
+        Log.d(TAG, "Fetching reminders from URL: $url")
 
         val request = Request.Builder()
             .url(url)
             .get()
             .build()
 
-        // Makes the network request
+        // Make the network request
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
+                Log.e(TAG, "Network request failed: ${e.message}")
                 runOnUiThread {
-                    Toast.makeText(this@Reminders, "Network Error: ${e.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@Reminders,
+                        "Network Error: ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 val responseBody = response.body?.string()
+                Log.d(TAG, "Response received: $responseBody")
 
                 runOnUiThread {
                     if (response.isSuccessful && responseBody != null) {
                         try {
                             val jsonArray = JSONArray(responseBody)
+                            Log.d(TAG, "Parsed JSON array: $jsonArray")
+
                             val upcomingReminders = mutableListOf<Reminder>()
                             val completedReminders = mutableListOf<Reminder>()
 
                             for (i in 0 until jsonArray.length()) {
                                 val jsonObject = jsonArray.getJSONObject(i)
-                                val reminder = Reminder(
-                                    reminderID = jsonObject.getInt("reminderID"),
-                                    userID = jsonObject.getInt("userID"),
-                                    description = jsonObject.getString("description"),
-                                    dateDue = jsonObject.getString("dateDue"),
-                                    notificationDate = if (jsonObject.isNull("notificationDate")) null else jsonObject.getString("notificationDate"),
-                                    isEnabled = jsonObject.getBoolean("isEnabled"),
-                                    isCompleted = jsonObject.getBoolean("isCompleted")
+                                Log.d(TAG, "Processing reminder JSON object: $jsonObject")
+
+                                val reminderID = jsonObject.getInt("reminderID")
+                                val userID = jsonObject.getInt("userID")
+                                val description = jsonObject.getString("description")
+                                val dateDue = jsonObject.getString("dateDue")
+                                val notificationDate =
+                                    if (jsonObject.isNull("notificationDate")) null else jsonObject.getString(
+                                        "notificationDate"
+                                    )
+                                val isEnabled = jsonObject.getBoolean("isEnabled")
+                                val isCompleted = jsonObject.getBoolean("isCompleted")
+
+                                Log.d(
+                                    TAG,
+                                    "Parsed fields - reminderID: $reminderID, userID: $userID, description: $description, dateDue: $dateDue, notificationDate: $notificationDate, isEnabled: $isEnabled, isCompleted: $isCompleted"
                                 )
+
+                                val reminder = Reminder(
+                                    reminderID = reminderID,
+                                    userID = userID,
+                                    description = description,
+                                    dateDue = dateDue,
+                                    notificationDate = notificationDate,
+                                    isEnabled = isEnabled,
+                                    isCompleted = isCompleted
+                                )
+
+                                Log.d(TAG, "Created Reminder object: $reminder")
 
                                 if (reminder.isCompleted) {
                                     completedReminders.add(reminder)
                                 } else {
                                     upcomingReminders.add(reminder)
                                 }
+
+                                // Schedule notifications for enabled reminders with notification dates
+                                if (reminder.isEnabled && reminder.notificationDate != null) {
+                                    scheduleReminderNotification(reminder)
+                                }
                             }
 
                             upcomingRemindersAdapter.setReminders(upcomingReminders)
                             completedRemindersAdapter.setReminders(completedReminders)
                         } catch (e: Exception) {
-                            Toast.makeText(this@Reminders, "Error parsing reminders: ${e.message}", Toast.LENGTH_LONG).show()
+                            Log.e(TAG, "Error parsing reminders: ${e.message}", e)
+                            Toast.makeText(
+                                this@Reminders,
+                                "Error parsing reminders: ${e.message}",
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
                     } else {
-                        Toast.makeText(this@Reminders, "Error fetching reminders", Toast.LENGTH_LONG).show()
+                        val errorBody = responseBody ?: "No response body"
+                        Log.e(TAG, "Error fetching reminders: $errorBody")
+                        Toast.makeText(
+                            this@Reminders,
+                            "Error fetching reminders",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
             }
         })
     }
 
-    // Shows the dialog to create a new reminder
+    // Show the dialog to create a new reminder
     private fun showCreateReminderDialog() {
         val builder = AlertDialog.Builder(this)
-        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_create_reminder, null)
+        val dialogView =
+            LayoutInflater.from(this).inflate(R.layout.dialog_create_reminder, null)
 
         builder.setView(dialogView)
         val dialog = builder.create()
@@ -179,12 +287,12 @@ class Reminders : BaseActivity() {
         }
 
         dateDueField.setOnClickListener {
-            showDatePickerDialog { date -> dateDueField.setText(date) }
+            showDateTimePickerDialog { date -> dateDueField.setText(date) }
         }
 
         dateToNotifyField.setOnClickListener {
             if (isEnabled) {
-                showDatePickerDialog { date -> dateToNotifyField.setText(date) }
+                showDateTimePickerDialog { date -> dateToNotifyField.setText(date) }
             }
         }
 
@@ -211,15 +319,22 @@ class Reminders : BaseActivity() {
         dialog.show()
     }
 
-    // Creates a new reminder on the server
-    private fun createReminder(description: String, dateDue: String, dateToNotify: String?, isEnabled: Boolean) {
+    // Create a new reminder on the server
+    private fun createReminder(
+        description: String,
+        dateDue: String,
+        dateToNotify: String?,
+        isEnabled: Boolean
+    ) {
         val url = "https://smartspendapi.azurewebsites.net/api/Reminder/create"
+        Log.d(TAG, "Creating reminder with URL: $url")
 
         val json = JSONObject()
         json.put("userID", userID)
         json.put("description", description)
         val dateDueFormatted = parseDateToApiFormat(dateDue)
-        val notificationDateFormatted = if (dateToNotify.isNullOrEmpty()) null else parseDateToApiFormat(dateToNotify)
+        val notificationDateFormatted =
+            if (dateToNotify.isNullOrEmpty()) null else parseDateToApiFormat(dateToNotify)
 
         json.put("dateDue", dateDueFormatted)
         if (isEnabled && notificationDateFormatted != null) {
@@ -229,6 +344,8 @@ class Reminders : BaseActivity() {
         }
         json.put("isEnabled", isEnabled)
         json.put("isCompleted", false) // New reminders are not completed
+
+        Log.d(TAG, "Reminder JSON to be sent: $json")
 
         val body = RequestBody.create(
             "application/json; charset=utf-8".toMediaTypeOrNull(),
@@ -240,31 +357,50 @@ class Reminders : BaseActivity() {
             .post(body)
             .build()
 
-        // Makes the network request
+        // Make the network request
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
+                Log.e(TAG, "Network request failed: ${e.message}")
                 runOnUiThread {
-                    Toast.makeText(this@Reminders, "Network Error: ${e.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@Reminders,
+                        "Network Error: ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
+                val responseBody = response.body?.string()
+                Log.d(TAG, "Create reminder response: $responseBody")
+
                 runOnUiThread {
                     if (response.isSuccessful) {
-                        Toast.makeText(this@Reminders, "Reminder created successfully", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            this@Reminders,
+                            "Reminder created successfully",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        // Fetch reminders to get updated list and schedule notifications
                         fetchReminders()
                     } else {
-                        val errorMessage = response.body?.string() ?: "Error creating reminder"
-                        Toast.makeText(this@Reminders, errorMessage, Toast.LENGTH_LONG).show()
+                        val errorMessage = responseBody ?: "Error creating reminder"
+                        Log.e(TAG, "Error creating reminder: $errorMessage")
+                        Toast.makeText(
+                            this@Reminders,
+                            errorMessage,
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
             }
         })
     }
 
-    // Updates an existing reminder on the server
+    // Update an existing reminder on the server
     private fun updateReminder(reminder: Reminder) {
         val url = "https://smartspendapi.azurewebsites.net/api/Reminder/update"
+        Log.d(TAG, "Updating reminder with URL: $url")
 
         val json = JSONObject()
         json.put("reminderID", reminder.reminderID)
@@ -274,6 +410,8 @@ class Reminders : BaseActivity() {
         json.put("notificationDate", reminder.notificationDate ?: JSONObject.NULL)
         json.put("isEnabled", reminder.isEnabled)
         json.put("isCompleted", reminder.isCompleted) // Include isCompleted
+
+        Log.d(TAG, "Reminder JSON to be sent for update: $json")
 
         val body = RequestBody.create(
             "application/json; charset=utf-8".toMediaTypeOrNull(),
@@ -287,25 +425,40 @@ class Reminders : BaseActivity() {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
+                Log.e(TAG, "Network request failed: ${e.message}")
                 runOnUiThread {
-                    Toast.makeText(this@Reminders, "Network Error: ${e.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@Reminders,
+                        "Network Error: ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
+                val responseBody = response.body?.string()
+                Log.d(TAG, "Update reminder response: $responseBody")
+
                 runOnUiThread {
                     if (response.isSuccessful) {
                         fetchReminders()
                     } else {
-                        val errorMessage = response.body?.string() ?: "Error updating reminder"
-                        Toast.makeText(this@Reminders, errorMessage, Toast.LENGTH_LONG).show()
+                        val errorMessage = responseBody ?: "Error updating reminder"
+                        Log.e(TAG, "Error updating reminder: $errorMessage")
+                        Toast.makeText(
+                            this@Reminders,
+                            errorMessage,
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
             }
         })
     }
 
+    // Schedule a reminder notification
     private fun scheduleReminderNotification(reminder: Reminder) {
+        Log.d(TAG, "Scheduling notification for reminder: ${reminder.reminderID}")
         if (reminder.notificationDate != null) {
             val intent = Intent(this, NotificationReceiver::class.java).apply {
                 putExtra("title", "Reminder")
@@ -315,38 +468,91 @@ class Reminders : BaseActivity() {
                 this,
                 reminder.reminderID,
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
 
             val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            val reminderTime = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-                .parse(reminder.notificationDate)?.time ?: return
+            try {
+                val reminderTime = parseApiDateTime(reminder.notificationDate)?.time ?: return
 
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, reminderTime, pendingIntent)
+                if (reminderTime > System.currentTimeMillis()) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        if (alarmManager.canScheduleExactAlarms()) {
+                            alarmManager.setExact(AlarmManager.RTC_WAKEUP, reminderTime, pendingIntent)
+                            Log.d(
+                                TAG,
+                                "Notification scheduled at $reminderTime for reminder ID ${reminder.reminderID}"
+                            )
+                        } else {
+                            Log.e(TAG, "Exact alarm permission not granted.")
+                        }
+                    } else {
+                        alarmManager.setExact(AlarmManager.RTC_WAKEUP, reminderTime, pendingIntent)
+                        Log.d(
+                            TAG,
+                            "Notification scheduled at $reminderTime for reminder ID ${reminder.reminderID}"
+                        )
+                    }
+                } else {
+                    Log.d(
+                        TAG,
+                        "Notification date is in the past for reminder ID ${reminder.reminderID}"
+                    )
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error scheduling notification: ${e.message}", e)
+            }
+        } else {
+            Log.d(TAG, "No notification date set for reminder ID ${reminder.reminderID}")
         }
     }
 
-    // Shows the date picker dialog
-    private fun showDatePickerDialog(onDateSet: (String) -> Unit) {
+    // Show date and time picker dialog
+    private fun showDateTimePickerDialog(onDateTimeSet: (String) -> Unit) {
         val calendar = Calendar.getInstance()
-        val year = calendar.get(Calendar.YEAR)
-        val month = calendar.get(Calendar.MONTH)
-        val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-        val datePickerDialog = DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
-            val selectedDate = String.format("%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear)
-            onDateSet(selectedDate)
-        }, year, month, day)
+        val dateListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+            calendar.set(year, month, dayOfMonth)
 
-        datePickerDialog.show()
+            val timeListener = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                calendar.set(Calendar.MINUTE, minute)
+                val dateTimeString = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(
+                    calendar.time
+                )
+                onDateTimeSet(dateTimeString)
+            }
+
+            TimePickerDialog(
+                this,
+                timeListener,
+                calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE),
+                true
+            ).show()
+        }
+
+        DatePickerDialog(
+            this,
+            dateListener,
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        ).show()
     }
 
-    // Parses the date string to API format
+    // Parse date to API format
     private fun parseDateToApiFormat(dateString: String): String {
-        val inputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val inputFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
         val outputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
         val date = inputFormat.parse(dateString)
         return outputFormat.format(date)
+    }
+
+    // Parse API date to Date object
+    private fun parseApiDateTime(dateString: String): Date? {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+        return inputFormat.parse(dateString)
     }
 }
 
@@ -368,7 +574,7 @@ class ReminderAdapter(
 
     private val reminders = mutableListOf<Reminder>()
 
-    // Updates the list of reminders
+    // Update the list of reminders
     fun setReminders(reminders: List<Reminder>) {
         this.reminders.clear()
         this.reminders.addAll(reminders)
@@ -386,7 +592,6 @@ class ReminderAdapter(
         holder.bind(reminder)
     }
 
-    // Returns the number of reminders
     override fun getItemCount(): Int {
         return reminders.size
     }
@@ -399,15 +604,24 @@ class ReminderAdapter(
         private val tvReminder: TextView = itemView.findViewById(R.id.tv_reminder)
         private val cbReminder: CheckBox = itemView.findViewById(R.id.cb_reminder)
 
-        // Binds the reminder data to the view
+        private val TAG = "ReminderViewHolder" // Tag for logging
+
+        // Bind reminder data to the view
         fun bind(reminder: Reminder) {
             tvReminder.text = reminder.description
 
-            val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-            val outputFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
-            val date = inputFormat.parse(reminder.dateDue)
-            val dateString = outputFormat.format(date)
-            tvDate.text = dateString
+            try {
+                Log.d(TAG, "Parsing dateDue: ${reminder.dateDue}")
+                val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+                val outputFormat = SimpleDateFormat("dd MMM yyyy HH:mm", Locale.getDefault())
+                val date = inputFormat.parse(reminder.dateDue)
+                val dateString = outputFormat.format(date)
+                tvDate.text = dateString
+                Log.d(TAG, "Formatted dateDue: $dateString")
+            } catch (e: Exception) {
+                Log.e(TAG, "Error parsing dateDue: ${e.message}", e)
+                tvDate.text = "Invalid date"
+            }
 
             cbReminder.setOnCheckedChangeListener(null)
             cbReminder.isChecked = reminder.isCompleted

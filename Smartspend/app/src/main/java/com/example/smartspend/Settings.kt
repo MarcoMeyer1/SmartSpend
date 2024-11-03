@@ -60,12 +60,23 @@ class Settings : BaseActivity() {
 
         spinnerLanguage.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
-                parent: AdapterView<*>, view: android.view.View, position: Int, id: Long
+                parent: AdapterView<*>, view: android.view.View?, position: Int, id: Long
             ) {
-                // Handle language selection changes if needed
+                val selectedLanguage = when (position) {
+                    0 -> "en" // Assuming English is at position 0
+                    1 -> "af" // Assuming Afrikaans is at position 1
+                    else -> "en" // Default fallback
+                }
+
+                // Set the selected locale
+                LocaleHelper.setLocale(this@Settings, selectedLanguage)
+
+                // Recreate the activity to apply the language change
+                recreate() // This will refresh the activity and apply the new language
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
+                // Do nothing
             }
         }
 

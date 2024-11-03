@@ -2,7 +2,6 @@ package com.example.smartspend
 
 import android.content.Context
 import android.preference.PreferenceManager
-import android.content.ContextWrapper
 import java.util.Locale
 
 object LocaleHelper {

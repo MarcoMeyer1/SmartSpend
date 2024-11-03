@@ -39,9 +39,11 @@ class Settings : BaseActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Attach the saved locale before super.onCreate to apply the correct language
-        LocaleHelper.onAttach(this)
         super.onCreate(savedInstanceState)
+        // Attach the saved locale before super.onCreate to apply the correct language
+        val contextWithLocale = LocaleHelper.onAttach(this)
+        applyLocale(contextWithLocale)
+
         enableEdgeToEdge()
         setContentView(R.layout.activity_settings)
         setActiveNavButton(R.id.settings_nav)
@@ -62,18 +64,14 @@ class Settings : BaseActivity() {
                 checkAndRequestNotificationPermission()
             } else {
                 Toast.makeText(this, "Notifications disabled", Toast.LENGTH_SHORT).show()
-                // Optionally handle disabling notifications
             }
         }
 
         checkboxSSO.setOnCheckedChangeListener { _, isChecked ->
-            // Handle SSO checkbox changes if needed
             if (isChecked) {
                 Toast.makeText(this, "SSO Enabled", Toast.LENGTH_SHORT).show()
-                // Enable SSO-related features
             } else {
                 Toast.makeText(this, "SSO Disabled", Toast.LENGTH_SHORT).show()
-                // Disable SSO-related features
             }
         }
 
@@ -94,22 +92,19 @@ class Settings : BaseActivity() {
                     else -> "en" // Default to English
                 }
 
+                // Get the currently set language
                 val currentLanguage = LocaleHelper.getLocale(this@Settings).language
                 if (selectedLanguage != currentLanguage) {
-                    // Save selected language to SharedPreferences
+                    // Save the new language preference
                     saveLanguagePreference(selectedLanguage)
 
-                    // Set the selected locale
+                    // Set the selected locale and recreate the activity
                     LocaleHelper.setLocale(this@Settings, selectedLanguage)
-
-                    // Recreate the activity to apply the language change
                     recreate() // This will refresh the activity and apply the new language
                 }
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // Do nothing
-            }
+            override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
         // Setup Sign Out Button
@@ -119,8 +114,7 @@ class Settings : BaseActivity() {
 
         // Setup View Profile TextView
         tvViewProfile.setOnClickListener {
-            val intent = Intent(this, Profile::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, Profile::class.java))
         }
     }
 
@@ -176,12 +170,10 @@ class Settings : BaseActivity() {
                     Toast.makeText(this, "Please enable notifications in app settings.", Toast.LENGTH_LONG).show()
                 }
                 else -> {
-                    // Directly request for permission
                     requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 }
             }
         } else {
-            // For Android versions below Tiramisu, notifications are enabled by default or handled differently
             Toast.makeText(this, "Notifications are enabled by default on this Android version.", Toast.LENGTH_SHORT).show()
         }
     }
@@ -201,8 +193,7 @@ class Settings : BaseActivity() {
 
             Log.d(TAG, "User signed out. SharedPreferences cleared.")
 
-            val intent = Intent(this@Settings, Login::class.java)
-            startActivity(intent)
+            startActivity(Intent(this@Settings, Login::class.java))
             finish()
         }
         builder.setNegativeButton("No") { dialog, _ ->
@@ -221,5 +212,14 @@ class Settings : BaseActivity() {
         editor.putString("app_language", language)
         editor.apply()
         Log.d(TAG, "Language preference saved: $language")
+    }
+
+    /**
+     * Re-attach locale if needed
+     */
+    private fun applyLocale(context: Context) {
+        val sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val language = sharedPreferences.getString("app_language", "en") ?: "en"
+        LocaleHelper.setLocale(context, language)
     }
 }

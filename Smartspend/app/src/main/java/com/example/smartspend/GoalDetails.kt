@@ -1,5 +1,6 @@
 package com.example.smartspend
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.*
 import androidx.activity.enableEdgeToEdge
@@ -71,7 +72,7 @@ class GoalDetails : AppCompatActivity() {
 
             // Animate progress
             val animator = ObjectAnimator.ofInt(progressGoalCompletion, "progress", 0, progressPercentage)
-            animator.duration = 1000 // 1 second animation
+            animator.duration = 2000
             animator.start()
         }
 
@@ -174,6 +175,7 @@ class GoalDetails : AppCompatActivity() {
                     if (response.isSuccessful && responseBody != null) {
                         runOnUiThread {
                             Toast.makeText(this@GoalDetails, "Goal updated successfully", Toast.LENGTH_SHORT).show()
+
                             // Update local database
                             scope.launch {
                                 withContext(Dispatchers.IO) {
@@ -183,12 +185,17 @@ class GoalDetails : AppCompatActivity() {
                                         goalName = goalName!!,
                                         totalAmount = totalAmount!!,
                                         savedAmount = savedAmount!!,
-                                        completionDate = completionDate, // Use the value here
+                                        completionDate = completionDate,
                                         isSynced = true
                                     )
                                     appDatabase.goalDao().insertGoal(goalEntity)
                                 }
                             }
+
+                            // Redirect to SavingGoals activity
+                            val intent = Intent(this@GoalDetails, SavingGoals::class.java)
+                            startActivity(intent)
+                            finish()
                         }
                     } else {
                         runOnUiThread {

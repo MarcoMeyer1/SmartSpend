@@ -48,6 +48,7 @@ class MainActivity : BaseActivity() {
         userID = sharedPreferences.getInt("userID", -1)
 
         fetchCategoryTotals()
+        LocaleHelper.onAttach(this)
 
         detailedViewButton.setOnClickListener {
             openDetailedView()

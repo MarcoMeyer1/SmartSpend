@@ -1,12 +1,24 @@
 <resources>
-    <string name="app_name">SmartSpend</string>
+
 
     <string-array name="language_array">
         <item>English</item>
-        <item>Spanish</item>
-        <item>French</item>
+        <item>Afrikaans</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="settings_title">Settings</string>
+    <string name="section_general">General</string>
+    <string name="checkbox_notifications">Allow Notifications</string>
+    <string name="checkbox_sso">Enable SSO</string>
+    <string name="label_language">Language</string>
+    <string name="section_account">Account</string>
+    <string name="view_profile">View Profile</string>
+    <string name="btn_sign_out">Sign Out</string>
+    <string name="welcome_text">Welcome, John</string>
+    <string name="available_budget_text">Available Budget</string>
+    <string name="detailed_view">Detailed View</string>
+    <string name="saving_goals">Saving Goals</string>
+    <string name="reminders">Reminders</string>
+    <string name="history">History</string>
 
 </resources>

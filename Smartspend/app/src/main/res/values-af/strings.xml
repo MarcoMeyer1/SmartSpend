@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <string name="settings_title">Instellings</string>
+    <string name="section_general">Algemeen</string>
+    <string name="checkbox_notifications">Laat Kennisgewings Toe</string>
+    <string name="checkbox_sso">Aktiveer SSO</string>
+    <string name="label_language">Taal</string>
+    <string name="section_account">Rekening</string>
+    <string name="view_profile">Bekyk Profiel</string>
+    <string name="btn_sign_out">Teken Uit</string>
+    <string name="welcome_text">Welkom, John</string>
+    <string name="available_budget_text">Beskikbare Begroting</string>
+    <string name="detailed_view">Gedetailleerde Uitsig</string>
+    <string name="saving_goals">Spaardoelwitte</string>
+    <string name="reminders">Herinneringe</string>
+    <string name="history">Geskiedenis</string>
 </resources>

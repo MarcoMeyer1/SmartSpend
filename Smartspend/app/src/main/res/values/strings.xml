@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SmartSpend</string>
+
 
     <string-array name="language_array">
         <item>English</item>

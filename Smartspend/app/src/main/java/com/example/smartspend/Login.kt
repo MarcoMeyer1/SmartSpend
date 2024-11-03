@@ -24,6 +24,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import org.json.JSONObject
 import java.io.IOException
 import java.util.concurrent.Executor
+import java.util.regex.Pattern
 
 class Login : AppCompatActivity() {
 
@@ -270,5 +271,37 @@ class Login : AppCompatActivity() {
             Log.e("Login", "Google sign-in failed", e)
             Toast.makeText(this, "Google Sign-In failed", Toast.LENGTH_LONG).show()
         }
+    }
+}
+
+object LoginValidator {
+    // Regular expression pattern for email validation
+    private val EMAIL_PATTERN = Pattern.compile(
+        "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
+    )
+    // Email validation method
+    fun isValidEmail(email: String): Boolean {
+        return EMAIL_PATTERN.matcher(email).matches()
+    }
+    // Password validation method
+    fun isValidPassword(password: String): Boolean {
+        return password.isNotEmpty()
+    }
+    // Mock login function (just a simulation for testing)
+    fun loginUserMock(email: String, password: String): Map<String, Any> {
+        return if (isValidEmail(email) && isValidPassword(password)) {
+            mapOf(
+                "userID" to 123,
+                "message" to "Login successful"
+            )
+        } else {
+            mapOf(
+                "message" to "Login failed"
+            )
+        }
+    }
+    // Mock function to save userID to SharedPreferences
+    fun saveUserIDToPreferencesMock(userID: Int): Boolean {
+        return userID > 0
     }
 }

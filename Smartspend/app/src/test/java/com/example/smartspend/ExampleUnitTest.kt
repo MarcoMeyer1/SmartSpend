@@ -38,6 +38,8 @@ class ExampleUnitTest {
         assertFalse(LoginValidator.isValidEmail(invalidEmail))
     }
 
+
+
     @Test
     fun testValidPassword() {
         val validPassword = "password123"
@@ -74,4 +76,7 @@ class ExampleUnitTest {
         assertTrue(LoginValidator.saveUserIDToPreferencesMock(validUserID))
         assertFalse(LoginValidator.saveUserIDToPreferencesMock(invalidUserID))
     }
+
+
 }
+

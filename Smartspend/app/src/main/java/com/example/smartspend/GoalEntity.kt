@@ -54,11 +54,12 @@ interface GoalDao {
 }
 
 
-@Database(entities = [GoalEntity::class], version = 2, exportSchema = false)
+@Database(entities = [GoalEntity::class, CategoryEntity::class], version = 3, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun goalDao(): GoalDao
+    abstract fun categoryDao(): CategoryDao
 
     companion object {
         @Volatile
@@ -71,23 +72,39 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "smartspend_database"
                 )
-                    .addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                     .build()
                 INSTANCE = instance
                 instance
             }
         }
 
-        // Migration from version 1 to 2
+        // Migration from version 1 to 2 (already existing)
         val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
-                // Add isSynced column with default value false (0)
+                // Add isSynced column with default value false (0) to goals table
                 database.execSQL("ALTER TABLE goals ADD COLUMN isSynced INTEGER NOT NULL DEFAULT 0")
+            }
+        }
+
+        // Migration from version 2 to 3 (new migration for categories)
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                // Create categories table
+                database.execSQL("""
+                    CREATE TABLE IF NOT EXISTS categories (
+                        categoryID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        categoryName TEXT NOT NULL,
+                        colorCode TEXT NOT NULL,
+                        userID INTEGER NOT NULL,
+                        maxBudget TEXT NOT NULL,
+                        isSynced INTEGER NOT NULL DEFAULT 0
+                    )
+                """.trimIndent())
             }
         }
     }
 }
-
 
 class Converters {
 

@@ -80,6 +80,8 @@ dependencies {
     implementation("androidx.room:room-ktx:2.5.2")
 
 
+    implementation("nl.dionsegijn:konfetti-xml:2.0.2")
+
     implementation("com.google.firebase:firebase-auth:22.1.1")
     implementation("androidx.biometric:biometric:1.2.0-alpha03")
     implementation(platform("com.google.firebase:firebase-bom:33.3.0"))

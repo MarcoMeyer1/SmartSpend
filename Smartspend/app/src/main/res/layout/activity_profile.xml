@@ -9,6 +9,7 @@
     android:background="#1b1b1b"
     tools:context=".Profile">
 
+    <!-- Profile Title -->
     <TextView
         android:id="@+id/profile_title"
         android:layout_width="wrap_content"
@@ -23,8 +24,114 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- User Stats Heading -->
+    <TextView
+        android:id="@+id/user_stats_heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="User Stats"
+        android:textColor="#808080"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toBottomOf="@id/profile_title"
+        app:layout_constraintStart_toStartOf="parent" />
 
+    <!-- Divider Line -->
+    <View
+        android:id="@+id/stats_divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="#444444"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintTop_toBottomOf="@id/user_stats_heading"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Profile Statistics - Left Aligned -->
+    <TextView
+        android:id="@+id/active_goals"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Active Goals: X"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toBottomOf="@id/stats_divider"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/completed_goals"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Completed Goals: X"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toBottomOf="@id/active_goals"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/different_categories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Different Categories: X"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toBottomOf="@id/completed_goals"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/upcoming_reminders"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Upcoming Reminders: X"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toBottomOf="@id/different_categories"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Modify Profile Information Heading -->
+    <TextView
+        android:id="@+id/modify_profile_heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Modify Profile Information"
+        android:textColor="#808080"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_marginTop="50dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toBottomOf="@id/upcoming_reminders"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Divider Line -->
+    <View
+        android:id="@+id/profile_divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="#444444"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintTop_toBottomOf="@id/modify_profile_heading"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Rest of Profile Fields -->
     <TextView
         android:id="@+id/first_name_label"
         android:layout_width="wrap_content"
@@ -35,7 +142,7 @@
         android:textStyle="bold"
         android:layout_marginTop="24dp"
         android:layout_marginStart="16dp"
-        app:layout_constraintTop_toBottomOf="@id/profile_title"
+        app:layout_constraintTop_toBottomOf="@id/profile_divider"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText

@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -22,8 +23,17 @@ class Profile : BaseActivity() {
     private lateinit var etPhoneNumber: EditText
     private lateinit var btnSet: Button
 
+    // TextViews for user stats
+    private lateinit var tvActiveGoals: TextView
+    private lateinit var tvCompletedGoals: TextView
+    private lateinit var tvDifferentCategories: TextView
+    private lateinit var tvUpcomingReminders: TextView
+
     private val client = OkHttpClient()
     private var userID: Int = -1
+
+    // Tag for logging
+    private val TAG = "ProfileActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +53,12 @@ class Profile : BaseActivity() {
         etPhoneNumber = findViewById(R.id.etPhoneNumber)
         btnSet = findViewById(R.id.btn_set)
 
+        // Initialize the TextViews for stats
+        tvActiveGoals = findViewById(R.id.active_goals)
+        tvCompletedGoals = findViewById(R.id.completed_goals)
+        tvDifferentCategories = findViewById(R.id.different_categories)
+        tvUpcomingReminders = findViewById(R.id.upcoming_reminders)
+
         etEmail.isEnabled = false
 
         // Retrieves the user ID from SharedPreferences
@@ -51,6 +67,7 @@ class Profile : BaseActivity() {
 
         if (userID != -1) {
             fetchUserProfile()
+            fetchUserProfileStats()
         } else {
             Toast.makeText(this, "User ID not found. Please log in again.", Toast.LENGTH_LONG).show()
         }
@@ -58,6 +75,61 @@ class Profile : BaseActivity() {
         btnSet.setOnClickListener {
             updateUserProfile()
         }
+    }
+
+    // Fetches user profile stats from the server
+    private fun fetchUserProfileStats() {
+        val url = "https://smartspendapi.azurewebsites.net/api/ProfileRework/stats/$userID"
+
+        val request = Request.Builder()
+            .url(url)
+            .get()
+            .build()
+
+        Log.d(TAG, "Fetching user profile stats from $url")
+
+        // Makes the network request
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e(TAG, "Network Error: ${e.message}", e)
+                runOnUiThread {
+                    Toast.makeText(this@Profile, "Network Error: ${e.message}", Toast.LENGTH_LONG).show()
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val responseBody = response.body?.string()
+
+                Log.d(TAG, "Response code: ${response.code}")
+                Log.d(TAG, "Response body: $responseBody")
+
+                runOnUiThread {
+                    if (response.isSuccessful && responseBody != null) {
+                        try {
+                            val jsonResponse = JSONObject(responseBody)
+                            val activeGoals = jsonResponse.getInt("activeGoals")
+                            val completedGoals = jsonResponse.getInt("completedGoals")
+                            val differentCategories = jsonResponse.getInt("differentCategories")
+                            val upcomingReminders = jsonResponse.getInt("upcomingReminders")
+
+                            tvActiveGoals.text = "Active Goals: $activeGoals"
+                            tvCompletedGoals.text = "Completed Goals: $completedGoals"
+                            tvDifferentCategories.text = "Different Categories: $differentCategories"
+                            tvUpcomingReminders.text = "Upcoming Reminders: $upcomingReminders"
+
+                            Log.d(TAG, "Stats updated successfully")
+
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Error parsing stats data", e)
+                            Toast.makeText(this@Profile, "Error parsing stats data", Toast.LENGTH_LONG).show()
+                        }
+                    } else {
+                        Log.e(TAG, "Failed to fetch user stats: ${response.message}")
+                        Toast.makeText(this@Profile, "Failed to fetch user stats", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        })
     }
 
     // Fetches user profile from the server
@@ -69,9 +141,12 @@ class Profile : BaseActivity() {
             .get()
             .build()
 
+        Log.d(TAG, "Fetching user profile from $url")
+
         // Makes the network request
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
+                Log.e(TAG, "Network Error: ${e.message}", e)
                 runOnUiThread {
                     Toast.makeText(this@Profile, "Network Error: ${e.message}", Toast.LENGTH_LONG).show()
                 }
@@ -79,6 +154,9 @@ class Profile : BaseActivity() {
 
             override fun onResponse(call: Call, response: Response) {
                 val responseBody = response.body?.string()
+
+                Log.d(TAG, "Response code: ${response.code}")
+                Log.d(TAG, "Response body: $responseBody")
 
                 runOnUiThread {
                     if (response.isSuccessful && responseBody != null) {
@@ -94,10 +172,14 @@ class Profile : BaseActivity() {
                             etEmail.setText(email)
                             etPhoneNumber.setText(phoneNumber)
 
+                            Log.d(TAG, "User profile fetched successfully")
+
                         } catch (e: Exception) {
+                            Log.e(TAG, "Error parsing user data", e)
                             Toast.makeText(this@Profile, "Error parsing user data", Toast.LENGTH_LONG).show()
                         }
                     } else {
+                        Log.e(TAG, "Failed to fetch user profile: ${response.message}")
                         Toast.makeText(this@Profile, "Failed to fetch user profile", Toast.LENGTH_LONG).show()
                     }
                 }
@@ -142,9 +224,12 @@ class Profile : BaseActivity() {
             .put(body)
             .build()
 
+        Log.d(TAG, "Updating user profile at $url with data: ${json.toString()}")
+
         // Makes the network request
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
+                Log.e(TAG, "Network Error: ${e.message}", e)
                 runOnUiThread {
                     Toast.makeText(this@Profile, "Network Error: ${e.message}", Toast.LENGTH_LONG).show()
                 }
@@ -153,12 +238,17 @@ class Profile : BaseActivity() {
             override fun onResponse(call: Call, response: Response) {
                 val responseBody = response.body?.string()
 
+                Log.d(TAG, "Response code: ${response.code}")
+                Log.d(TAG, "Response body: $responseBody")
+
                 runOnUiThread {
                     if (response.isSuccessful) {
                         Toast.makeText(this@Profile, "Profile updated successfully", Toast.LENGTH_LONG).show()
+                        Log.d(TAG, "Profile updated successfully")
                     } else {
                         val errorMessage = responseBody ?: "Profile update failed"
                         Toast.makeText(this@Profile, errorMessage, Toast.LENGTH_LONG).show()
+                        Log.e(TAG, "Profile update failed: $errorMessage")
                     }
                 }
             }

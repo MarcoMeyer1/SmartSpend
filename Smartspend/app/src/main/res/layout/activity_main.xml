@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Welcome, John"
+        android:text="@string/welcome_text"
         android:textColor="#FFFFFF"
         android:textSize="32sp"
         android:textStyle="bold"
@@ -34,7 +34,7 @@
         android:id="@+id/availableBudgetText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Available Budget"
+        android:text="@string/available_budget_text"
         android:textColor="#AAAAAA"
         android:textSize="16sp"
         app:layout_constraintTop_toBottomOf="@id/welcomeText"
@@ -87,7 +87,7 @@
             android:layout_margin="8dp"
             android:background="@drawable/button_background"
             android:padding="12dp"
-            android:text="Detailed View"
+            android:text="@string/detailed_view"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
             android:textSize="16sp" />
@@ -100,7 +100,7 @@
             android:layout_margin="8dp"
             android:background="@drawable/button_background"
             android:padding="12dp"
-            android:text="Saving Goals"
+            android:text="@string/saving_goals"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
             android:textSize="16sp" />
@@ -113,7 +113,7 @@
             android:layout_margin="8dp"
             android:background="@drawable/button_background"
             android:padding="12dp"
-            android:text="Reminders"
+            android:text="@string/reminders"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
             android:textSize="16sp" />
@@ -126,7 +126,7 @@
             android:layout_margin="8dp"
             android:background="@drawable/button_background"
             android:padding="12dp"
-            android:text="History"
+            android:text="@string/history"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
             android:textSize="16sp" />

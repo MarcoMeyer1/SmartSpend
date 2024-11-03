@@ -15,8 +15,21 @@ import java.math.BigDecimal
 import java.text.NumberFormat
 import java.util.*
 import android.animation.ObjectAnimator
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import nl.dionsegijn.konfetti.core.Party
+import nl.dionsegijn.konfetti.core.Position
+import nl.dionsegijn.konfetti.core.emitter.Emitter
 import java.text.SimpleDateFormat
+
+
+import nl.dionsegijn.konfetti.core.models.Shape
+import nl.dionsegijn.konfetti.core.models.Size
+
+
+import java.util.concurrent.TimeUnit
+import nl.dionsegijn.konfetti.xml.KonfettiView
 
 class GoalDetails : AppCompatActivity() {
 
@@ -24,6 +37,7 @@ class GoalDetails : AppCompatActivity() {
     private lateinit var tvGoalAmount: TextView
     private lateinit var progressGoalCompletion: ProgressBar
     private lateinit var tvGoalPercentage: TextView
+    private lateinit var konfettiView: KonfettiView // Added for confetti animation
     private lateinit var appDatabase: AppDatabase
     private val client = OkHttpClient()
     private val scope = CoroutineScope(Dispatchers.Main + Job())
@@ -45,6 +59,7 @@ class GoalDetails : AppCompatActivity() {
         tvGoalAmount = findViewById(R.id.tvGoalAmount)
         progressGoalCompletion = findViewById(R.id.progressGoalCompletion)
         tvGoalPercentage = findViewById(R.id.tvGoalPercentage)
+        konfettiView = findViewById(R.id.konfettiView) // Initialize the KonfettiView
 
         appDatabase = AppDatabase.getDatabase(this)
 
@@ -74,6 +89,11 @@ class GoalDetails : AppCompatActivity() {
             val animator = ObjectAnimator.ofInt(progressGoalCompletion, "progress", 0, progressPercentage)
             animator.duration = 2000
             animator.start()
+
+            // Check if the goal has been met and play confetti
+            if (progressPercentage >= 100) {
+                playConfettiAnimation()
+            }
         }
 
         val addToGoal: Button = findViewById(R.id.btnAddToGoal)
@@ -116,12 +136,17 @@ class GoalDetails : AppCompatActivity() {
                         .multiply(BigDecimal(100))).toInt()
 
                     tvGoalPercentage.text = "$progressPercentage%"
-                    progressGoalCompletion.progress = progressPercentage
+
+                    // Animate progress
+                    val animator = ObjectAnimator.ofInt(progressGoalCompletion, "progress", progressGoalCompletion.progress, progressPercentage)
+                    animator.duration = 2000
+                    animator.start()
 
                     // Check if the goal has been met
                     if (newSavedAmount >= totalAmount) {
                         completionDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
                         Log.d("GoalDetails", "Goal met! Completion date set to: $completionDate")
+                        playConfettiAnimation() // Play confetti when goal is met
                     } else {
                         completionDate = null // Explicitly setting to null when the goal isn't met
                     }
@@ -136,6 +161,33 @@ class GoalDetails : AppCompatActivity() {
         }
     }
 
+    // Method to play confetti animation
+    private fun playConfettiAnimation() {
+        val colors = listOf(
+            android.graphics.Color.YELLOW,
+            android.graphics.Color.GREEN,
+            android.graphics.Color.MAGENTA,
+            android.graphics.Color.RED,
+            android.graphics.Color.BLUE
+        )
+
+        val party = Party(
+            speed = 10f,
+            maxSpeed = 30f,
+            damping = 0.9f,
+            spread = 360,
+            colors = colors,
+            shapes = listOf(Shape.Square, Shape.Circle),
+            size = listOf(Size.SMALL, Size.LARGE),
+            timeToLive = 2000L,
+            position = Position.Relative(0.5, 0.5),
+            emitter = Emitter(duration = 100, TimeUnit.MILLISECONDS).max(50)
+        )
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            konfettiView.start(party)
+        }, 500) // Delay in milliseconds
+    }
     private fun updateGoalOnServer() {
         val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         val userID = sharedPreferences.getInt("userID", -1)

@@ -97,7 +97,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="#70FFB5"
             android:popupBackground="#1b1b1b"
-            android:textColor="#FFF"
+            android:textColor="#FFFFFF"
             android:entries="@array/language_array"
             android:dropDownWidth="wrap_content"
             android:spinnerMode="dropdown"

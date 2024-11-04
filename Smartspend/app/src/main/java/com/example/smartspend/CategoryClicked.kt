@@ -1,5 +1,6 @@
 package com.example.smartspend
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
@@ -61,6 +62,15 @@ class CategoryClicked : AppCompatActivity() {
         recyclerViewHistory.layoutManager = LinearLayoutManager(this)
         recyclerViewHistory.adapter = transactionAdapter
 
+        ivEditCategory.setOnClickListener {
+            val intent = Intent(this, EditCategory::class.java)
+            intent.putExtra("categoryID", categoryID)
+            intent.putExtra("categoryName", categoryName)
+            intent.putExtra("colorCode", colorCode)
+            intent.putExtra("maxBudget", maxBudget)
+            startActivity(intent)
+        }
+
         // Retrieves user ID from SharedPreferences
         val sharedPreferences: SharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         userID = sharedPreferences.getInt("userID", -1)
@@ -86,6 +96,8 @@ class CategoryClicked : AppCompatActivity() {
             finish()
         }
     }
+
+
 
     // Fetches category details from the server
     private fun fetchCategoryDetails() {

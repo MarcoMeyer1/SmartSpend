@@ -112,10 +112,10 @@ class Profile : BaseActivity() {
                             val differentCategories = jsonResponse.getInt("differentCategories")
                             val upcomingReminders = jsonResponse.getInt("upcomingReminders")
 
-                            tvActiveGoals.text = "Active Goals: $activeGoals"
-                            tvCompletedGoals.text = "Completed Goals: $completedGoals"
-                            tvDifferentCategories.text = "Different Categories: $differentCategories"
-                            tvUpcomingReminders.text = "Upcoming Reminders: $upcomingReminders"
+                            tvActiveGoals.text = "$activeGoals"
+                            tvCompletedGoals.text = "$completedGoals"
+                            tvDifferentCategories.text = "$differentCategories"
+                            tvUpcomingReminders.text = "$upcomingReminders"
 
                             Log.d(TAG, "Stats updated successfully")
 

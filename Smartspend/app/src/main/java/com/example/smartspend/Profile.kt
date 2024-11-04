@@ -54,10 +54,10 @@ class Profile : BaseActivity() {
         btnSet = findViewById(R.id.btn_set)
 
         // Initialize the TextViews for stats
-        tvActiveGoals = findViewById(R.id.active_goals)
-        tvCompletedGoals = findViewById(R.id.completed_goals)
-        tvDifferentCategories = findViewById(R.id.different_categories)
-        tvUpcomingReminders = findViewById(R.id.upcoming_reminders)
+        tvActiveGoals = findViewById(R.id.active_goals_value)
+        tvCompletedGoals = findViewById(R.id.completed_goals_value)
+        tvDifferentCategories = findViewById(R.id.different_categories_value)
+        tvUpcomingReminders = findViewById(R.id.upcoming_reminders_value)
 
         etEmail.isEnabled = false
 

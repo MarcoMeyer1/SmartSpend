@@ -35,8 +35,10 @@ class GoalAdapter(private val goals: List<GoalEntity>, private val listener: OnI
         holder.tvGoalTitle.text = goal.goalName
 
         val numberFormat = NumberFormat.getCurrencyInstance(Locale.getDefault())
-        holder.tvGoalProgress.text =
-            "${numberFormat.format(goal.savedAmount)}/${numberFormat.format(goal.totalAmount)}"
+        val savedAmountFormatted = "R" + goal.savedAmount.setScale(2, RoundingMode.HALF_UP).toPlainString()
+        val totalAmountFormatted = "R" + goal.totalAmount.setScale(2, RoundingMode.HALF_UP).toPlainString()
+        holder.tvGoalProgress.text = "$savedAmountFormatted/$totalAmountFormatted"
+
 
         val progressPercentage = (goal.savedAmount.divide(goal.totalAmount, 2, RoundingMode.HALF_UP)
             .multiply(BigDecimal(100))).toInt()

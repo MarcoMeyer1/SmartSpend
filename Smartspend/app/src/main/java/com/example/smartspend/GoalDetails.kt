@@ -77,8 +77,9 @@ class GoalDetails : AppCompatActivity() {
         tvGoalName.text = goalName
         // Set progress with animation
         if (totalAmount != null && savedAmount != null) {
-            val numberFormat = NumberFormat.getCurrencyInstance(Locale.getDefault())
-            tvGoalAmount.text = "${numberFormat.format(savedAmount)} / ${numberFormat.format(totalAmount)}"
+            val numberFormat = NumberFormat.getCurrencyInstance(Locale("en", "ZA"))
+            tvGoalAmount.text = "R${savedAmount?.setScale(2, BigDecimal.ROUND_HALF_UP)} / R${totalAmount?.setScale(2, BigDecimal.ROUND_HALF_UP)}"
+
 
             val progressPercentage = (savedAmount!!.divide(totalAmount, 2, BigDecimal.ROUND_HALF_UP)
                 .multiply(BigDecimal(100))).toInt()
@@ -95,6 +96,7 @@ class GoalDetails : AppCompatActivity() {
                 playConfettiAnimation()
             }
         }
+
 
         val addToGoal: Button = findViewById(R.id.btnAddToGoal)
         addToGoal.setOnClickListener {
@@ -130,7 +132,8 @@ class GoalDetails : AppCompatActivity() {
                 // Update UI
                 if (totalAmount != null && newSavedAmount != null) {
                     val numberFormat = NumberFormat.getCurrencyInstance(Locale.getDefault())
-                    tvGoalAmount.text = "${numberFormat.format(newSavedAmount)} / ${numberFormat.format(totalAmount)}"
+                    tvGoalAmount.text = "R${newSavedAmount?.setScale(2, BigDecimal.ROUND_HALF_UP)} / R${totalAmount?.setScale(2, BigDecimal.ROUND_HALF_UP)}"
+
 
                     val progressPercentage = (newSavedAmount.divide(totalAmount, 2, BigDecimal.ROUND_HALF_UP)
                         .multiply(BigDecimal(100))).toInt()

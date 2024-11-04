@@ -23,7 +23,7 @@
             android:gravity="center"
             android:textSize="38sp"
             android:textStyle="bold"
-            android:textColor="#92D1E1" />
+            android:textColor="#FFFFFF" />
 
         <ImageView
             android:id="@+id/iv_edit_category"
@@ -38,9 +38,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/available_budget_label"
-        android:textColor="#808080"
-        android:textSize="14sp"
-        android:layout_marginTop="16dp" />
+        android:textColor="#A0A0A0"
+    android:textSize="14sp"
+    android:layout_marginTop="16dp" />
 
     <TextView
         android:id="@+id/tv_available_budget"
@@ -63,8 +63,8 @@
         android:layout_height="wrap_content"
         android:textSize="14sp"
         android:text="@string/set_monthly_limit"
-        android:textColor="#808080"
-        android:layout_marginTop="16dp" />
+        android:textColor="#A0A0A0"
+    android:layout_marginTop="16dp" />
 
     <View
         android:layout_width="match_parent"
@@ -77,19 +77,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/set_amount_label"
-        android:textColor="#808080"
-        android:layout_marginTop="16dp" />
+        android:textColor="#A0A0A0"
+    android:layout_marginTop="16dp" />
 
     <EditText
         android:id="@+id/et_set_amount_manually"
         android:layout_width="171dp"
-        android:layout_height="38dp"
-        android:layout_marginTop="8dp"
-        android:textColor="#FFFFFF"
-        android:background="@drawable/custom_edittext_green_border"
-        android:gravity="center"
-        android:hint="@string/hint_amount"
-        android:inputType="number" />
+        android:layout_height="48dp"
+    android:layout_marginTop="8dp"
+    android:textColor="#FFFFFF"
+    android:background="@drawable/custom_edittext_green_border"
+    android:gravity="center"
+    android:hint="@string/hint_amount"
+    android:inputType="number" />
 
     <View
         android:layout_width="match_parent"
@@ -102,8 +102,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/history_label"
-        android:textColor="#808080"
-        android:layout_marginTop="16dp" />
+        android:textColor="#A0A0A0"
+    android:layout_marginTop="16dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_history"

@@ -24,7 +24,7 @@
         android:layout_marginTop="12dp"
         android:fontFamily="sans-serif-condensed"
         android:gravity="center"
-        android:text="smartspend"
+        android:text="@string/app_title"
         android:textColor="#FFFFFF"
         android:textSize="32sp" />
 
@@ -37,13 +37,12 @@
         android:gravity="center"
         app:iconGravity="textStart"
         app:iconPadding="8dp"
-        android:text="Continue with Google"
+        android:text="@string/continue_with_google"
         android:textColor="#FFFFFF"
         app:icon="@drawable/ic_google"
         app:iconSize="28dp"
         app:strokeColor="#70FFB5"
         app:strokeWidth="1dp" />
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -91,7 +90,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableTint="#7E7E7E"
-            android:hint="E-mail"
+            android:hint="@string/email_hint"
             android:inputType="textEmailAddress"
             android:textColor="#FFFFFF"
             android:textColorHint="#FFFFFF" />
@@ -111,25 +110,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:foreground="#00000000"
-            android:hint="Password"
+            android:hint="@string/password_hint"
             android:inputType="textPassword"
             android:textColor="#FFFFFF"
             android:textColorHint="#70FFB5" />
     </com.google.android.material.textfield.TextInputLayout>
-
-
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSignIn"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginTop="30dp"
-    android:backgroundTint="#31453a"
-    android:text="Sign In"
-    android:textColor="#FFFFFF"
-    android:alpha="0.75"
-    app:strokeColor="#70FFB5"
-    app:strokeWidth="1dp" />
+        android:backgroundTint="#31453a"
+        android:text="@string/sign_in"
+        android:textColor="#FFFFFF"
+        android:alpha="0.75"
+        app:strokeColor="#70FFB5"
+        app:strokeWidth="1dp" />
 
     <TextView
         android:id="@+id/createAccountText"
@@ -137,7 +134,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:gravity="center"
-        android:text="Don't have an account? Create an account"
+        android:text="@string/create_account_prompt"
         android:textColor="#70FFB5"
         android:textSize="15sp" />
 
@@ -147,7 +144,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:text="Forgot password?"
+        android:text="@string/forgot_password"
         android:textColor="#FFFFFF"
         android:textSize="13sp" />
 
@@ -158,19 +155,17 @@
         android:layout_marginTop="25dp"
         android:backgroundTint="#70FFB5"
         android:clickable="true"
-        android:contentDescription="TODO"
+        android:contentDescription="@string/biometric_login"
         android:focusable="true"
         app:srcCompat="@drawable/fingerprint_icon"
         app:tint="#6370FFB5" />
-
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="131dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Biometric Login"
+        android:text="@string/biometric_login"
         android:textAlignment="center"
         android:textColor="#7FFFFFFF" />
-
 </LinearLayout>

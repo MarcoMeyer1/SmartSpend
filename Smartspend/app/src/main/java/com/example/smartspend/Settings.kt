@@ -126,10 +126,10 @@ class Settings : BaseActivity() {
         val adapter = ArrayAdapter.createFromResource(
             this,
             R.array.language_array,
-            android.R.layout.simple_spinner_item
+            R.layout.spinner_item
         )
         // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        adapter.setDropDownViewResource(R.layout.spinner_item)
         // Apply the adapter to the spinner
         spinnerLanguage.adapter = adapter
 

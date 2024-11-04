@@ -28,7 +28,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="October 2024"
+            android:text="@string/date_text"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -37,7 +37,7 @@
             android:id="@+id/edtAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="R0"
+            android:text="@string/edt_amount"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -57,7 +57,7 @@
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
         android:backgroundTint="#70FFB5"
-        android:contentDescription="AddCategory"
+        android:contentDescription="@string/add_category_description"
         android:elevation="8dp"
         android:src="@drawable/baseline_add_24"
         app:tint="#212226" />
@@ -71,7 +71,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-
 </LinearLayout>
 
 

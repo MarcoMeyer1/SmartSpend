@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -48,17 +48,17 @@
             android:id="@+id/stats_card"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            app:cardBackgroundColor="#1b1b1b"
+            app:cardBackgroundColor="#001B1B1B"
             app:cardCornerRadius="8dp"
             app:cardElevation="4dp"
-            app:strokeWidth="2dp"
-            app:strokeColor="#00FF00"
-            app:layout_constraintTop_toBottomOf="@id/user_stats_heading"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/user_stats_heading"
+            app:strokeColor="#00FF00"
+            app:strokeWidth="2dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -73,8 +73,8 @@
                     android:text="Active Goals"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/active_goals_value"
@@ -83,29 +83,29 @@
                     android:text="X"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp"
-                    app:layout_constraintTop_toTopOf="@id/active_goals_label"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/active_goals_label" />
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="1dp"
+                    android:layout_marginTop="8dp"
                     android:background="#444444"
-                    app:layout_constraintTop_toBottomOf="@id/active_goals_label"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginTop="8dp"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/active_goals_label" />
 
                 <!-- Completed Goals -->
                 <TextView
                     android:id="@+id/completed_goals_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
                     android:text="Completed Goals"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp"
-                    app:layout_constraintTop_toBottomOf="@id/active_goals_label"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginTop="16dp" />
+                    app:layout_constraintTop_toBottomOf="@id/active_goals_label" />
 
                 <TextView
                     android:id="@+id/completed_goals_value"
@@ -114,29 +114,29 @@
                     android:text="X"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp"
-                    app:layout_constraintTop_toTopOf="@id/completed_goals_label"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/completed_goals_label" />
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="1dp"
+                    android:layout_marginTop="8dp"
                     android:background="#444444"
-                    app:layout_constraintTop_toBottomOf="@id/completed_goals_label"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginTop="8dp"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/completed_goals_label" />
 
                 <!-- Different Categories -->
                 <TextView
                     android:id="@+id/different_categories_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
                     android:text="Different Categories"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp"
-                    app:layout_constraintTop_toBottomOf="@id/completed_goals_label"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginTop="16dp" />
+                    app:layout_constraintTop_toBottomOf="@id/completed_goals_label" />
 
                 <TextView
                     android:id="@+id/different_categories_value"
@@ -145,29 +145,29 @@
                     android:text="X"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp"
-                    app:layout_constraintTop_toTopOf="@id/different_categories_label"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/different_categories_label" />
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="1dp"
+                    android:layout_marginTop="8dp"
                     android:background="#444444"
-                    app:layout_constraintTop_toBottomOf="@id/different_categories_label"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginTop="8dp"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/different_categories_label" />
 
                 <!-- Upcoming Reminders -->
                 <TextView
                     android:id="@+id/upcoming_reminders_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
                     android:text="Upcoming Reminders"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp"
-                    app:layout_constraintTop_toBottomOf="@id/different_categories_label"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginTop="16dp" />
+                    app:layout_constraintTop_toBottomOf="@id/different_categories_label" />
 
                 <TextView
                     android:id="@+id/upcoming_reminders_value"
@@ -176,22 +176,87 @@
                     android:text="X"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp"
-                    app:layout_constraintTop_toTopOf="@id/upcoming_reminders_label"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/upcoming_reminders_label" />
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="1dp"
+                    android:layout_marginTop="8dp"
                     android:background="#444444"
-                    app:layout_constraintTop_toBottomOf="@id/upcoming_reminders_label"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginTop="8dp"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/upcoming_reminders_label" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Modify Profile Information Heading -->
+
+        <!-- "5 goals left to:" label aligned to the top right of the progress bar -->
+
+        <TextView
+            android:id="@+id/Rank_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="12dp"
+            android:text="Beginner"
+            android:textColor="#FFEB3B"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/progressGoalCompletion"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/stats_card"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <TextView
+            android:id="@+id/goals_left_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:text="5 goals left to:"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/progressGoalCompletion"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/Rank_label"
+            app:layout_constraintTop_toBottomOf="@id/stats_card"
+            app:layout_constraintVertical_bias="0.72" />
+
+        <!-- "Novice" label to the right of "5 goals left to:" label, aligned to the right -->
+
+        <!-- Progress Bar -->
+        <TextView
+            android:id="@+id/next_rank_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="12dp"
+            android:text="Novice"
+            android:textColor="#2196F3"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/progressGoalCompletion"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.061"
+            app:layout_constraintStart_toEndOf="@id/goals_left_label"
+            app:layout_constraintTop_toBottomOf="@id/stats_card"
+            app:layout_constraintVertical_bias="0.666" />
+
+        <ProgressBar
+            android:id="@+id/progressGoalCompletion"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="17dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="36dp"
+            android:layout_marginEnd="16dp"
+            android:max="100"
+            android:progress="50"
+            android:progressDrawable="@drawable/progress_bar_style"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/stats_card" />
+
         <TextView
             android:id="@+id/modify_profile_heading"
             android:layout_width="wrap_content"
@@ -200,7 +265,7 @@
             android:textColor="#A0A0A0"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="80dp"
             android:layout_marginStart="16dp"
             app:layout_constraintTop_toBottomOf="@id/stats_card"
             app:layout_constraintStart_toStartOf="parent" />

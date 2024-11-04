@@ -67,21 +67,20 @@
         app:layout_constraintTop_toBottomOf="@id/edit_text_name"
         app:layout_constraintStart_toStartOf="parent"/>
 
-    <!-- Color Picker Button -->
+    <!-- Color Picker Button with Green Border -->
     <Button
         android:id="@+id/color_picker_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Select Color"
-        android:textColor="@color/white"
-        android:background="@drawable/custom_edittext_green_border"
+        android:textColor="@android:color/white"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:background="@drawable/custom_edittext_green_border"
         android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@id/edit_color_subheading"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <!-- Subheading: Edit Amount -->
     <TextView
@@ -112,5 +111,20 @@
         app:layout_constraintTop_toBottomOf="@id/edit_amount_subheading"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Save Button at the Bottom -->
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="227dp"
+        android:layout_height="49dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="276dp"
+        android:text="Save"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:strokeColor="#70FFB5"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -133,7 +133,6 @@ class SavingGoals : BaseActivity(), GoalAdapter.OnItemClickListener {
                     return@setOnClickListener
                 }
 
-                // Fetches the userID from the SharedPreferences
                 val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
                 val userID = sharedPreferences.getInt("userID", -1)
 
@@ -147,29 +146,25 @@ class SavingGoals : BaseActivity(), GoalAdapter.OnItemClickListener {
                         completionDate = null
                     )
 
-                    scope.launch {
-                        // Saved to local database
-                        withContext(Dispatchers.IO) {
-                            appDatabase.goalDao().insertGoal(newGoal)
-                        }
-
-                        if (isNetworkAvailable()) {
-                            // Syncs with the server
-                            createGoalOnServer(newGoal) { success ->
-                                if (success) {
-                                    fetchGoalsFromServer()
-                                    dialog.dismiss()
-                                } else {
-                                    Toast.makeText(
-                                        this@SavingGoals,
-                                        "Failed to sync with server",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    fetchGoalsFromLocal()
-                                    dialog.dismiss()
-                                }
+                    if (isNetworkAvailable()) {
+                        createGoalOnServer(newGoal) { success ->
+                            if (success) {
+                                fetchGoalsFromServer()
+                                dialog.dismiss()
+                            } else {
+                                Toast.makeText(
+                                    this@SavingGoals,
+                                    "Failed to create goal on server",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                dialog.dismiss()
                             }
-                        } else {
+                        }
+                    } else {
+                        scope.launch {
+                            withContext(Dispatchers.IO) {
+                                appDatabase.goalDao().insertGoal(newGoal)
+                            }
                             Toast.makeText(
                                 this@SavingGoals,
                                 "Saved locally. Will sync when online.",
@@ -182,7 +177,6 @@ class SavingGoals : BaseActivity(), GoalAdapter.OnItemClickListener {
                 } else {
                     Toast.makeText(this, "User ID not found. Please log in.", Toast.LENGTH_SHORT).show()
                 }
-
             } else {
                 Toast.makeText(this, "Please fill out all fields", Toast.LENGTH_SHORT).show()
             }
@@ -190,6 +184,7 @@ class SavingGoals : BaseActivity(), GoalAdapter.OnItemClickListener {
 
         dialog.show()
     }
+
 
     // Checks if the network is available
     private fun isNetworkAvailable(): Boolean {
@@ -238,7 +233,6 @@ class SavingGoals : BaseActivity(), GoalAdapter.OnItemClickListener {
                     runOnUiThread {
                         Toast.makeText(this@SavingGoals, "Failed to load goals from server", Toast.LENGTH_SHORT)
                             .show()
-                        // Load from local database
                         fetchGoalsFromLocal()
                     }
                 }
@@ -258,20 +252,16 @@ class SavingGoals : BaseActivity(), GoalAdapter.OnItemClickListener {
                                 totalAmount = BigDecimal(jsonObject.getDouble("totalAmount")),
                                 savedAmount = BigDecimal(jsonObject.getDouble("savedAmount")),
                                 completionDate = jsonObject.optString("completionDate", null),
-                                isSynced = true // Mark as synced
+                                isSynced = true
                             )
                             serverGoals.add(goal)
                         }
 
                         scope.launch {
                             withContext(Dispatchers.IO) {
-                                // Merge local unsynced goals with server goals
-                                val localUnsyncedGoals = appDatabase.goalDao().getUnsyncedGoals(userID)
-                                val allGoals = localUnsyncedGoals + serverGoals
-                                appDatabase.goalDao().deleteGoalsByUser(userID)
-                                appDatabase.goalDao().insertGoals(allGoals)
+                                appDatabase.goalDao().deleteSyncedGoalsByUser(userID)
+                                appDatabase.goalDao().insertGoals(serverGoals)
                             }
-                            // Updates the UI
                             fetchGoalsFromLocal()
                         }
                     } else {
@@ -281,7 +271,6 @@ class SavingGoals : BaseActivity(), GoalAdapter.OnItemClickListener {
                                 "Failed to load goals from server",
                                 Toast.LENGTH_SHORT
                             ).show()
-                            // Loads data from local database
                             fetchGoalsFromLocal()
                         }
                     }
@@ -291,6 +280,7 @@ class SavingGoals : BaseActivity(), GoalAdapter.OnItemClickListener {
             Toast.makeText(this, "User ID not found. Please log in.", Toast.LENGTH_SHORT).show()
         }
     }
+
 
     // Syncs the local unsynced goals with the server
     private fun syncLocalDataWithServer() {
@@ -306,11 +296,11 @@ class SavingGoals : BaseActivity(), GoalAdapter.OnItemClickListener {
                 for (goal in localUnsyncedGoals) {
                     createGoalOnServer(goal) { success ->
                         if (success) {
-                            // Update local goal to mark as synced
                             scope.launch {
                                 withContext(Dispatchers.IO) {
-                                    appDatabase.goalDao().insertGoal(goal.copy(isSynced = true))
+                                    appDatabase.goalDao().deleteGoal(goal)
                                 }
+                                fetchGoalsFromLocal()
                             }
                         }
                     }
@@ -318,6 +308,7 @@ class SavingGoals : BaseActivity(), GoalAdapter.OnItemClickListener {
             }
         }
     }
+
 
     private fun createGoalOnServer(goal: GoalEntity, callback: (Boolean) -> Unit) {
         val url = "$apiBaseUrl/Goal/create"
@@ -356,19 +347,8 @@ class SavingGoals : BaseActivity(), GoalAdapter.OnItemClickListener {
                 if (response.isSuccessful && responseBody != null) {
                     runOnUiThread {
                         try {
-                            val jsonResponse = JSONObject(responseBody)
-                            val serverGoalID = jsonResponse.getInt("goalID")
-
-                            // Updates the local goal with server goalID and marked as synced
-                            scope.launch {
-                                withContext(Dispatchers.IO) {
-                                    appDatabase.goalDao().updateGoal(goal.copy(goalID = serverGoalID, isSynced = true))
-                                }
-                            }
-                            fetchGoalsFromLocal()  // Refreshes the goals after creating
                             callback(true)
                         } catch (e: JSONException) {
-
                             callback(false)
                         }
                     }
@@ -386,6 +366,7 @@ class SavingGoals : BaseActivity(), GoalAdapter.OnItemClickListener {
             }
         })
     }
+
 
     override fun onDestroy() {
         super.onDestroy()

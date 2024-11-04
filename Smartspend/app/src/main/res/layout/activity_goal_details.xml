@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -11,7 +12,7 @@
         android:id="@+id/tvGoalDetailsTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Goal Details"
+        android:text="@string/goal_details_title"
         android:textColor="#FFFFFF"
         android:textSize="36sp"
         android:textStyle="bold"
@@ -46,7 +47,7 @@
                 android:textColor="#FFFFFF"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                tools:text="Vacation Fund" />
+                tools:text="Vacation Fund" /> <!-- Placeholder, keep this for tools -->
 
             <TextView
                 android:id="@+id/tvGoalAmount"
@@ -56,17 +57,18 @@
                 android:textAlignment="center"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
-                tools:text="$500 / $1,000" />
+                android:text="@string/goal_amount"
+                tools:text="$500 / $1,000" /> <!-- Placeholder, keep this for tools -->
 
-                <ProgressBar
-                    android:id="@+id/progressGoalCompletion"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="20dp"
-                    android:layout_marginTop="16dp"
-                    android:max="100"
-                    android:progress="50"
-                    android:progressDrawable="@drawable/progress_bar_style"/>
+            <ProgressBar
+                android:id="@+id/progressGoalCompletion"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginTop="16dp"
+                android:max="100"
+                android:progress="50"
+                android:progressDrawable="@drawable/progress_bar_style"/>
 
             <TextView
                 android:id="@+id/tvGoalPercentage"
@@ -77,8 +79,7 @@
                 android:textColor="#FFFFFF"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                tools:text="50%" />
-
+                tools:text="50%" /> <!-- Placeholder, keep this for tools -->
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -88,7 +89,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
-        android:text="Add to Goal"
+        android:text="@string/add_to_goal"
         android:textColor="#FFFFFF"
         android:backgroundTint="#31453a"
         android:alpha="0.75"
@@ -106,5 +107,4 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

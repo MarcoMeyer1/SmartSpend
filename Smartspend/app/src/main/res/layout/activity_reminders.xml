@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -17,7 +16,7 @@
             android:id="@+id/tv_reminders_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Reminders"
+            android:text="@string/reminders_title"
             android:textColor="#FFFFFF"
             android:textSize="32sp"
             android:textStyle="bold"
@@ -27,7 +26,7 @@
             android:id="@+id/tv_upcoming"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Upcoming"
+            android:text="@string/upcoming"
             android:textColor="#70FFB5"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -50,7 +49,7 @@
             android:id="@+id/tv_completed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Completed"
+            android:text="@string/completed"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -80,13 +79,13 @@
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_reminder"
         android:layout_width="wrap_content"
-        android:contentDescription="add_reminder"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/add_reminder_description"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="76dp"
-    android:src="@drawable/plus"
-    app:backgroundTint="#70FFB5"
-    app:tint="#000000" />
+        android:src="@drawable/plus"
+        app:backgroundTint="#70FFB5"
+        app:tint="#000000" />
 
 </FrameLayout>

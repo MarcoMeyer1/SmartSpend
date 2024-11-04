@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -13,7 +12,7 @@
         android:id="@+id/tv_history_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Transaction History"
+        android:text="@string/transaction_history_title"
         android:textColor="#FFFFFF"
         android:textSize="32sp"
         android:textStyle="bold"
@@ -43,7 +42,7 @@
                 android:id="@+id/tv_income_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Income"
+                android:text="@string/income_label"
                 android:layout_gravity="center"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
@@ -58,7 +57,7 @@
                 android:gravity="center_horizontal"
                 android:padding="10dp"
                 android:background="@drawable/custom_edittext_green_border"
-                android:text="0.00"
+                android:text="@string/default_amount"
                 android:textColor="#FFFFFF"/>
         </LinearLayout>
 
@@ -72,7 +71,7 @@
                 android:id="@+id/tv_expenses_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Expenses"
+                android:text="@string/expenses_label"
                 android:layout_gravity="center"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
@@ -88,7 +87,7 @@
                 android:gravity="center_horizontal"
                 android:background="@drawable/button_border_red"
                 android:padding="10dp"
-                android:text="0.00"
+                android:text="@string/default_amount"
                 android:textColor="#FFFFFF"/>
         </LinearLayout>
     </LinearLayout>

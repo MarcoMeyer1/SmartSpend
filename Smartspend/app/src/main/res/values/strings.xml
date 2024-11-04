@@ -21,4 +21,79 @@
     <string name="reminders">Reminders</string>
     <string name="history">History</string>
 
+    <string name="home_label">Home</string>
+    <string name="notifications_label">Notifications</string>
+    <string name="add_record_label">Add Record</string>
+    <string name="profile_label">Profile</string>
+    <string name="settings_label">Settings</string>
+    <string name="home_description">Home</string>
+    <string name="notifications_description">Notifications</string>
+    <string name="add_record_description">Add Record</string>
+    <string name="profile_description">Profile</string>
+    <string name="settings_description">Settings</string>
+
+    <string name="date_text">October 2024</string>
+    <string name="edt_amount">R0</string>
+    <string name="add_category_description">Add Category</string>
+
+    <string name="reminders_title">Reminders</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="completed">Completed</string>
+    <string name="add_reminder_description">Add Reminder</string>
+
+    <string name="saving_goals_title">Saving Goals</string>
+    <string name="add_goal_description">Add Goal</string>
+
+    <string name="transaction_history_title">Transaction History</string>
+    <string name="income_label">Income</string>
+    <string name="expenses_label">Expenses</string>
+    <string name="default_amount">0.00</string>
+
+    <string name="profile_title">Profile</string>
+    <string name="user_stats_heading">User Stats</string>
+    <string name="active_goals">Active Goals: %d</string>
+    <string name="completed_goals">Completed Goals: %d</string>
+    <string name="different_categories">Different Categories: %d</string>
+    <string name="upcoming_reminders">Upcoming Reminders: %d</string>
+    <string name="modify_profile_heading">Modify Profile Information</string>
+    <string name="first_name_label">First Name</string>
+    <string name="surname_label">Surname</string>
+    <string name="email_label">Email</string>
+    <string name="phone_label">Phone Number</string>
+    <string name="set_button_text">Set</string>
+
+    <string name="goal_details_title">Goal Details</string>
+    <string name="goal_name">Goal Name</string>
+    <string name="goal_amount">$500 / $1,000</string>
+    <string name="goal_percentage">50%</string>
+    <string name="add_to_goal">Add to Goal</string>
+
+    <string name="app_title">smartspend</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="email_hint">E-mail</string>
+    <string name="password_hint">Password</string>
+    <string name="sign_in">Sign In</string>
+    <string name="create_account_prompt">Don\'t have an account? Create one.</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="biometric_login">Biometric Login</string>
+
+    <string name="register_title">Register</string>
+    <string name="confirm_password_hint">Confirm Password</string>
+    <string name="create_account">Create Account</string>
+    <string name="already_have_account">Already have an account?</string>
+    <string name="login_link">Login</string>
+    <string name="or_text">or</string>
+
+    <string name="notifications_title">Notifications</string>
+    <string name="no_notifications_message">No notification yet</string>
+
+    <string name="category_title">Groceries</string>
+    <string name="available_budget_label">Available Budget</string>
+    <string name="available_budget">R445/R600</string>
+    <string name="set_monthly_limit">Set Monthly Limit</string>
+    <string name="set_amount_label">Set Amount Manually</string>
+    <string name="history_label">History</string>
+    <string name="hint_amount">R600</string>
+
+
 </resources>

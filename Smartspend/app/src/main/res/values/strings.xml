@@ -91,7 +91,7 @@
     <string name="available_budget_label">Available Budget</string>
     <string name="available_budget">R445/R600</string>
     <string name="set_monthly_limit">Set Monthly Limit</string>
-    <string name="set_amount_label">Set Amount Manually</string>
+    <string name="set_amount_label">Set max budget</string>
     <string name="history_label">History</string>
     <string name="hint_amount">R600</string>
 

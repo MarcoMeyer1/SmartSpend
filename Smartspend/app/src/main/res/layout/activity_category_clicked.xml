@@ -58,21 +58,6 @@
         android:background="#333333" />
 
     <TextView
-        android:id="@+id/tv_set_monthly_limit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:text="@string/set_monthly_limit"
-        android:textColor="#A0A0A0"
-    android:layout_marginTop="16dp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="16dp"
-        android:background="#333333" />
-
-    <TextView
         android:id="@+id/tv_set_amount_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

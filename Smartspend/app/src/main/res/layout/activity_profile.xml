@@ -195,7 +195,7 @@
         <!-- "5 goals left to:" label aligned to the top right of the progress bar -->
 
         <TextView
-            android:id="@+id/Rank_label"
+            android:id="@+id/rank_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -204,7 +204,7 @@
             android:textColor="#FFEB3B"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/progressGoalCompletion"
+            app:layout_constraintBottom_toTopOf="@+id/progressRank"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/stats_card"
             app:layout_constraintVertical_bias="1.0" />
@@ -217,9 +217,9 @@
             android:text="5 goals left to:"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/progressGoalCompletion"
+            app:layout_constraintBottom_toTopOf="@+id/progressRank"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/Rank_label"
+            app:layout_constraintStart_toEndOf="@+id/rank_label"
             app:layout_constraintTop_toBottomOf="@id/stats_card"
             app:layout_constraintVertical_bias="0.72" />
 
@@ -235,7 +235,7 @@
             android:text="Novice"
             android:textColor="#2196F3"
             android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/progressGoalCompletion"
+            app:layout_constraintBottom_toTopOf="@+id/progressRank"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.061"
             app:layout_constraintStart_toEndOf="@id/goals_left_label"
@@ -243,7 +243,7 @@
             app:layout_constraintVertical_bias="0.666" />
 
         <ProgressBar
-            android:id="@+id/progressGoalCompletion"
+            android:id="@+id/progressRank"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="0dp"
             android:layout_height="17dp"

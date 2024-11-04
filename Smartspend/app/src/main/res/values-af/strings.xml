@@ -89,4 +89,33 @@
     <string name="history_label">Geskiedenis</string>
     <string name="hint_amount">R600</string>
 
+    <string name="new_income">Nuwe Inkomste</string>
+    <string name="amount">Bedrag</string>
+    <string name="record_reference">Rekordverwysing</string>
+    <string name="confirm">Bevestig</string>
+
+    <string name="new_expense">Nuwe Uitgawe</string>
+    <string name="expense_name">Uitgawe Naam</string>
+
+    <string name="new_goal">Nuwe Doelwit</string>
+    <string name="total_amount">Totale Bedrag</string>
+    <string name="saved_amount">Gespaar Bedrag</string>
+    <string name="save">Stoor</string>
+
+    <string name="category_name">Kategorie Naam</string>
+    <string name="set_amount">Stel Bedrag in</string>
+    <string name="amount_hint">R600</string>
+    <string name="selected_color">Geselekteerde Kleur:</string>
+    <string name="pick_color">Kies Kleur</string>
+    <string name="create_category">Skep Kategorie</string>
+
+    <string name="add">Voeg By</string>
+
+    <string name="create_reminder">Skep Herinnering</string>
+    <string name="description_hint">Beskrywing</string>
+    <string name="date_due_hint">Sperdatum</string>
+    <string name="enabled_text">(Ingeskakel)</string>
+    <string name="disabled_text">(Uitgeskakel)</string>
+    <string name="date_to_notify_hint">Datum vir kennisgewing</string>
+    <string name="create_button">Skep</string>
 </resources>

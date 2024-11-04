@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,7 +9,7 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add to Goal"
+        android:text="@string/add_to_goal"
         android:textColor="#FFFFFF"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -22,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:background="@drawable/edittext_green_border"
-        android:hint="Amount"
+        android:hint="@string/amount_hint"
         android:inputType="numberDecimal"
         android:padding="16dp"
         android:textColor="#FFFFFF"
@@ -35,7 +34,7 @@
         android:layout_marginTop="24dp"
         android:backgroundTint="#31453a"
         android:padding="16dp"
-        android:text="Add"
+        android:text="@string/add"
         android:textColor="#FFFFFF"
         android:textStyle="bold" />
 

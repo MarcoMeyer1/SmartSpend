@@ -31,7 +31,6 @@ class Profile : BaseActivity() {
     private lateinit var rankProgress: ProgressBar
     private lateinit var btnSet: Button
 
-    // TextViews for user stats
     private lateinit var tvActiveGoals: TextView
     private lateinit var tvCompletedGoals: TextView
     private lateinit var tvDifferentCategories: TextView
@@ -40,7 +39,6 @@ class Profile : BaseActivity() {
     private val client = OkHttpClient()
     private var userID: Int = -1
 
-    // Tag for logging
     private val TAG = "ProfileActivity"
 
     private val rankGoals = mapOf(
@@ -61,15 +59,12 @@ class Profile : BaseActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        // Initializes the UI elements
         etFirstName = findViewById(R.id.etFirstName)
         etSurname = findViewById(R.id.etSurname)
         etEmail = findViewById(R.id.etEmail)
         etPhoneNumber = findViewById(R.id.etPhoneNumber)
         btnSet = findViewById(R.id.btn_set)
 
-        // Initialize the TextViews for stats
         tvActiveGoals = findViewById(R.id.active_goals_value)
         tvCompletedGoals = findViewById(R.id.completed_goals_value)
         tvDifferentCategories = findViewById(R.id.different_categories_value)
@@ -82,7 +77,6 @@ class Profile : BaseActivity() {
 
         etEmail.isEnabled = false
 
-        // Retrieves the user ID from SharedPreferences
         val sharedPreferences: SharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         userID = sharedPreferences.getInt("userID", -1)
 
@@ -160,7 +154,7 @@ class Profile : BaseActivity() {
         }
     }
 
-    // Fetches user profile stats from the server
+    // Fetches the users profile stats from the server
     private fun fetchUserProfileStats() {
         val url = "https://smartspendapi.azurewebsites.net/api/ProfileRework/stats/$userID"
 
@@ -217,7 +211,7 @@ class Profile : BaseActivity() {
         })
     }
 
-    // Fetches user profile from the server
+    // Fetches the users profile from the server
     private fun fetchUserProfile() {
         val url = "https://smartspendapi.azurewebsites.net/api/User/$userID"
 
@@ -272,7 +266,7 @@ class Profile : BaseActivity() {
         })
     }
 
-    // Updates the user profile on the server
+    // Updates the users profile on the server
     private fun updateUserProfile() {
         val firstName = etFirstName.text.toString().trim()
         val lastName = etSurname.text.toString().trim()

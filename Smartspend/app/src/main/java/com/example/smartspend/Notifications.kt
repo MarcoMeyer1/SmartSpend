@@ -61,7 +61,7 @@ class Notifications : BaseActivity() {
 
                 override fun onResponse(call: Call, response: Response) {
                     val responseBody = response.body?.string()
-                    Log.d("Notifications", "Response: $responseBody")  // Log the full response
+                    Log.d("Notifications", "Response: $responseBody")  // Logs the full response
 
                     if (response.isSuccessful && responseBody != null) {
                         val jsonArray = JSONArray(responseBody)
@@ -114,7 +114,6 @@ class Notifications : BaseActivity() {
         val timestamp: String
     )
 
-    // Adapter for the RecyclerView
     class NotificationAdapter(private val notifications: List<Notification>) :
         RecyclerView.Adapter<NotificationAdapter.NotificationViewHolder>() {
 

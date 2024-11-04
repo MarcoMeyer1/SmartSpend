@@ -16,17 +16,11 @@ object LocaleHelper {
         return updateResources(context, language)
     }
 
-    /**
-     * Attaches the persisted locale to the context
-     */
     fun onAttach(context: Context): Context {
         val lang = getPersistedData(context, Locale.getDefault().language)
         return setLocale(context, lang)
     }
 
-    /**
-     * Persists the selected language in SharedPreferences
-     */
     private fun persist(context: Context, language: String) {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         prefs.edit().putString(SELECTED_LANGUAGE, language).apply()
@@ -52,9 +46,6 @@ object LocaleHelper {
         return context.createConfigurationContext(config)
     }
 
-    /**
-     * Retrieves the current locale of the app
-     */
     fun getLocale(context: Context): Locale {
         val config = context.resources.configuration
         return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {

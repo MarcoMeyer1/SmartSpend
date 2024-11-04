@@ -64,7 +64,7 @@ class SavingGoals : BaseActivity(), GoalAdapter.OnItemClickListener {
             showAddGoalDialog()
         }
 
-        // Fetch goals from local database initially
+        // Fetch goals from the local database
         fetchGoalsFromLocal()
 
         // Initial sync if network is available
@@ -74,7 +74,7 @@ class SavingGoals : BaseActivity(), GoalAdapter.OnItemClickListener {
         }
     }
 
-    // Implement the OnItemClickListener method
+    // Implemented the OnItemClickListener method
     override fun onItemClick(goal: GoalEntity) {
         // Start the GoalDetails activity and pass the goal details
         val intent = Intent(this, GoalDetails::class.java)
@@ -94,7 +94,6 @@ class SavingGoals : BaseActivity(), GoalAdapter.OnItemClickListener {
         networkCallback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
                 super.onAvailable(network)
-                // Network is available, trigger sync
                 runOnUiThread {
                     syncLocalDataWithServer()
                     fetchGoalsFromServer()
@@ -134,7 +133,7 @@ class SavingGoals : BaseActivity(), GoalAdapter.OnItemClickListener {
                     return@setOnClickListener
                 }
 
-                // Fetches the userID from SharedPreferences
+                // Fetches the userID from the SharedPreferences
                 val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
                 val userID = sharedPreferences.getInt("userID", -1)
 
@@ -149,13 +148,13 @@ class SavingGoals : BaseActivity(), GoalAdapter.OnItemClickListener {
                     )
 
                     scope.launch {
-                        // Save to local database
+                        // Saved to local database
                         withContext(Dispatchers.IO) {
                             appDatabase.goalDao().insertGoal(newGoal)
                         }
 
                         if (isNetworkAvailable()) {
-                            // Sync with server
+                            // Syncs with the server
                             createGoalOnServer(newGoal) { success ->
                                 if (success) {
                                     fetchGoalsFromServer()
@@ -192,7 +191,7 @@ class SavingGoals : BaseActivity(), GoalAdapter.OnItemClickListener {
         dialog.show()
     }
 
-    // Check if network is available
+    // Checks if the network is available
     private fun isNetworkAvailable(): Boolean {
         val connectivityManager =
             getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -272,7 +271,7 @@ class SavingGoals : BaseActivity(), GoalAdapter.OnItemClickListener {
                                 appDatabase.goalDao().deleteGoalsByUser(userID)
                                 appDatabase.goalDao().insertGoals(allGoals)
                             }
-                            // Update UI
+                            // Updates the UI
                             fetchGoalsFromLocal()
                         }
                     } else {
@@ -282,7 +281,7 @@ class SavingGoals : BaseActivity(), GoalAdapter.OnItemClickListener {
                                 "Failed to load goals from server",
                                 Toast.LENGTH_SHORT
                             ).show()
-                            // Load from local database
+                            // Loads data from local database
                             fetchGoalsFromLocal()
                         }
                     }
@@ -293,7 +292,7 @@ class SavingGoals : BaseActivity(), GoalAdapter.OnItemClickListener {
         }
     }
 
-    // Sync local unsynced goals with the server
+    // Syncs the local unsynced goals with the server
     private fun syncLocalDataWithServer() {
         scope.launch {
             val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
@@ -357,17 +356,16 @@ class SavingGoals : BaseActivity(), GoalAdapter.OnItemClickListener {
                 if (response.isSuccessful && responseBody != null) {
                     runOnUiThread {
                         try {
-                            // Try to parse the response as JSON
                             val jsonResponse = JSONObject(responseBody)
                             val serverGoalID = jsonResponse.getInt("goalID")
 
-                            // Update local goal with server goalID and mark as synced
+                            // Updates the local goal with server goalID and marked as synced
                             scope.launch {
                                 withContext(Dispatchers.IO) {
                                     appDatabase.goalDao().updateGoal(goal.copy(goalID = serverGoalID, isSynced = true))
                                 }
                             }
-                            fetchGoalsFromLocal()  // Refresh goals after creating
+                            fetchGoalsFromLocal()  // Refreshes the goals after creating
                             callback(true)
                         } catch (e: JSONException) {
                             Toast.makeText(

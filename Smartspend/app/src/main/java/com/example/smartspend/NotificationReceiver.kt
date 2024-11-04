@@ -15,7 +15,7 @@ import androidx.core.content.ContextCompat
 
 class NotificationReceiver : BroadcastReceiver() {
 
-    private val TAG = "NotificationReceiver" // Tag for logging
+    private val TAG = "NotificationReceiver" // Tag for loggings
 
     override fun onReceive(context: Context?, intent: Intent?) {
         val title = intent?.getStringExtra("title")
@@ -52,7 +52,7 @@ class NotificationReceiver : BroadcastReceiver() {
                     }
 
                     val notificationBuilder = NotificationCompat.Builder(it, channelId)
-                        .setSmallIcon(R.drawable.smartspend_logo) // Replace with your app icon
+                        .setSmallIcon(R.drawable.smartspend_logo)
                         .setContentTitle(title)
                         .setContentText(message)
                         .setAutoCancel(true)

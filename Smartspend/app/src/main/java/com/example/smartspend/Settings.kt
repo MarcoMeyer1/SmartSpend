@@ -26,7 +26,7 @@ class Settings : BaseActivity() {
 
     private val TAG = "SettingsActivity"
 
-    private var isSpinnerInitialized = false // Flag to track initial setup
+    private var isSpinnerInitialized = false
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -40,7 +40,6 @@ class Settings : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Attach the saved locale before super.onCreate to apply the correct language
         val contextWithLocale = LocaleHelper.onAttach(this)
         applyLocale(contextWithLocale)
 
@@ -48,17 +47,15 @@ class Settings : BaseActivity() {
         setContentView(R.layout.activity_settings)
         setActiveNavButton(R.id.settings_nav)
 
-        // Initialize Views
+        // Initializes the Views
         checkboxNotifications = findViewById(R.id.checkbox_notifications)
         checkboxSSO = findViewById(R.id.checkbox_sso)
         spinnerLanguage = findViewById(R.id.spinner_language)
         btnSignOut = findViewById(R.id.btn_sign_out)
         tvViewProfile = findViewById(R.id.view_profile)
 
-        // Setup Language Spinner
         setupLanguageSpinner()
 
-        // Setup CheckBox Listeners
         checkboxNotifications.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 checkAndRequestNotificationPermission()
@@ -81,7 +78,6 @@ class Settings : BaseActivity() {
                 parent: AdapterView<*>, view: android.view.View?, position: Int, id: Long
             ) {
                 if (!isSpinnerInitialized) {
-                    // Skip the first selection (initial setup)
                     isSpinnerInitialized = true
                     return
                 }
@@ -98,21 +94,19 @@ class Settings : BaseActivity() {
                     // Save the new language preference
                     saveLanguagePreference(selectedLanguage)
 
-                    // Set the selected locale and recreate the activity
                     LocaleHelper.setLocale(this@Settings, selectedLanguage)
-                    recreate() // This will refresh the activity and apply the new language
+                    recreate()
                 }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
-        // Setup Sign Out Button
+        //Sign Out Button
         btnSignOut.setOnClickListener {
             signOut()
         }
 
-        // Setup View Profile TextView
         tvViewProfile.setOnClickListener {
             startActivity(Intent(this, Profile::class.java))
         }
@@ -122,32 +116,25 @@ class Settings : BaseActivity() {
      * Sets up the language spinner with available language options
      */
     private fun setupLanguageSpinner() {
-        // Create an ArrayAdapter using the string array and a default spinner layout
         val adapter = ArrayAdapter.createFromResource(
             this,
             R.array.language_array,
             R.layout.spinner_item
         )
-        // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(R.layout.spinner_item)
-        // Apply the adapter to the spinner
         spinnerLanguage.adapter = adapter
 
         // Retrieve saved language preference or default to English
         val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         val savedLanguage = sharedPreferences.getString("app_language", "en") ?: "en"
 
-        // Determine spinner position based on saved language
         val languagePosition = when (savedLanguage) {
             "en" -> 0
             "af" -> 1
             else -> 0 // Default to English if unknown
         }
 
-        // Log the current language and position for debugging
         Log.d(TAG, "Saved language: $savedLanguage, Spinner Position: $languagePosition")
-
-        // Set the flag before setting selection to avoid triggering onItemSelected
         isSpinnerInitialized = false
         spinnerLanguage.setSelection(languagePosition)
         isSpinnerInitialized = true

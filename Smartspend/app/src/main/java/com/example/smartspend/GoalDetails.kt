@@ -54,7 +54,6 @@ class GoalDetails : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_goal_details)
 
-        // Initialize views
         tvGoalName = findViewById(R.id.tvGoalName)
         tvGoalAmount = findViewById(R.id.tvGoalAmount)
         progressGoalCompletion = findViewById(R.id.progressGoalCompletion)
@@ -63,7 +62,7 @@ class GoalDetails : AppCompatActivity() {
 
         appDatabase = AppDatabase.getDatabase(this)
 
-        // Get intent extras
+        // Gets the intent extras
         val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         val userID = sharedPreferences.getInt("userID", -1)
 
@@ -73,9 +72,9 @@ class GoalDetails : AppCompatActivity() {
         savedAmount = intent.getStringExtra("savedAmount")?.toBigDecimalOrNull()
         completionDate = intent.getStringExtra("completionDate")
 
-        // Update UI
+        // Updates the UI
         tvGoalName.text = goalName
-        // Set progress with animation
+        // Sets the progress with the animation
         if (totalAmount != null && savedAmount != null) {
             val numberFormat = NumberFormat.getCurrencyInstance(Locale("en", "ZA"))
             tvGoalAmount.text = "R${savedAmount?.setScale(2, BigDecimal.ROUND_HALF_UP)} / R${totalAmount?.setScale(2, BigDecimal.ROUND_HALF_UP)}"
@@ -86,12 +85,11 @@ class GoalDetails : AppCompatActivity() {
 
             tvGoalPercentage.text = "$progressPercentage%"
 
-            // Animate progress
             val animator = ObjectAnimator.ofInt(progressGoalCompletion, "progress", 0, progressPercentage)
             animator.duration = 2000
             animator.start()
 
-            // Check if the goal has been met and play confetti
+            // Checks if the goal has been met and which plays the confetti animation
             if (progressPercentage >= 100) {
                 playConfettiAnimation()
             }
@@ -123,13 +121,11 @@ class GoalDetails : AppCompatActivity() {
                 // Logging the entered amount
                 Log.d("GoalDetails", "Entered amount: $enteredAmount")
 
-                // Update savedAmount safely
                 val newSavedAmount = savedAmount?.add(enteredAmount)
 
-                // Logging the updated saved amount
                 Log.d("GoalDetails", "Updated saved amount: $newSavedAmount")
 
-                // Update UI
+                // Updates the UI
                 if (totalAmount != null && newSavedAmount != null) {
                     val numberFormat = NumberFormat.getCurrencyInstance(Locale.getDefault())
                     tvGoalAmount.text = "R${newSavedAmount?.setScale(2, BigDecimal.ROUND_HALF_UP)} / R${totalAmount?.setScale(2, BigDecimal.ROUND_HALF_UP)}"
@@ -140,22 +136,20 @@ class GoalDetails : AppCompatActivity() {
 
                     tvGoalPercentage.text = "$progressPercentage%"
 
-                    // Animate progress
                     val animator = ObjectAnimator.ofInt(progressGoalCompletion, "progress", progressGoalCompletion.progress, progressPercentage)
                     animator.duration = 2000
                     animator.start()
 
-                    // Check if the goal has been met
+                    // Checks if the goal has been met
                     if (newSavedAmount >= totalAmount) {
                         completionDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
                         Log.d("GoalDetails", "Goal met! Completion date set to: $completionDate")
-                        playConfettiAnimation() // Play confetti when goal is met
+                        playConfettiAnimation() // Plays the confetti when the goal has been met
                     } else {
-                        completionDate = null // Explicitly setting to null when the goal isn't met
+                        completionDate = null
                     }
                 }
-                // Update backend
-                savedAmount = newSavedAmount // Update savedAmount with the new value
+                savedAmount = newSavedAmount // Updates the savedAmount with the new value
                 updateGoalOnServer()
                 alertDialog.dismiss()
             } else {
@@ -189,7 +183,7 @@ class GoalDetails : AppCompatActivity() {
 
         Handler(Looper.getMainLooper()).postDelayed({
             konfettiView.start(party)
-        }, 500) // Delay in milliseconds
+        }, 500)
     }
     private fun updateGoalOnServer() {
         val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
@@ -203,10 +197,10 @@ class GoalDetails : AppCompatActivity() {
                 put("goalName", goalName)
                 put("totalAmount", totalAmount)
                 put("savedAmount", savedAmount)
-                put("completionDate", completionDate ?: JSONObject.NULL) // Send null if completionDate is null
+                put("completionDate", completionDate ?: JSONObject.NULL)
             }
 
-            Log.d("GoalDetails", "Payload to send: $json") // Log the JSON payload
+            Log.d("GoalDetails", "Payload to send: $json")
 
             val body = RequestBody.create(
                 "application/json; charset=utf-8".toMediaTypeOrNull(),
@@ -246,8 +240,6 @@ class GoalDetails : AppCompatActivity() {
                                     appDatabase.goalDao().insertGoal(goalEntity)
                                 }
                             }
-
-                            // Redirect to SavingGoals activity
                             val intent = Intent(this@GoalDetails, SavingGoals::class.java)
                             startActivity(intent)
                             finish()

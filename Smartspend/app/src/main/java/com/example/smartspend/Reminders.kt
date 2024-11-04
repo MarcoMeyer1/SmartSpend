@@ -460,9 +460,12 @@ class Reminders : BaseActivity() {
     private fun scheduleReminderNotification(reminder: Reminder) {
         Log.d(TAG, "Scheduling notification for reminder: ${reminder.reminderID}")
         if (reminder.notificationDate != null) {
+            val title = "Reminder"
+            val message = reminder.description
+
             val intent = Intent(this, NotificationReceiver::class.java).apply {
-                putExtra("title", "Reminder")
-                putExtra("message", reminder.description)
+                putExtra("title", title)
+                putExtra("message", message)
             }
             val pendingIntent = PendingIntent.getBroadcast(
                 this,
@@ -479,25 +482,19 @@ class Reminders : BaseActivity() {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                         if (alarmManager.canScheduleExactAlarms()) {
                             alarmManager.setExact(AlarmManager.RTC_WAKEUP, reminderTime, pendingIntent)
-                            Log.d(
-                                TAG,
-                                "Notification scheduled at $reminderTime for reminder ID ${reminder.reminderID}"
-                            )
+                            Log.d(TAG, "Notification scheduled at $reminderTime for reminder ID ${reminder.reminderID}")
                         } else {
                             Log.e(TAG, "Exact alarm permission not granted.")
                         }
                     } else {
                         alarmManager.setExact(AlarmManager.RTC_WAKEUP, reminderTime, pendingIntent)
-                        Log.d(
-                            TAG,
-                            "Notification scheduled at $reminderTime for reminder ID ${reminder.reminderID}"
-                        )
+                        Log.d(TAG, "Notification scheduled at $reminderTime for reminder ID ${reminder.reminderID}")
                     }
+
+                    // Save notification to the database
+                    saveNotificationToDatabase(title, message)
                 } else {
-                    Log.d(
-                        TAG,
-                        "Notification date is in the past for reminder ID ${reminder.reminderID}"
-                    )
+                    Log.d(TAG, "Notification date is in the past for reminder ID ${reminder.reminderID}")
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error scheduling notification: ${e.message}", e)
@@ -554,7 +551,40 @@ class Reminders : BaseActivity() {
         val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
         return inputFormat.parse(dateString)
     }
+
+    private fun saveNotificationToDatabase(title: String, message: String) {
+        val url = "https://smartspendapi.azurewebsites.net/api/Notification/create"
+
+        val json = JSONObject().apply {
+            put("userID", userID)
+            put("notificationText", "$title: $message")
+            put("notificationDate", SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault()).format(Date()))
+        }
+
+        val body = RequestBody.create("application/json; charset=utf-8".toMediaTypeOrNull(), json.toString())
+
+        val request = Request.Builder()
+            .url(url)
+            .post(body)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e(TAG, "Failed to save notification to database: ${e.message}", e)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    Log.d(TAG, "Notification saved to database successfully")
+                } else {
+                    Log.e(TAG, "Failed to save notification to database: ${response.message}")
+                }
+            }
+        })
+    }
 }
+
+
 
 // Reminder data class
 data class Reminder(

@@ -13,7 +13,7 @@
         android:id="@+id/registerTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Register"
+        android:text="@string/register_title"
         android:textSize="36sp"
         android:textStyle="bold"
         android:textColor="#FFFFFF"
@@ -40,7 +40,7 @@
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email Address"
+            android:hint="@string/email_hint"
             android:inputType="textEmailAddress"
             android:textColor="#FFFFFF"
             android:textColorHint="#808080"
@@ -66,13 +66,12 @@
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Password"
+            android:hint="@string/password_hint"
             android:textColorHint="#808080"
             android:textColor="#FFFFFF"
             android:inputType="textPassword"
             android:fontFamily="sans-serif" />
     </com.google.android.material.textfield.TextInputLayout>
-
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/confirmPasswordTextInputLayout"
@@ -93,13 +92,11 @@
             android:id="@+id/etConfirmPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Confirm Password"
-            app:hintTextColor="#808080"
+            android:hint="@string/confirm_password_hint"
             android:textColor="#FFFFFF"
             android:inputType="textPassword"
             android:fontFamily="sans-serif" />
     </com.google.android.material.textfield.TextInputLayout>
-
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnRegister"
@@ -107,7 +104,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:backgroundTint="#31453a"
-        android:text="Create Account"
+        android:text="@string/create_account"
         android:textColor="#FFFFFF"
         android:textSize="16sp"
         app:cornerRadius="24dp"
@@ -133,7 +130,7 @@
         android:id="@+id/orText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="or"
+        android:text="@string/or_text"
         android:textColor="#808080"
         android:textSize="14sp"
         app:layout_constraintTop_toBottomOf="@id/btnRegister"
@@ -169,7 +166,7 @@
             android:id="@+id/alreadyHaveAccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Already have an account?"
+            android:text="@string/already_have_account"
             android:textColor="#808080"
             android:textSize="14sp"
             android:fontFamily="sans-serif" />
@@ -178,7 +175,7 @@
             android:id="@+id/loginLink"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" Login"
+            android:text="@string/login_link"
             android:textColor="#70FFB5"
             android:textSize="14sp"
             android:layout_marginStart="4dp"

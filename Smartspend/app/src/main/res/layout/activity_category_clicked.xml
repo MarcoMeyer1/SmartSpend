@@ -19,7 +19,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Groceries"
+            android:text="@string/category_title"
             android:gravity="center"
             android:textSize="38sp"
             android:textStyle="bold"
@@ -37,16 +37,16 @@
         android:id="@+id/tv_available_budget_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Available Budget"
+        android:text="@string/available_budget_label"
         android:textColor="#808080"
-        android:textSize="14dp"
+        android:textSize="14sp"
         android:layout_marginTop="16dp" />
 
     <TextView
         android:id="@+id/tv_available_budget"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="R445/R600"
+        android:text="@string/available_budget"
         android:textSize="24sp"
         android:textColor="#70FFB5"
         android:layout_marginTop="8dp" />
@@ -61,22 +61,22 @@
         android:id="@+id/tv_set_monthly_limit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14dp"
-        android:text="Set Monthly Limit"
+        android:textSize="14sp"
+        android:text="@string/set_monthly_limit"
         android:textColor="#808080"
         android:layout_marginTop="16dp" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="16dp"
         android:background="#333333" />
 
-
     <TextView
         android:id="@+id/tv_set_amount_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Set Amount Manually"
+        android:text="@string/set_amount_label"
         android:textColor="#808080"
         android:layout_marginTop="16dp" />
 
@@ -88,7 +88,7 @@
         android:textColor="#FFFFFF"
         android:background="@drawable/custom_edittext_green_border"
         android:gravity="center"
-        android:hint="R600"
+        android:hint="@string/hint_amount"
         android:inputType="number" />
 
     <View
@@ -101,7 +101,7 @@
         android:id="@+id/tv_history_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="History"
+        android:text="@string/history_label"
         android:textColor="#808080"
         android:layout_marginTop="16dp" />
 
@@ -121,5 +121,4 @@
         android:contentDescription="Add Transaction"
         android:src="@drawable/baseline_add_25"
         android:backgroundTint="#70FFB5"/>
-
 </LinearLayout>

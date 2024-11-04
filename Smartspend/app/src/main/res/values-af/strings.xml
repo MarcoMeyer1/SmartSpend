@@ -14,4 +14,108 @@
     <string name="saving_goals">Spaardoelwitte</string>
     <string name="reminders">Herinneringe</string>
     <string name="history">Geskiedenis</string>
+
+    <string name="home_label">Tuis</string>
+    <string name="notifications_label">Kennisgewings</string>
+    <string name="add_record_label">Voeg Rekord Toe</string>
+    <string name="profile_label">Profiel</string>
+    <string name="settings_label">Instellings</string>
+    <string name="home_description">Tuis</string>
+    <string name="notifications_description">Kennisgewings</string>
+    <string name="add_record_description">Voeg Rekord Toe</string>
+    <string name="profile_description">Profiel</string>
+    <string name="settings_description">Instellings</string>
+
+    <string name="date_text">Oktober 2024</string>
+    <string name="edt_amount">R0</string>
+    <string name="add_category_description">Voeg Kategorie Toe</string>
+
+    <string name="reminders_title">Herinneringe</string>
+    <string name="upcoming">Opkomend</string>
+    <string name="completed">Voltooi</string>
+    <string name="add_reminder_description">Voeg Herinnering By</string>
+
+    <string name="saving_goals_title">Spaardoelwitte</string>
+    <string name="add_goal_description">Voeg Doel By</string>
+
+    <string name="transaction_history_title">Transaksie Geskiedenis</string>
+    <string name="income_label">Inkomste</string>
+    <string name="expenses_label">Uitgawes</string>
+    <string name="default_amount">0.00</string>
+
+    <string name="profile_title">Profiel</string>
+    <string name="user_stats_heading">Gebruiker Statistieke</string>
+    <string name="active_goals">Aktiewe Doelwitte: %d</string>
+    <string name="completed_goals">Voltooide Doelwitte: %d</string>
+    <string name="different_categories">Verskillende Kategorieë: %d</string>
+    <string name="upcoming_reminders">Opkomende Herinneringe: %d</string>
+    <string name="modify_profile_heading">Wysig Profielinligting</string>
+    <string name="first_name_label">Voornaam</string>
+    <string name="surname_label">Van</string>
+    <string name="email_label">E-pos</string>
+    <string name="phone_label">Telefoonnommer</string>
+    <string name="set_button_text">Stel</string>
+
+    <string name="goal_details_title">Doelbesonderhede</string>
+    <string name="goal_name">Doelnaam</string>
+    <string name="goal_amount">$500 / $1,000</string>
+    <string name="goal_percentage">50%</string>
+    <string name="add_to_goal">Voeg by tot Doel</string>
+
+    <string name="app_title">smartspend</string>
+    <string name="continue_with_google">Gaan voort met Google</string>
+    <string name="email_hint">E-pos</string>
+    <string name="password_hint">Wagwoord</string>
+    <string name="sign_in">Teken In</string>
+    <string name="create_account_prompt">Het jy nie \'n rekening nie? Skep een.</string>
+    <string name="forgot_password">Vergeet wagwoord?</string>
+    <string name="biometric_login">Biometriese Aanmelding</string>
+
+    <string name="register_title">Registreer</string>
+    <string name="confirm_password_hint">Bevestig Wagwoord</string>
+    <string name="create_account">Skep Rekening</string>
+    <string name="already_have_account">Het u reeds \'n rekening?</string>
+    <string name="login_link">Teken In</string>
+    <string name="or_text">of</string>
+
+    <string name="notifications_title">Kennisgewings</string>
+    <string name="no_notifications_message">Geen kennisgewing nog</string>
+
+    <string name="category_title">Boodskappe</string>
+    <string name="available_budget_label">Beskikbare Begroting</string>
+    <string name="available_budget">R445/R600</string>
+    <string name="set_monthly_limit">Stel Maandelikse Limiet</string>
+    <string name="set_amount_label">Stel Bedrag Handmatig In</string>
+    <string name="history_label">Geskiedenis</string>
+    <string name="hint_amount">R600</string>
+
+    <string name="new_income">Nuwe Inkomste</string>
+    <string name="amount">Bedrag</string>
+    <string name="record_reference">Rekordverwysing</string>
+    <string name="confirm">Bevestig</string>
+
+    <string name="new_expense">Nuwe Uitgawe</string>
+    <string name="expense_name">Uitgawe Naam</string>
+
+    <string name="new_goal">Nuwe Doelwit</string>
+    <string name="total_amount">Totale Bedrag</string>
+    <string name="saved_amount">Gespaar Bedrag</string>
+    <string name="save">Stoor</string>
+
+    <string name="category_name">Kategorie Naam</string>
+    <string name="set_amount">Stel Bedrag in</string>
+    <string name="amount_hint">R600</string>
+    <string name="selected_color">Geselekteerde Kleur:</string>
+    <string name="pick_color">Kies Kleur</string>
+    <string name="create_category">Skep Kategorie</string>
+
+    <string name="add">Voeg By</string>
+
+    <string name="create_reminder">Skep Herinnering</string>
+    <string name="description_hint">Beskrywing</string>
+    <string name="date_due_hint">Sperdatum</string>
+    <string name="enabled_text">(Ingeskakel)</string>
+    <string name="disabled_text">(Uitgeskakel)</string>
+    <string name="date_to_notify_hint">Datum vir kennisgewing</string>
+    <string name="create_button">Skep</string>
 </resources>

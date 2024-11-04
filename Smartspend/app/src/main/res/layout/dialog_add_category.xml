@@ -11,7 +11,7 @@
         android:id="@+id/editTextCategoryName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Category Name"
+        android:hint="@string/category_name"
         android:inputType="text"
         android:minHeight="48dp"
         android:padding="8dp"
@@ -27,14 +27,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Set Amount"
+            android:text="@string/set_amount"
             android:textColor="#FFFFFF" />
 
         <EditText
             android:id="@+id/editTextSetAmountManually"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="R600"
+            android:hint="@string/amount_hint"
             android:inputType="numberDecimal"
             android:minHeight="48dp"
             android:padding="8dp"
@@ -46,7 +46,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="16dp"
-        android:text="Selected Color:"
+        android:text="@string/selected_color"
         android:textColor="#FFFFFF" />
 
     <View
@@ -61,7 +61,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:backgroundTint="#70FFB5"
-        android:text="Pick Colour"
+        android:text="@string/pick_color"
         android:textColor="#000000" />
 
     <com.google.android.material.button.MaterialButton
@@ -71,7 +71,7 @@
         android:layout_marginTop="24dp"
         android:alpha="0.75"
         android:backgroundTint="#31453a"
-        android:text="Create Category"
+        android:text="@string/create_category"
         android:textColor="#FFFFFF"
         app:strokeColor="#70FFB5"
         app:strokeWidth="1dp" />

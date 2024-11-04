@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#1b1b1b">
@@ -11,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="New Expense"
+        android:text="@string/new_expense"
         android:textColor="#FFFFFF"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -28,7 +27,7 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/custom_edittext_green_border"
         android:gravity="center"
-        android:hint="Expense Name"
+        android:hint="@string/expense_name"
         android:padding="16dp"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF"
@@ -57,7 +56,7 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/custom_edittext_green_border"
         android:gravity="center"
-        android:hint="Amount"
+        android:hint="@string/amount"
         android:inputType="numberDecimal"
         android:padding="16dp"
         android:textColor="#FFFFFF"
@@ -74,7 +73,7 @@
         android:layout_marginTop="24dp"
         android:backgroundTint="#31453a"
         android:padding="16dp"
-        android:text="Confirm"
+        android:text="@string/confirm"
         android:textColor="#FFFFFF"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"

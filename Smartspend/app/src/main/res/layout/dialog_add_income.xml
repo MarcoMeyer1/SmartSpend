@@ -5,22 +5,21 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1b1b1b"
-    >
+    android:background="#1b1b1b">
 
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="108dp"
-        android:text="New Income"
+        android:text="@string/new_income"
         android:textColor="#FFFFFF"
         android:textSize="45dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/et_amount"
@@ -29,7 +28,7 @@
         android:layout_marginTop="36dp"
         android:background="@drawable/custom_edittext_green_border"
         android:gravity="center"
-        android:hint="Amount"
+        android:hint="@string/amount"
         android:inputType="numberDecimal"
         android:padding="12dp"
         android:textColor="#FFFFFF"
@@ -47,7 +46,7 @@
         android:layout_marginTop="64dp"
         android:background="@drawable/custom_edittext_green_border"
         android:gravity="center"
-        android:hint="Record Reference"
+        android:hint="@string/record_reference"
         android:inputType="text"
         android:padding="12dp"
         android:textColor="#FFFFFF"
@@ -66,7 +65,7 @@
         android:backgroundTint="#31453a"
         android:gravity="center"
         android:padding="14dp"
-        android:text="Confirm"
+        android:text="@string/confirm"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -76,6 +75,6 @@
         app:layout_constraintVertical_bias="0.051"
         app:layout_constraintWidth_percent="0.5"
         app:strokeColor="#70FFB5"
-        app:strokeWidth="1dp"/>
+        app:strokeWidth="1dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

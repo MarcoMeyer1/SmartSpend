@@ -368,11 +368,7 @@ class SavingGoals : BaseActivity(), GoalAdapter.OnItemClickListener {
                             fetchGoalsFromLocal()  // Refreshes the goals after creating
                             callback(true)
                         } catch (e: JSONException) {
-                            Toast.makeText(
-                                this@SavingGoals,
-                                "Unexpected response: $responseBody",
-                                Toast.LENGTH_LONG
-                            ).show()
+
                             callback(false)
                         }
                     }

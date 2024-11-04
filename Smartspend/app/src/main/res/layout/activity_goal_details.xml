@@ -61,7 +61,7 @@
                 tools:text="$500 / $1,000" /> <!-- Placeholder, keep this for tools -->
 
             <ProgressBar
-                android:id="@+id/progressGoalCompletion"
+                android:id="@+id/progressRank"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"

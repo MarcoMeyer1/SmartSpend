@@ -1,10 +1,13 @@
 package com.example.smartspend
 
+import android.animation.ObjectAnimator
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.Toast
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -14,6 +17,7 @@ import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import org.json.JSONObject
 import java.io.IOException
+import java.math.BigDecimal
 
 class Profile : BaseActivity() {
 
@@ -21,6 +25,10 @@ class Profile : BaseActivity() {
     private lateinit var etSurname: EditText
     private lateinit var etEmail: EditText
     private lateinit var etPhoneNumber: EditText
+    private lateinit var tvRank: TextView
+    private lateinit var tvGoalsLeft: TextView
+    private lateinit var tvNextRank:TextView
+    private lateinit var rankProgress: ProgressBar
     private lateinit var btnSet: Button
 
     // TextViews for user stats
@@ -34,6 +42,14 @@ class Profile : BaseActivity() {
 
     // Tag for logging
     private val TAG = "ProfileActivity"
+
+    private val rankGoals = mapOf(
+        "Beginner" to 0,
+        "Novice" to 5,
+        "Pro" to 10,
+        "SmartSpender" to 15
+    )
+    private val rankOrder = listOf("Beginner", "Novice", "Pro", "SmartSpender")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +75,11 @@ class Profile : BaseActivity() {
         tvDifferentCategories = findViewById(R.id.different_categories_value)
         tvUpcomingReminders = findViewById(R.id.upcoming_reminders_value)
 
+        tvRank = findViewById(R.id.rank_label)
+        tvGoalsLeft = findViewById(R.id.goals_left_label)
+        tvNextRank = findViewById(R.id.next_rank_label)
+        rankProgress = findViewById(R.id.progressRank)
+
         etEmail.isEnabled = false
 
         // Retrieves the user ID from SharedPreferences
@@ -74,6 +95,68 @@ class Profile : BaseActivity() {
 
         btnSet.setOnClickListener {
             updateUserProfile()
+        }
+
+    }
+
+    private fun updateProgress(completedGoals: Int) {
+        val currentRank = getCurrentRank(completedGoals)
+        val nextRank = getNextRank(currentRank)
+        val nextRankGoal = rankGoals[nextRank] ?: completedGoals
+        val currentRankGoal = rankGoals[currentRank] ?: 0
+
+        // Calculate progress toward the next rank
+        val goalsToNextRank = nextRankGoal - currentRankGoal
+        val goalsCompletedTowardNext = completedGoals - currentRankGoal
+        val progressPercentage = (goalsCompletedTowardNext.toFloat() / goalsToNextRank * 100).toInt()
+
+        // Update UI
+       updateRankColor(currentRank)
+        updateNextRankColor(nextRank)
+
+        tvRank.text = currentRank
+        tvNextRank.text = nextRank
+        tvGoalsLeft.text = "${nextRankGoal - completedGoals} goals left to:"
+
+        // Animate progress
+        ObjectAnimator.ofInt(rankProgress, "progress", 0, progressPercentage).apply {
+            duration = 2000
+            start()
+        }
+    }
+
+    private fun updateRankColor(currentRank: String) {
+        when (currentRank) {
+            "Beginner" -> tvRank.setTextColor(Color.RED)
+            "Novice" -> tvRank.setTextColor(Color.YELLOW)
+            "Pro" -> tvRank.setTextColor(Color.BLUE)
+            "SmartSpender" -> tvRank.setTextColor(Color.GREEN)
+        }
+    }
+
+    private fun updateNextRankColor(nextRank: String) {
+        when (nextRank) {
+            "Beginner" -> tvNextRank.setTextColor(Color.RED)
+            "Novice" -> tvNextRank.setTextColor(Color.YELLOW)
+            "Pro" -> tvNextRank.setTextColor(Color.CYAN)
+            "SmartSpender" -> tvNextRank.setTextColor(Color.GREEN)
+        }
+    }
+
+
+
+    private fun getCurrentRank(completedGoals: Int): String {
+        // Determine current rank based on completed goals
+        return rankOrder.lastOrNull { rankGoals[it] ?: 0 <= completedGoals } ?: "Beginner"
+    }
+
+    private fun getNextRank(currentRank: String): String {
+        // Determine the next rank in order
+        val currentIndex = rankOrder.indexOf(currentRank)
+        return if (currentIndex in rankOrder.indices && currentIndex + 1 < rankOrder.size) {
+            rankOrder[currentIndex + 1]
+        } else {
+            currentRank  // If the user is at the highest rank, it stays the same
         }
     }
 
@@ -116,6 +199,8 @@ class Profile : BaseActivity() {
                             tvCompletedGoals.text = "$completedGoals"
                             tvDifferentCategories.text = "$differentCategories"
                             tvUpcomingReminders.text = "$upcomingReminders"
+
+                            updateProgress(completedGoals)
 
                             Log.d(TAG, "Stats updated successfully")
 

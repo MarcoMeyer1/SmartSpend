@@ -57,7 +57,7 @@ class GoalDetails : AppCompatActivity() {
         // Initialize views
         tvGoalName = findViewById(R.id.tvGoalName)
         tvGoalAmount = findViewById(R.id.tvGoalAmount)
-        progressGoalCompletion = findViewById(R.id.progressGoalCompletion)
+        progressGoalCompletion = findViewById(R.id.progressRank)
         tvGoalPercentage = findViewById(R.id.tvGoalPercentage)
         konfettiView = findViewById(R.id.konfettiView) // Initialize the KonfettiView
 

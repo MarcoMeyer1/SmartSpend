@@ -2,6 +2,7 @@ package com.example.smartspend
 
 import android.animation.ObjectAnimator
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -110,6 +111,9 @@ class Profile : BaseActivity() {
         val progressPercentage = (goalsCompletedTowardNext.toFloat() / goalsToNextRank * 100).toInt()
 
         // Update UI
+       updateRankColor(currentRank)
+        updateNextRankColor(nextRank)
+
         tvRank.text = currentRank
         tvNextRank.text = nextRank
         tvGoalsLeft.text = "${nextRankGoal - completedGoals} goals left to:"
@@ -120,6 +124,26 @@ class Profile : BaseActivity() {
             start()
         }
     }
+
+    private fun updateRankColor(currentRank: String) {
+        when (currentRank) {
+            "Beginner" -> tvRank.setTextColor(Color.RED)
+            "Novice" -> tvRank.setTextColor(Color.YELLOW)
+            "Pro" -> tvRank.setTextColor(Color.BLUE)
+            "SmartSpender" -> tvRank.setTextColor(Color.GREEN)
+        }
+    }
+
+    private fun updateNextRankColor(nextRank: String) {
+        when (nextRank) {
+            "Beginner" -> tvNextRank.setTextColor(Color.RED)
+            "Novice" -> tvNextRank.setTextColor(Color.YELLOW)
+            "Pro" -> tvNextRank.setTextColor(Color.CYAN)
+            "SmartSpender" -> tvNextRank.setTextColor(Color.GREEN)
+        }
+    }
+
+
 
     private fun getCurrentRank(completedGoals: Int): String {
         // Determine current rank based on completed goals

@@ -123,7 +123,7 @@ class Profile : BaseActivity() {
         when (currentRank) {
             "Beginner" -> tvRank.setTextColor(Color.RED)
             "Novice" -> tvRank.setTextColor(Color.YELLOW)
-            "Pro" -> tvRank.setTextColor(Color.BLUE)
+            "Pro" -> tvRank.setTextColor(Color.CYAN)
             "SmartSpender" -> tvRank.setTextColor(Color.GREEN)
         }
     }
